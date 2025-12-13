@@ -45,7 +45,7 @@ export default function AddPerson({
     <div className="card">
       <h2>Ingresar participantes</h2>
 <div>
-  <h4>Nombre</h4>
+  <h3>Nombre</h3>
       <input
         type="text"
         placeholder="Nombre"
@@ -54,7 +54,7 @@ export default function AddPerson({
       />
 </div>
 <div>
-  <h4>Cantidad personas</h4>
+  <h3>Cantidad personas</h3>
       <input
         type="number"
         value={count}

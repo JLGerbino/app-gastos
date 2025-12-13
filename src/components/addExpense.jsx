@@ -40,7 +40,7 @@ export default function AddExpense({
       </select>
 </div>
 <div>
-  <h5>Descripción del gasto</h5>
+  <h3>Descripción del gasto</h3>
       <input
         type="text"
         placeholder="Ingresar descripción"
@@ -49,7 +49,7 @@ export default function AddExpense({
       />
 </div>
 <div>
-  <h5>Importe del gasto</h5>
+  <h3>Importe del gasto</h3>
       <input
         type="number"
         placeholder="Ingresar importe"

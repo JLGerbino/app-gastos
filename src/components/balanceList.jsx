@@ -59,7 +59,7 @@ export default function BalanceList({ people, expenses }) {
       <h2>Balance</h2>
       <p>Total gastado: ${totalGasto.toFixed(2)}</p>
 
-      <h3>Balance individual</h3>
+      <h3 className="balance">Balance individual</h3>
       <ul>
         {balances.map((b, i) => {
           let text = "está justo";
@@ -69,7 +69,7 @@ export default function BalanceList({ people, expenses }) {
         })}
       </ul>
 
-      <h3>Deudas entre personas</h3>
+      <h3 className="balance">Deudas entre personas</h3>
       {deudas.length === 0 ? (
         <p>Todos están a mano</p>
       ) : (

@@ -1,6 +1,5 @@
 .app {
-  font-family: "Brush Script MT", cursive;
-  font-style: oblique;
+  font-family: "Ubuntu Mono", monospace;
   color: grey;
   max-width: 600px;
   margin: 20px auto;
@@ -44,4 +43,13 @@ ul {
 }
 h1{
   color: white;
+}
+h2{
+  font-size: 35px;
+}
+.balance{
+  font-size: 25px;
+}
+li,p{
+  font-size: 18px;
 }
