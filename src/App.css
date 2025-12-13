@@ -5,13 +5,13 @@
   margin: 20px auto;
   padding: 10px;
   text-align: center;
-  background-color: #C5ADC5;
+  background-color: #283655;
 }
 
 .card {
   background: #FCFDFE;
   padding: 15px;
-  margin: 10px 0;
+  margin: 20px 0;
   border-radius: 12px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
@@ -25,7 +25,7 @@ button {
   margin-top: 10px;
   margin-left: 5px;
   padding: 6px 12px;
-  background-color: #C5ADC5;
+  background-color: #D0E1F9;
   border: none;
   color:  black;
   border-radius: 6px;
@@ -46,8 +46,9 @@ h1{
 }
 h2{
   font-size: 31px;
+  color: #1E1F26;
 }
-.balance{
+.balance{  
   font-size: 21px;
 }
 li,p{
