@@ -56,7 +56,7 @@ export default function BalanceList({ people, expenses }) {
 
   return (
     <div className="card">
-      <h2>⚖️ Balances</h2>
+      <h2>Balance</h2>
       <p>Total gastado: ${totalGasto.toFixed(2)}</p>
 
       <h3>Balance individual</h3>
@@ -69,9 +69,9 @@ export default function BalanceList({ people, expenses }) {
         })}
       </ul>
 
-      <h3>🔗 Deudas entre personas</h3>
+      <h3>Deudas entre personas</h3>
       {deudas.length === 0 ? (
-        <p>Todos están a mano 👍</p>
+        <p>Todos están a mano</p>
       ) : (
         <ul>
           {deudas.map((d, i) => (

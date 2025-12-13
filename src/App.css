@@ -1,13 +1,16 @@
 .app {
-  font-family: sans-serif;
+  font-family: "Brush Script MT", cursive;
+  font-style: oblique;
+  color: grey;
   max-width: 600px;
   margin: 20px auto;
   padding: 10px;
   text-align: center;
+  background-color: #C5ADC5;
 }
 
 .card {
-  background: #f9f9f9;
+  background: #FCFDFE;
   padding: 15px;
   margin: 10px 0;
   border-radius: 12px;
@@ -20,20 +23,25 @@ input, select {
 }
 
 button {
+  margin-top: 10px;
   margin-left: 5px;
   padding: 6px 12px;
-  background-color: #00aaff;
+  background-color: #C5ADC5;
   border: none;
-  color: white;
+  color: grey;
   border-radius: 6px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #007acc;
+  background-color: #F0EFEA;
+  transform: scale(1.02);
 }
 
 ul {
   list-style: none;
   padding: 0;
+}
+h1{
+  color: white;
 }
