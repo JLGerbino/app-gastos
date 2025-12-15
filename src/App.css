@@ -55,3 +55,11 @@ li,p{
   font-size: 15px;
   color: black;
 }
+.foot{
+  color: white;
+}
+.fa-trash {
+  color: #283655;
+  cursor: pointer;
+}
+

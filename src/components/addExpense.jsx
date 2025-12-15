@@ -65,7 +65,7 @@ export default function AddExpense({
         {expenses.map((e) => (
           <li key={e.id}>
             {e.payer} pagó ${e.amount} ({e.desc})
-            <button onClick={() => deleteExpenseFromDB(e.id)}>🗑️</button>
+            <span><button onClick={() => deleteExpenseFromDB(e.id)}><i class="fa-solid fa-trash"></i></button></span>
           </li>
         ))}        
       </ul>      

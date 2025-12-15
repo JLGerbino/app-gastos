@@ -19,7 +19,21 @@ function App() {
   const [people, setPeople] = useState([]);
   const [expenses, setExpenses] = useState([]);
 
-  // 🔥 Escuchar personas en tiempo real
+//nuevo
+  //Crea id
+//   const getGroupId = () => {
+//   let id = localStorage.getItem("groupId");
+//   if (!id) {
+//     id = crypto.randomUUID();
+//     localStorage.setItem("groupId", id);
+//   }
+//   return id;
+// };
+
+// const groupId = getGroupId();
+//nuevo
+
+  // Escuchar personas en tiempo real
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "people"), snap => {
       const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -28,7 +42,7 @@ function App() {
     return unsub;
   }, []);
 
-  // 🔥 Escuchar gastos en tiempo real
+  // Escuchar gastos en tiempo real
   useEffect(() => {
     const unsub = onSnapshot(collection(db, "expenses"), snap => {
       const list = snap.docs.map(d => ({ id: d.id, ...d.data() }));
@@ -37,17 +51,17 @@ function App() {
     return unsub;
   }, []);
 
-  // ➕ Agregar persona
+  // Agregar persona
   const addPersonToDB = async person => {
     await addDoc(collection(db, "people"), person);
   };
 
-  // ❌ Borrar persona
+  // Borrar persona
   const deletePersonFromDB = async id => {
     await deleteDoc(doc(db, "people", id));
   };
 
-  // ❌ Borrar TODOS los gastos de una persona
+  // Borrar TODOS los gastos de una persona
   const deleteExpensesByPerson = async personName => {
     console.log("🔥 Buscando gastos de:", personName);
 
@@ -66,15 +80,15 @@ function App() {
 
     await Promise.all(promises);
 
-    console.log("🔥 Gastos de", personName, "borrados");
+    console.log("Gastos de", personName, "borrados");
   };
 
-  // ➕ Agregar gasto
+  // Agregar gasto
   const addExpenseToDB = async expense => {
     await addDoc(collection(db, "expenses"), expense);
   };
 
-  // ❌ Borrar gasto individual
+  // Borrar gasto individual
   const deleteExpenseFromDB = async id => {
     await deleteDoc(doc(db, "expenses", id));
   };
@@ -99,7 +113,7 @@ function App() {
       />
 
       <BalanceList people={people} expenses={expenses} />
-      <p>Desarrollado por Jose Luis Gerbino</p>
+      <p className="foot">Desarrollado por Jose Luis Gerbino</p>
     </div>
   );
 }

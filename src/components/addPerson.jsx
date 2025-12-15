@@ -68,8 +68,9 @@ export default function AddPerson({
       <ul>
         {people.map(p => (
           <li key={p.id}>
-            {p.name} ({p.count})
-            <button onClick={() => deletePerson(p)}>🗑️</button>
+            <span>{p.name} ({p.count})</span>
+            <span><button onClick={() => deletePerson(p)}><i class="fa-solid fa-trash"></i>
+</button></span>
           </li>
         ))}
       </ul>
