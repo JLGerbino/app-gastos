@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from "sweetalert2";
 
 export default function AddExpense({
   people,
@@ -25,6 +26,42 @@ export default function AddExpense({
     setAmount("");
     setPayer("");
   };
+
+
+  
+
+const deleteExpense = async (expenseId) => {
+  const result = await Swal.fire({
+    title: "¿Seguro de eliminar gasto?",
+    text: "Esta acción no se puede deshacer",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Eliminar",
+    cancelButtonText: "Cancelar",
+  });
+
+  if (!result.isConfirmed) return;
+
+  try {
+    await deleteExpenseFromDB(expenseId);
+
+    Swal.fire({
+      title: "Eliminado",
+      text: "El gasto fue eliminado",
+      icon: "success",
+    });
+  } catch (error) {
+    console.error("Error eliminando gasto:", error);
+
+    Swal.fire({
+      title: "Error",
+      text: "No se pudo eliminar el gasto",
+      icon: "error",
+    });
+  }
+};
 
   return (
     <div className="card">
@@ -65,7 +102,7 @@ export default function AddExpense({
         {expenses.map((e) => (
           <li key={e.id}>
             {e.payer} pagó ${e.amount} ({e.desc})
-            <span><button onClick={() => deleteExpenseFromDB(e.id)}><i class="fa-solid fa-trash"></i></button></span>
+            <span><button onClick={() => deleteExpense(e.id)}><i className="fa-solid fa-trash"></i></button></span>
           </li>
         ))}        
       </ul>      

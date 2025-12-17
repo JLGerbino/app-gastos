@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Swal from 'sweetalert2';
 
 export default function AddPerson({
   people,
@@ -26,20 +27,68 @@ export default function AddPerson({
     setCount(1);
   };
 
-  const deletePerson = async person => {
-    console.log("🟥 Eliminando persona:", person);
 
-    if (!person?.id || !person?.name) {
-      console.error("❌ ERROR: persona sin id o name:", person);
-      return;
-    }
+  const deletePerson = async (person) => {
+  console.log("🟥 Eliminando persona:", person);
 
+  if (!person?.id || !person?.name) {
+    console.error("❌ ERROR: persona sin id o name:", person);
+    return;
+  }
+
+  const result = await Swal.fire({
+    title: "¿Seguro de eliminar participante?",
+    text: "Se eliminará a la persona y todos sus gastos asociados",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Eliminar",
+    cancelButtonText: "Cancelar",
+  });
+
+  // 👉 SOLO si confirma, se borra
+  if (!result.isConfirmed) return;
+
+  try {
     // 1) Borrar la persona
     await deletePersonFromDB(person.id);
 
     // 2) Borrar sus gastos asociados
     await deleteExpensesByPerson(person.name);
-  };
+
+    await Swal.fire({
+      title: "Eliminado",
+      text: "La persona y sus gastos fueron eliminados correctamente",
+      icon: "success",
+    });
+  } catch (error) {
+    console.error("❌ Error eliminando persona:", error);
+
+    Swal.fire({
+      title: "Error",
+      text: "Ocurrió un problema al eliminar la persona",
+      icon: "error",
+    });
+  }
+};
+
+
+
+  // const deletePerson = async person => {
+  //   console.log("🟥 Eliminando persona:", person);
+
+  //   if (!person?.id || !person?.name) {
+  //     console.error("❌ ERROR: persona sin id o name:", person);
+  //     return;
+  //   }
+
+  //   // 1) Borrar la persona
+  //   await deletePersonFromDB(person.id);
+
+  //   // 2) Borrar sus gastos asociados
+  //   await deleteExpensesByPerson(person.name);
+  // };
 
   return (
     <div className="card">
@@ -69,7 +118,7 @@ export default function AddPerson({
         {people.map(p => (
           <li key={p.id}>
             <span>{p.name} ({p.count})</span>
-            <span><button onClick={() => deletePerson(p)}><i class="fa-solid fa-trash"></i>
+            <span><button onClick={() => deletePerson(p)}><i className="fa-solid fa-trash"></i>
 </button></span>
           </li>
         ))}
