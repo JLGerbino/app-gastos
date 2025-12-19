@@ -54,15 +54,18 @@ export default function AddPerson({
 
   return (
     <div className="card">
-      <h2>Ingresar participantes</h2>
-
+      <h2>Agregar participantes</h2>
+<div>
+  <h3>Nombre</h3>
       <input
         type="text"
         placeholder="Nombre"
         value={name}
         onChange={e => setName(e.target.value)}
       />
-
+</div>
+<div>
+  <h3>Cantidad personas</h3>
       <input
         type="number"
         min={1}
@@ -70,9 +73,10 @@ export default function AddPerson({
         onChange={e => setCount(e.target.value)}
         placeholder="Cantidad de personas"
       />
-
+</div>
+<div>
       <button onClick={addPerson}>Agregar participante</button>
-
+</div>
       <ul>
         {people.map(p => (
           <li key={p.id}>

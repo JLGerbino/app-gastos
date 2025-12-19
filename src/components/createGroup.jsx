@@ -38,6 +38,10 @@ export default function CreateGroup({ onGroupCreated }) {
     });
 
     onGroupCreated(groupId);
+    setName("");
+    setCode("");
+    setJoinName("");
+    setJoinCode("");   
   };
 
   // 🔑 ENTRAR A GRUPO EXISTENTE
@@ -62,43 +66,50 @@ export default function CreateGroup({ onGroupCreated }) {
 
   return (
     <div className="card">
-      {/* 🆕 CREAR */}
-      <h2>🆕 Crear grupo</h2>
-
+      {/* 🆕 CREAR */}      
+      <h2>Crear nuevo grupo?</h2>
+      <h4>Completá estos datos</h4>
+      <div>
       <input
         placeholder="Nombre del grupo"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-
+</div>
+<div>
       <input
         placeholder="Código (6 dígitos)"
         value={code}
         maxLength={6}
         onChange={(e) => setCode(e.target.value)}
       />
-
+</div>
+<div>
       <button onClick={createGroup}>Crear grupo</button>
-
+</div>
       <hr style={{ margin: "24px 0" }} />
 
       {/* 🔑 ENTRAR */}
-      <h2>🔑 ¿Ya tenés un grupo?</h2>
-
+      <h2>Ya tenés un grupo?</h2>
+      <h4>Ingresá acá</h4>
+<div>
       <input
         placeholder="Nombre del grupo"
         value={joinName}
         onChange={(e) => setJoinName(e.target.value)}
       />
-
+</div>
+<div>
       <input
         placeholder="Código (6 dígitos)"
         value={joinCode}
         maxLength={6}
         onChange={(e) => setJoinCode(e.target.value)}
       />
-
+</div>
+<div>
       <button onClick={joinGroup}>Entrar al grupo</button>
+    </div>  
     </div>
   );
 }
