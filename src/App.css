@@ -22,7 +22,7 @@ input, select {
   padding: 6px;
 }
 
-button {
+button { 
   margin-top: 10px;
   margin-left: 5px;
   padding: 6px 12px;
@@ -76,4 +76,8 @@ li,p{
 }
 .tacho{
   text-align: right;
+}
+.boton{
+  width: 180px ;
+  font-size: 15px;
 }

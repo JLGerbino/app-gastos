@@ -128,7 +128,7 @@ function App() {
       <h3>o cuando lo nesecites!!!</h3>
 
 
-      <button onClick={() => setStarted(true)}>
+      <button className="boton" onClick={() => setStarted(true)}>
         Ingresar
       </button>
     </div>

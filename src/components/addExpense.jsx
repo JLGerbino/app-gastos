@@ -127,7 +127,7 @@ const deleteAll = async () => {
       />
 </div>
 <div>
-      <button onClick={addExpense}>Agregar gasto</button>
+      <button className="boton" onClick={addExpense}>Agregar gasto</button>
 </div>
 
       <ul>        

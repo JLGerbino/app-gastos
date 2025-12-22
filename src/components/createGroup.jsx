@@ -88,7 +88,7 @@ onGroupCreated(groupId, joinName.trim());
       />
 </div>
 <div>
-      <button onClick={createGroup}>Crear grupo</button>
+      <button className="boton" onClick={createGroup}>Crear grupo</button>
 </div>
       <hr style={{ margin: "24px 0" }} />
 
@@ -111,7 +111,7 @@ onGroupCreated(groupId, joinName.trim());
       />
 </div>
 <div>
-      <button onClick={joinGroup}>Entrar al grupo</button>
+      <button className="boton" onClick={joinGroup}>Entrar al grupo</button>
     </div>  
     </div>
   );
