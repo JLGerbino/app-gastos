@@ -5,11 +5,12 @@
   margin: 20px auto;
   padding: 10px;
   text-align: center;
-  background-color: #283655;
+  background-color: #ADC1c0;
+  /* background-color: #283655; */
 }
 
 .card {
-  background: #FCFDFE;
+  background: #dee0e0;
   padding: 15px;
   margin: 20px 0;
   border-radius: 12px;
@@ -25,7 +26,7 @@ button {
   margin-top: 10px;
   margin-left: 5px;
   padding: 6px 12px;
-  background-color: #D0E1F9;
+  background-color: #35b67e;
   border: none;
   color:  black;
   border-radius: 6px;
@@ -33,7 +34,7 @@ button {
 }
 
 button:hover {
-  background-color: #F0EFEA;
+  background-color: #269181;
   transform: scale(1.02);
 }
 
@@ -62,4 +63,17 @@ li,p{
   color: #283655;
   cursor: pointer;
 }
-
+.welcome {
+  background-color: #ADC1c0;
+  text-align: center;
+  margin-top: 80px;
+}
+.logo {
+  width: 280px;  
+}
+.Create{
+  width:130px;
+}
+.tacho{
+  text-align: right;
+}

@@ -17,21 +17,27 @@ import {
 import "./App.css";
 
 function App() {
-  // 🔹 1) Estado inicial desde localStorage
+  // Estado inicial desde localStorage
   const [groupId, setGroupId] = useState(() => {
     return localStorage.getItem("groupId");
   });
+
+  const [groupName, setGroupName] = useState(() => {
+    return localStorage.getItem("groupName") || "";
+  });
+  
   const [people, setPeople] = useState([]);
   const [expenses, setExpenses] = useState([]);
+  const [started, setStarted] = useState(false);//nuevo
 
-  // 🔹 2) Guardar groupId en localStorage
+  // Guardar groupId en localStorage
   useEffect(() => {
     if (groupId) {
       localStorage.setItem("groupId", groupId);
     }
   }, [groupId]);
 
-  // 🔄 Personas en tiempo real
+  // Ver personas en tiempo real
   useEffect(() => {
     if (!groupId) return;
 
@@ -44,7 +50,7 @@ function App() {
     return unsub;
   }, [groupId]);
 
-  // 🔄 Gastos en tiempo real
+  // Ver gastos en tiempo real
   useEffect(() => {
     if (!groupId) return;
 
@@ -57,11 +63,11 @@ function App() {
     return unsub;
   }, [groupId]);
 
-  // ➕ Persona
+  // Agregar Persona
   const addPersonToDB = (person) =>
     addDoc(collection(db, "groups", groupId, "people"), person);
 
-  // ❌ Persona + gastos
+  // Borrar persona + gastos
   const deletePersonAndExpenses = async (person) => {
     await deleteDoc(doc(db, "groups", groupId, "people", person.id));
 
@@ -78,38 +84,98 @@ function App() {
     );
   };
 
-  // ➕ Gasto
+  // Agregar Gasto
   const addExpenseToDB = (expense) =>
     addDoc(collection(db, "groups", groupId, "expenses"), expense);
 
-  // ❌ Gasto
+  // Borrar Gasto
   const deleteExpenseFromDB = (expenseId) =>
     deleteDoc(doc(db, "groups", groupId, "expenses", expenseId));
 
-  // 🚪 Salir del grupo
+    //Borrar TODOS los gastos del grupo
+  const deleteAllExpenses = async () => {
+    const q = query(
+      collection(db, "groups", groupId, "expenses")
+    );
+
+    const snap = await getDocs(q);
+
+    await Promise.all(
+      snap.docs.map(d =>
+        deleteDoc(doc(db, "groups", groupId, "expenses", d.id))
+      )
+    );
+  };
+
+
+  // Salir del grupo
   const exitGroup = () => {
     localStorage.removeItem("groupId");
     setGroupId(null);
     setPeople([]);
     setExpenses([]);
   };
+//nuevo
+  if (!started && !groupId) {
+  return (
+    <div className="app welcome">
+      <img src="public/logo.jpg" alt="Cuentas Claras" className="logo" />
+      <h2>La manera mas facil de</h2>
+      <h2>compartir gastos</h2>
 
-  // 👉 PANTALLA CREAR / ENTRAR A GRUPO
+      <h3>Ideal para resolver las cuentas en</h3>
+      <h3>vacaciones, juntadas, salidas</h3>
+      <h3>o cuando lo nesecites!!!</h3>
+
+
+      <button onClick={() => setStarted(true)}>
+        Ingresar
+      </button>
+    </div>
+  );
+}
+//nuevo
+
+
+
+
+  // Pantalla crear/Entrar a grupo
   if (!groupId) {
-    return (
-      <div className="app">
-        <h1>Binevenido a Cuentas Claras</h1>
-        <CreateGroup onGroupCreated={setGroupId} />
-      </div>
-    );
-  }
+  return (
+    <div className="app">
+      {/* <h1>Cuentas Claras</h1> */}
+      <img src="public/logo.jpg" alt="Cuentas Claras" className="Create" />
+      <p>La manera mas facil de compartir gastos</p>
+      <CreateGroup
+        onGroupCreated={(id, name) => {
+          setGroupId(id);
+          setGroupName(name);
+        }}
+      />
+    </div>
+  );
+}
+
+
+  
+  // if (!groupId) {
+  //   return (
+  //     <div className="app">
+  //       <h1>Bienvenido a Cuentas Claras</h1>
+  //       <CreateGroup onGroupCreated={setGroupId} />
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="app">
-      <h1>Cuentas Claras</h1>
 
+      {/* <h1>Cuentas Claras</h1> */}
+      <img src="public/logo.jpg" alt="Cuentas Claras" className="Create" />
+      <p>La manera mas facil de compartir gastos</p>
+<h1 className="group-title">{groupName}</h1>
       <button className="exit-btn" onClick={exitGroup}>
-        Salir <i class="fa fa-sign-out" aria-hidden="true"></i>
+        Salir <i className="fa fa-sign-out" aria-hidden="true"></i>
       </button>
 
       <AddPerson
@@ -123,6 +189,7 @@ function App() {
         expenses={expenses}
         addExpenseToDB={addExpenseToDB}
         deleteExpenseFromDB={deleteExpenseFromDB}
+        deleteAllExpenses={deleteAllExpenses}
       />
 
       <BalanceList people={people} expenses={expenses} />

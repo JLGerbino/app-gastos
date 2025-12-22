@@ -1,7 +1,7 @@
 export default function BalanceList({ people, expenses }) {
   if (people.length === 0) return null;
 
-  // --- Totales por persona ---
+  // Totales por persona
   const totals = {};
   people.forEach((p) => (totals[p.name] = 0));
 
@@ -9,22 +9,22 @@ export default function BalanceList({ people, expenses }) {
     totals[e.payer] += e.amount;
   });
 
-  // --- Calcular total ponderado por cantidad ---
+  // Calcular total ponderado por cantidad
   const totalPersonas = people.reduce((acc, p) => acc + p.count, 0);
   const totalGasto = expenses.reduce((acc, e) => acc + e.amount, 0);
   const costoPorPersona = totalGasto / totalPersonas;
 
-  // --- Balance original (NO se debe modificar) ---
+  // Balance original (NO modificar)
   const balances = people.map((p) => {
     const gastoEsperado = p.count * costoPorPersona;
     const balance = totals[p.name] - gastoEsperado;
     return { name: p.name, balance };
   });
 
-  // --- CLON para calcular deudas ---
+  // CLON para calcular deudas
   const balancesForDebts = balances.map(b => ({ ...b }));
 
-  // --- Deudores y acreedores ---
+  // Deudores y acreedores
   const deudores = balancesForDebts.filter((b) => b.balance < -0.01);
   const acreedores = balancesForDebts.filter((b) => b.balance > 0.01);
 
@@ -58,6 +58,7 @@ export default function BalanceList({ people, expenses }) {
     <div className="card">
       <h2>Balance</h2>
       <p>Total gastado: ${totalGasto.toFixed(2)}</p>
+      <p>A pagar cada uno: ${costoPorPersona.toFixed(2)}</p>
 
       <h3 className="balance">Balance individual</h3>
       <ul>
