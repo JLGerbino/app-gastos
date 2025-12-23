@@ -25,7 +25,6 @@ html, body {
 }
 
 input, select {
-
   margin-bottom: 10px;
   padding: 6px;
   border: none;
@@ -58,15 +57,16 @@ h1{
 }
 h2{
   font-size: 25px;
-  color: #1E1F26;
+  color: #283655;
 }
 .balance{  
   font-size: 21px;
 }
 li,p{
   font-size: 15px;
-  color: black;
+  color: #283655;
 }
+
 .foot{
   color: white;
 }
