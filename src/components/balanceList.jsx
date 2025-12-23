@@ -66,7 +66,7 @@ export default function BalanceList({ people, expenses }) {
           let text = "está justo";
           if (b.balance > 0.01) text = `le deben $${b.balance.toFixed(2)}`;
           if (b.balance < -0.01) text = `debe $${Math.abs(b.balance).toFixed(2)}`;
-          return <li key={i}>{b.name}: {text}</li>;
+          return <li className="deudores" key={i}>{b.name}: {text}</li>;
         })}
       </ul>
 
@@ -76,7 +76,7 @@ export default function BalanceList({ people, expenses }) {
       ) : (
         <ul>
           {deudas.map((d, i) => (
-            <li key={i}>
+            <li className="deudores" key={i}>
               <strong>{d.from}</strong> debe{" "}
               <strong>${d.amount.toFixed(2)}</strong> a{" "}
               <strong>{d.to}</strong>

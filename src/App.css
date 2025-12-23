@@ -17,6 +17,7 @@ html, body {
 
 .card {
   background: #dee0e0;
+  color: #283655;
   padding: 15px;
   margin: 20px 0;
   border-radius: 12px;
@@ -24,8 +25,11 @@ html, body {
 }
 
 input, select {
-  margin: 5px;
+
+  margin-bottom: 10px;
   padding: 6px;
+  border: none;
+  border-radius: 8px;
 }
 
 button { 
@@ -110,3 +114,6 @@ li,p{
   text-align: center;
 }
 
+.deudores{
+  padding: 5px;
+}
