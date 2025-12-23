@@ -79,9 +79,9 @@ export default function AddPerson({
 </div>
       <ul>
         {people.map(p => (
-          <li key={p.id}>
-            {p.name} ({p.count})
-            <button onClick={() => handleDeletePerson(p)}>
+          <li key={p.id} className="people-item"><span className="people-name">
+            {p.name} ({p.count})</span>
+            <button className="delete-btn" onClick={() => handleDeletePerson(p)}>
               <i className="fa-solid fa-trash"></i>
             </button>
           </li>

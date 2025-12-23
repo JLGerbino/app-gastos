@@ -132,16 +132,16 @@ const deleteAll = async () => {
 
       <ul>        
         {expenses.map((e) => (
-          <li key={e.id}>
-            {e.payer} pagó ${e.amount} ({e.desc})
-            <span><button onClick={() => deleteExpense(e.id)}><i className="fa-solid fa-trash"></i></button></span>
+          <li key={e.id} className="people-item">
+            <span className="people-name">{e.payer} pagó ${e.amount} ({e.desc})</span>
+            <button onClick={() => deleteExpense(e.id)}><i className="fa-solid fa-trash"></i></button>
           </li>
         ))}        
       </ul> 
       <div>
         <button
   onClick={deleteAll}
-  style={{ background: "#b61028", marginTop: "12px" }}
+  style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
 >
   <i className="fa-solid fa-trash"></i> Borrar todos los gastos
 </button>

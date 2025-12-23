@@ -1,12 +1,18 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background-color: #ADC1c0;
+}
+
 .app {
-  font-family: "Ubuntu Mono", monospace;
+  font-family: "Ubuntu Mono", monospace;  
   color: grey;
   max-width: 600px;
   margin: 20px auto;
   padding: 10px;
   text-align: center;
-  background-color: #ADC1c0;
-  /* background-color: #283655; */
+  background-color: #ADC1c0;  
 }
 
 .card {
@@ -25,6 +31,7 @@ input, select {
 button { 
   margin-top: 10px;
   margin-left: 5px;
+  margin-right: 10px;
   padding: 6px 12px;
   background-color: #35b67e;
   border: none;
@@ -78,6 +85,25 @@ li,p{
   text-align: right;
 }
 .boton{
-  width: 180px ;
+  width: 190px ;
   font-size: 15px;
 }
+.people-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.people-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.people-name {
+  flex: 1;
+  text-align: center;
+}
+
