@@ -70,7 +70,7 @@ onGroupCreated(groupId, joinName.trim());
   return (
     <div className="card">
       {/* CREAR */}      
-      <h2>Crear nuevo grupo?</h2>
+      <h2>Crear nuevo grupo</h2>
       <h4>Completá estos datos</h4>
       <div>
       <input

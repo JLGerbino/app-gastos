@@ -75,7 +75,7 @@ export default function AddPerson({
       />
 </div>
 <div>
-      <button className="boton" onClick={addPerson}>Agregar participante</button>
+      <button className="boton" onClick={addPerson}>Agregar</button>
 </div>
       <ul>
         {people.map(p => (

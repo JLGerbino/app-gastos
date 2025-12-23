@@ -53,7 +53,7 @@ h1{
   color: white;
 }
 h2{
-  font-size: 31px;
+  font-size: 25px;
   color: #1E1F26;
 }
 .balance{  
@@ -86,7 +86,10 @@ li,p{
 }
 .boton{
   width: 190px ;
-  font-size: 15px;
+  height: 40px;
+  font-size: 18px;
+  border-radius: 15px;
+  color: white;
 }
 .people-list {
   list-style: none;
