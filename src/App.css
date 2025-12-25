@@ -117,3 +117,12 @@ li,p{
 .deudores{
   padding: 5px;
 }
+.expense-payer {
+  font-weight: bold;
+  cursor: pointer;
+  /* text-decoration: underline; */
+}
+
+.expense-payer:hover {
+  color: #2c7be5;
+}

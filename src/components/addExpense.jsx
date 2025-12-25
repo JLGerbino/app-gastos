@@ -94,6 +94,47 @@ const deleteAll = async () => {
   }
 };
 
+//nuevo
+const showPersonExpenses = (personName) => {
+  const personExpenses = expenses.filter(
+    e => e.payer === personName
+  );
+
+  if (personExpenses.length === 0) {
+    Swal.fire(
+      "Sin gastos",
+      `${personName} no tiene gastos registrados`,
+      "info"
+    );
+    return;
+  }
+
+  const total = personExpenses.reduce(
+    (sum, e) => sum + Number(e.amount),
+    0
+  );
+
+  const listHtml = personExpenses
+    .map(e => `<li>${e.desc || "Sin descripción"} - $${e.amount}</li>`)
+    .join("");
+
+  Swal.fire({
+    title: `Gastos de ${personName}`,
+    html: `
+      <ul style="text-align:left">
+        ${listHtml}
+      </ul>
+      <hr />
+      <strong>Total: $${total}</strong>
+    `,
+    confirmButtonText: "Cerrar"
+  });
+};
+//nuevo
+
+
+
+
 
   return (
     <div className="card">
@@ -132,10 +173,24 @@ const deleteAll = async () => {
 
       <ul>        
         {expenses.map((e) => (
-          <li key={e.id} className="people-item">
-            <span className="people-name">{e.payer} pagó ${e.amount} ({e.desc})</span>
-            <button onClick={() => deleteExpense(e.id)}><i className="fa-solid fa-trash"></i></button>
-          </li>
+          <li key={e.id} className="people-item expense-item">
+  <span
+    className="people-name expense-payer"
+    onClick={() => showPersonExpenses(e.payer)}
+  >
+    {e.payer}
+  
+  {" "}pagó ${e.amount} ({e.desc})</span>
+
+  <button onClick={() => deleteExpense(e.id)}>
+    <i className="fa-solid fa-trash"></i>
+  </button>
+</li>
+
+          // <li key={e.id} className="people-item">
+          //   <span className="people-name">{e.payer} pagó ${e.amount} ({e.desc})</span>            
+          //   <button onClick={() => deleteExpense(e.id)}><i className="fa-solid fa-trash"></i></button>
+          // </li>
         ))}        
       </ul> 
       <div>
@@ -143,8 +198,7 @@ const deleteAll = async () => {
   onClick={deleteAll}
   style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
 >
-  <i className="fa-solid fa-trash"></i> Borrar todos los gastos
-</button>
+  <i className="fa-solid fa-trash"></i> Borrar todos los gastos</button>
 
         </div>     
     </div>    
