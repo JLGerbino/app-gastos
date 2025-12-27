@@ -1,9 +1,51 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { VitePWA } from "vite-plugin-pwa";
 
-// https://vite.dev/config/
 export default defineConfig({
-  base: "/app-gastos/",
-  plugins: [react()],
-})
+  plugins: [
+    react(),
+    VitePWA({
+      registerType: "autoUpdate",
+      includeAssets: ["logo.png", "favicon.ico"],
+      manifest: {
+        name: "Vamo&Vamo",
+        short_name: "Vamo",
+        description: "La manera más fácil de compartir gastos",
+        theme_color: "#ADC1c0",
+        background_color: "#ADC1c0",
+        display: "standalone",
+        start_url: "/",
+        icons: [
+          {
+            src: "/pwa-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "/pwa-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
+          }
+        ],
+      },
+    }),
+  ],
+});
+
+
+
+
+
+
+
+
+// import { defineConfig } from 'vite'
+// import react from '@vitejs/plugin-react'
+
+// // https://vite.dev/config/
+// export default defineConfig({
+//   base: "/app-gastos/",
+//   plugins: [react()],
+// })
 
