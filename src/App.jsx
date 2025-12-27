@@ -119,7 +119,7 @@ function App() {
   if (!started && !groupId) {
   return (
     <div className="app welcome">
-      <img src="logo.jpg" alt="Cuentas Claras" className="logo" />
+      <img src="logo.png" alt="Cuentas Claras" className="logo" />
       <h2>La manera mas fácil de compartir gastos</h2>      
       <h3>Ideal para resolver las cuentas en vacaciones, juntadas, salidas o cuando lo nesecites!!!</h3>
       <button className="boton" onClick={() => setStarted(true)}>
@@ -134,7 +134,7 @@ function App() {
   if (!groupId) {
   return (
     <div className="app">
-      <img src="logo.jpg" alt="Cuentas Claras" className="Create" />
+      <img src="logo.png" alt="Cuentas Claras" className="Create" />
       <p>La manera mas facil de compartir gastos</p>
       <CreateGroup
         onGroupCreated={(id, name) => {
@@ -149,7 +149,7 @@ function App() {
 
   return (
     <div className="app">      
-      <img src="logo.jpg" alt="Cuentas Claras" className="Create" />
+      <img src="logo.png" alt="Cuentas Claras" className="Create" />
       <p>La manera mas facil de compartir gastos</p>
 <h1 className="group-title">{groupName}</h1>
       <button className="exit-btn" onClick={exitGroup}>
