@@ -119,8 +119,7 @@ li,p{
 }
 .expense-payer {
   font-weight: bold;
-  cursor: pointer;
-  /* text-decoration: underline; */
+  cursor: pointer;  
 }
 
 .expense-payer:hover {

@@ -13,6 +13,7 @@ import {
   query,
   where,
   getDocs,
+  getDoc,
 } from "firebase/firestore";
 import "./App.css";
 
@@ -25,10 +26,12 @@ function App() {
   const [groupName, setGroupName] = useState(() => {
     return localStorage.getItem("groupName") || "";
   });
+
+  const [groupCode, setGroupCode] = useState("");
   
   const [people, setPeople] = useState([]);
   const [expenses, setExpenses] = useState([]);
-  const [started, setStarted] = useState(false);//nuevo
+  const [started, setStarted] = useState(false);  
 
   // Guardar groupId en localStorage
   useEffect(() => {
@@ -36,6 +39,26 @@ function App() {
       localStorage.setItem("groupId", groupId);
     }
   }, [groupId]);
+
+
+  //traer nombre grupo de firebase
+  useEffect(() => {
+  if (!groupId) return;
+
+  const fetchGroupInfo = async () => {
+    const ref = doc(db, "groups", groupId);
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      const data = snap.data();
+      setGroupName(data.name || "");
+      setGroupCode(data.code || "");
+    }
+  };
+
+  fetchGroupInfo();
+}, [groupId]);
+
 
   // Ver personas en tiempo real
   useEffect(() => {
@@ -145,13 +168,15 @@ function App() {
     </div>
   );
 }
-  
 
   return (
     <div className="app">      
       <img src="logo.png" alt="Cuentas Claras" className="Create" />
       <p>La manera mas facil de compartir gastos</p>
 <h1 className="group-title">{groupName}</h1>
+<p className="group-code">
+  <strong>{groupCode}</strong>  
+</p>
       <button className="exit-btn" onClick={exitGroup}>
         Salir <i className="fa fa-sign-out" aria-hidden="true"></i>
       </button>

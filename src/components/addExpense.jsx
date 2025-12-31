@@ -185,12 +185,7 @@ const showPersonExpenses = (personName) => {
   <button onClick={() => deleteExpense(e.id)}>
     <i className="fa-solid fa-trash"></i>
   </button>
-</li>
-
-          // <li key={e.id} className="people-item">
-          //   <span className="people-name">{e.payer} pagó ${e.amount} ({e.desc})</span>            
-          //   <button onClick={() => deleteExpense(e.id)}><i className="fa-solid fa-trash"></i></button>
-          // </li>
+</li>          
         ))}        
       </ul> 
       <div>
