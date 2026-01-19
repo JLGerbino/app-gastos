@@ -100,6 +100,9 @@ const showPersonExpenses = (personName) => {
     e => e.payer === personName
   );
 
+  const person = people.find(p => p.name === personName);
+  const alias = person?.alias;
+
   if (personExpenses.length === 0) {
     Swal.fire(
       "Sin gastos",
@@ -124,12 +127,105 @@ const showPersonExpenses = (personName) => {
       <ul style="text-align:left">
         ${listHtml}
       </ul>
+
       <hr />
+
       <strong>Total: $${total}</strong>
+
+      ${
+        alias
+          ? `
+            <hr />
+            <p><strong>Alias para recibir transferencias</strong></p>
+            <p style="font-size:22px">${alias}</p>
+            <p style="font-size:12px">Pagá con</p>
+            <img 
+              src="mp-logo.png"
+              alt="Mercado Pago"
+              id="openMP"
+              style="
+                width: 34px;
+                cursor: pointer;
+                margin-top: 10px;
+              "
+            />
+            
+          `
+          : ""
+      }
     `,
-    confirmButtonText: "Cerrar"
+    confirmButtonText: "Cerrar",
+    didOpen: () => {
+      if (alias) {
+        const mpBtn = document.getElementById("openMP");
+        if (mpBtn) {
+          mpBtn.addEventListener("click", () => {
+            navigator.clipboard.writeText(alias);
+            window.location.href = "mercadopago://";
+          });
+        }
+      }
+    }
   });
 };
+
+
+
+
+
+
+
+// const showPersonExpenses = (personName) => {
+//   const personExpenses = expenses.filter(
+//     e => e.payer === personName
+//   );
+
+//   const person = people.find(p => p.name === personName);
+//   const alias = person?.alias;
+
+//   if (personExpenses.length === 0) {
+//     Swal.fire(
+//       "Sin gastos",
+//       `${personName} no tiene gastos registrados`,
+//       "info"
+//     );
+//     return;
+//   }
+
+//   const total = personExpenses.reduce(
+//     (sum, e) => sum + Number(e.amount),
+//     0
+//   );
+
+//   const listHtml = personExpenses
+//     .map(e => `<li>${e.desc || "Sin descripción"} - $${e.amount}</li>`)
+//     .join("");
+
+//   Swal.fire({
+//     title: `Gastos de ${personName}`,
+//     html: `
+//       <ul style="text-align:left">
+//         ${listHtml}
+//       </ul>
+
+//       <hr />
+
+//       <strong>Total: $${total}</strong>
+
+//       ${
+//         alias
+//           ? `
+//             <hr />
+//             <p><strong>Alias para recibir transferencias</strong></p>
+//             <p style="font-size:16px">${alias}</p>
+//           `
+//           : ""
+//       }      
+//     `,
+//     confirmButtonText: "Cerrar",
+//   });
+// };
+
 //nuevo
 
 
