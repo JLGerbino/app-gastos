@@ -156,16 +156,35 @@ const showPersonExpenses = (personName) => {
     `,
     confirmButtonText: "Cerrar",
     didOpen: () => {
-      if (alias) {
-        const mpBtn = document.getElementById("openMP");
-        if (mpBtn) {
-          mpBtn.addEventListener("click", () => {
-            navigator.clipboard.writeText(alias);
-            window.location.href = "mercadopago://";
-          });
-        }
+  if (person.alias) {
+    const btn = document.getElementById("openMPPerson");
+    btn?.addEventListener("click", () => {
+      navigator.clipboard.writeText(person.alias);
+
+      const isAndroid = /Android/i.test(navigator.userAgent);
+
+      if (isAndroid) {
+        // 👉 Intent para Android
+        window.location.href =
+          "intent://#Intent;package=com.mercadopago.wallet;scheme=mercadopago;end";
+      } else {
+        // 👉 iOS o fallback
+        window.open("https://www.mercadopago.com.ar", "_blank");
       }
-    }
+    });
+  }
+}
+    // didOpen: () => {
+    //   if (alias) {
+    //     const mpBtn = document.getElementById("openMP");
+    //     if (mpBtn) {
+    //       mpBtn.addEventListener("click", () => {
+    //         navigator.clipboard.writeText(alias);
+    //         window.location.href = "mercadopago://";
+    //       });
+    //     }
+    //   }
+    // }
   });
 };
 
