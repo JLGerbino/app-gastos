@@ -110,10 +110,11 @@ const showPersonAlias = (person) => {
       //     });
       //   }
       // }
-    });
+    })
+  }
+     }
+    })
   };
-
-
 
 
 //   const showPersonAlias = (person) => {
