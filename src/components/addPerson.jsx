@@ -57,64 +57,124 @@ export default function AddPerson({
   };
 
 const showPersonAlias = (person) => {
-    Swal.fire({
-      title: person.name,
-      html: `
-        <p><strong>Cantidad:</strong> ${person.count}</p>
+  Swal.fire({
+    title: person.name,
+    html: `
+      <p><strong>Cantidad:</strong> ${person.count}</p>
 
-        ${
-          person.alias
-            ? `
-              <hr />
-              <p><strong>Alias para recibir transferencias</strong></p>
-              <p style="font-size:22px">${person.alias}</p>
-              <p style="font-size:12px">Pagá con</p>
-              <img
-                src="mp-logo.png"
-                alt="Mercado Pago"
-                id="openMPPerson"
-                style="
-                  width: 34px;
-                  cursor: pointer;
-                  margin-top: 10px;
-                "
-              />              
-            `
-            : `<p style="color:gray">Sin alias cargado</p>`
-        }
-      `,
-      confirmButtonText: "Cerrar",
-
-      didOpen: () => {
-  if (person.alias) {
-    const btn = document.getElementById("openMPPerson");
-    btn?.addEventListener("click", () => {
-      navigator.clipboard.writeText(person.alias);
-
-      const isAndroid = /Android/i.test(navigator.userAgent);
-
-      if (isAndroid) {
-        // 👉 Intent para Android
-        window.location.href =
-          "intent://#Intent;package=com.mercadopago.wallet;scheme=mercadopago;end";
-      } else {
-        // 👉 iOS o fallback
-        window.open("https://www.mercadopago.com.ar", "_blank");
+      ${
+        person.alias
+          ? `
+            <hr />
+            <p><strong>Alias para recibir transferencias</strong></p>
+            <p 
+              id="copyAliasPerson"
+              style="
+                font-size:22px;
+                cursor:pointer;
+                color:#1976d2;
+                user-select:all;
+              "
+            >
+              ${person.alias}
+            </p>
+            <p style="font-size:12px;color:gray">
+              Tocá el alias para copiarlo
+            </p>
+          `
+          : `<p style="color:gray">Sin alias cargado</p>`
       }
-      // didOpen: () => {
-      //   if (person.alias) {
-      //     const btn = document.getElementById("openMPPerson");
-      //     btn?.addEventListener("click", () => {
-      //       navigator.clipboard.writeText(person.alias);
-      //       window.location.href = "mercadopago://";
-      //     });
-      //   }
-      // }
-    })
-  }
-     }
-    })
-  };
+    `,
+    confirmButtonText: "Cerrar",
+
+    didOpen: () => {
+      if (!person.alias) return;
+
+      const aliasEl = document.getElementById("copyAliasPerson");
+
+      aliasEl?.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(person.alias);
+
+        Swal.fire({
+          toast: true,
+          position: "top",
+          icon: "success",
+          title: "Alias copiado",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
+    },
+  });
+};
+
+
+
+
+
+
+
+
+
+// const showPersonAlias = (person) => {
+//     Swal.fire({
+//       title: person.name,
+//       html: `
+//         <p><strong>Cantidad:</strong> ${person.count}</p>
+
+//         ${
+//           person.alias
+//             ? `
+//               <hr />
+//               <p><strong>Alias para recibir transferencias</strong></p>
+//               <p style="font-size:22px">${person.alias}</p>
+//               <p style="font-size:12px">Pagá con</p>
+//               <img
+//                 src="mp-logo.png"
+//                 alt="Mercado Pago"
+//                 id="openMPPerson"
+//                 style="
+//                   width: 34px;
+//                   cursor: pointer;
+//                   margin-top: 10px;
+//                 "
+//               />              
+//             `
+//             : `<p style="color:gray">Sin alias cargado</p>`
+//         }
+//       `,
+//       confirmButtonText: "Cerrar",
+
+//       didOpen: () => {
+//   if (person.alias) {
+//     const btn = document.getElementById("openMPPerson");
+//     btn?.addEventListener("click", () => {
+//       navigator.clipboard.writeText(person.alias);
+
+//       const isAndroid = /Android/i.test(navigator.userAgent);
+
+//       if (isAndroid) {
+//         // 👉 Intent para Android
+//         window.location.href =
+//           "intent://#Intent;package=com.mercadopago.wallet;scheme=mercadopago;end";
+//       } else {
+//         // 👉 iOS o fallback
+//         window.open("https://www.mercadopago.com.ar", "_blank");
+//       }
+//       // didOpen: () => {
+//       //   if (person.alias) {
+//       //     const btn = document.getElementById("openMPPerson");
+//       //     btn?.addEventListener("click", () => {
+//       //       navigator.clipboard.writeText(person.alias);
+//       //       window.location.href = "mercadopago://";
+//       //     });
+//       //   }
+//       // }
+//     })
+//   }
+//      }
+//     })
+//   };
 
 
 //   const showPersonAlias = (person) => {

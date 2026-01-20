@@ -129,7 +129,6 @@ const showPersonExpenses = (personName) => {
       </ul>
 
       <hr />
-
       <strong>Total: $${total}</strong>
 
       ${
@@ -137,56 +136,153 @@ const showPersonExpenses = (personName) => {
           ? `
             <hr />
             <p><strong>Alias para recibir transferencias</strong></p>
-            <p style="font-size:22px">${alias}</p>
-            <p style="font-size:12px">Pagá con</p>
-            <img 
-              src="mp-logo.png"
-              alt="Mercado Pago"
-              id="openMP"
+            <p 
+              id="copyAliasExpense"
               style="
-                width: 34px;
-                cursor: pointer;
-                margin-top: 10px;
+                font-size:22px;
+                cursor:pointer;
+                color:#1976d2;
+                user-select:all;
               "
-            />
-            
+            >
+              ${alias}
+            </p>
+            <p style="font-size:12px;color:gray">
+              Tocá el alias para copiarlo
+            </p>
           `
           : ""
       }
     `,
     confirmButtonText: "Cerrar",
+
     didOpen: () => {
-  if (person.alias) {
-    const btn = document.getElementById("openMPPerson");
-    btn?.addEventListener("click", () => {
-      navigator.clipboard.writeText(person.alias);
+      if (!alias) return;
 
-      const isAndroid = /Android/i.test(navigator.userAgent);
+      const aliasEl = document.getElementById("copyAliasExpense");
 
-      if (isAndroid) {
-        // 👉 Intent para Android
-        window.location.href =
-          "intent://#Intent;package=com.mercadopago.wallet;scheme=mercadopago;end";
-      } else {
-        // 👉 iOS o fallback
-        window.open("https://www.mercadopago.com.ar", "_blank");
-      }
-    });
-  }
-}
-    // didOpen: () => {
-    //   if (alias) {
-    //     const mpBtn = document.getElementById("openMP");
-    //     if (mpBtn) {
-    //       mpBtn.addEventListener("click", () => {
-    //         navigator.clipboard.writeText(alias);
-    //         window.location.href = "mercadopago://";
-    //       });
-    //     }
-    //   }
-    // }
+      aliasEl?.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(alias);
+
+        Swal.fire({
+          toast: true,
+          position: "top",
+          icon: "success",
+          title: "Alias copiado",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
+    },
   });
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const showPersonExpenses = (personName) => {
+//   const personExpenses = expenses.filter(
+//     e => e.payer === personName
+//   );
+
+//   const person = people.find(p => p.name === personName);
+//   const alias = person?.alias;
+
+//   if (personExpenses.length === 0) {
+//     Swal.fire(
+//       "Sin gastos",
+//       `${personName} no tiene gastos registrados`,
+//       "info"
+//     );
+//     return;
+//   }
+
+//   const total = personExpenses.reduce(
+//     (sum, e) => sum + Number(e.amount),
+//     0
+//   );
+
+//   const listHtml = personExpenses
+//     .map(e => `<li>${e.desc || "Sin descripción"} - $${e.amount}</li>`)
+//     .join("");
+
+//   Swal.fire({
+//     title: `Gastos de ${personName}`,
+//     html: `
+//       <ul style="text-align:left">
+//         ${listHtml}
+//       </ul>
+
+//       <hr />
+
+//       <strong>Total: $${total}</strong>
+
+//       ${
+//         alias
+//           ? `
+//             <hr />
+//             <p><strong>Alias para recibir transferencias</strong></p>
+//             <p style="font-size:22px">${alias}</p>
+//             <p style="font-size:12px">Pagá con</p>
+//             <img 
+//               src="mp-logo.png"
+//               alt="Mercado Pago"
+//               id="openMP"
+//               style="
+//                 width: 34px;
+//                 cursor: pointer;
+//                 margin-top: 10px;
+//               "
+//             />
+            
+//           `
+//           : ""
+//       }
+//     `,
+//     confirmButtonText: "Cerrar",
+//     didOpen: () => {
+//   if (person.alias) {
+//     const btn = document.getElementById("openMPPerson");
+//     btn?.addEventListener("click", () => {
+//       navigator.clipboard.writeText(person.alias);
+
+//       const isAndroid = /Android/i.test(navigator.userAgent);
+
+//       if (isAndroid) {
+//         // 👉 Intent para Android
+//         window.location.href =
+//           "intent://#Intent;package=com.mercadopago.wallet;scheme=mercadopago;end";
+//       } else {
+//         // 👉 iOS o fallback
+//         window.open("https://www.mercadopago.com.ar", "_blank");
+//       }
+//     });
+//   }
+// }
+//     // didOpen: () => {
+//     //   if (alias) {
+//     //     const mpBtn = document.getElementById("openMP");
+//     //     if (mpBtn) {
+//     //       mpBtn.addEventListener("click", () => {
+//     //         navigator.clipboard.writeText(alias);
+//     //         window.location.href = "mercadopago://";
+//     //       });
+//     //     }
+//     //   }
+//     // }
+//   });
+// };
 
 
 
