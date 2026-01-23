@@ -143,7 +143,7 @@ function App() {
   return (
     <div className="app welcome">
       <img src="logo.png" alt="Cuentas Claras" className="logo" />
-      <h2>La manera mas fácil de compartir gastos</h2>      
+      <h2>La manera más fácil de compartir gastos</h2>      
       <h3>Ideal para resolver las cuentas en vacaciones, juntadas, salidas o cuando lo nesecites!!!</h3>
       <button className="boton" onClick={() => setStarted(true)}>
         Ingresar
@@ -158,7 +158,7 @@ function App() {
   return (
     <div className="app">
       <img src="logo.png" alt="Cuentas Claras" className="Create" />
-      <p>La manera mas facil de compartir gastos</p>
+      <p>La manera más fácil de compartir gastos</p>
       <CreateGroup
         onGroupCreated={(id, name) => {
           setGroupId(id);
