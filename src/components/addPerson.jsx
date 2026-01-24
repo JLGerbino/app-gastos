@@ -31,30 +31,91 @@ export default function AddPerson({
   };
 
   const handleDeletePerson = async (person) => {
-    const result = await Swal.fire({
-      title: "¿Seguro de eliminar participante?",
-      text: "Se eliminará la persona y todos sus gastos",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Eliminar",
-      cancelButtonText: "Cancelar",
+  const result = await Swal.fire({
+    title: "¿Seguro de eliminar participante?",
+    text: "Se eliminará la persona y todos sus gastos",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Eliminar",
+    cancelButtonText: "Cancelar",
+  });
+
+  if (!result.isConfirmed) return;
+
+  // 🔒 Loading bloqueante
+  Swal.fire({
+    title: "Eliminando participante...",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+
+  try {
+    await deletePerson(person);
+
+    // ✅ Reemplaza el loading
+    await Swal.fire({
+      icon: "success",
+      title: "Eliminado",
+      text: "La persona y sus gastos fueron eliminados",
+      allowOutsideClick: false,
     });
+  } catch (error) {
+    console.error("Error eliminando persona:", error);
 
-    if (!result.isConfirmed) return;
+    await Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "No se pudo eliminar la persona",
+    });
+  }
+};
 
-    try {
-      await deletePerson(person);
 
-      Swal.fire(
-        "Eliminado",
-        "La persona y sus gastos fueron eliminados",
-        "success"
-      );
-    } catch (error) {
-      console.error("Error eliminando persona:", error);
-      Swal.fire("Error", "No se pudo eliminar la persona", "error");
-    }
-  };
+
+
+
+
+
+
+  // const handleDeletePerson = async (person) => {
+  //   const result = await Swal.fire({
+  //     title: "¿Seguro de eliminar participante?",
+  //     text: "Se eliminará la persona y todos sus gastos",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Eliminar",
+  //     cancelButtonText: "Cancelar",
+  //   });
+    
+    
+
+  //   if (!result.isConfirmed) return;
+    
+  //   Swal.fire({
+  //   title: "Eliminando participante...",
+  //   allowOutsideClick: false,
+  //   allowEscapeKey: false,
+  //   didOpen: () => {
+  //     Swal.showLoading();
+  //   },
+  // });
+
+  //   try {
+  //     await deletePerson(person);
+
+  //     Swal.fire(
+  //       "Eliminado",
+  //       "La persona y sus gastos fueron eliminados",        
+    
+  //     );
+  //   } catch (error) {
+  //     console.error("Error eliminando persona:", error);
+  //     Swal.fire("Error", "No se pudo eliminar la persona", "error");
+  //   }
+  // };
 
 const showPersonAlias = (person) => {
   Swal.fire({
