@@ -71,7 +71,7 @@ export default function AddExpense({
       color:"#283655",
       iconColor:"#269181",
       confirmButtonColor:"#35b67e",
-      confirmButtonText: "Listo",
+      confirmButtonText: "Cerrar",
       allowOutsideClick: false,
     });
   } catch (error) {
