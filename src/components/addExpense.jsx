@@ -35,8 +35,10 @@ export default function AddExpense({
     text: "Esta acción no se puede deshacer",
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#3085d6",
-    cancelButtonColor: "#d33",
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",        
     confirmButtonText: "Eliminar",
     cancelButtonText: "Cancelar",
   });
@@ -48,6 +50,10 @@ export default function AddExpense({
     title: "Eliminando gasto...",
     allowOutsideClick: false,
     allowEscapeKey: false,
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
     didOpen: () => {
       Swal.showLoading();
     },
@@ -61,6 +67,11 @@ export default function AddExpense({
       icon: "success",
       title: "Eliminado",
       text: "El gasto fue eliminado",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
+      confirmButtonText: "Listo",
       allowOutsideClick: false,
     });
   } catch (error) {
@@ -117,6 +128,9 @@ const deleteAll = async () => {
     text: "Esta acción no se puede deshacer",
     icon: "warning",
     showCancelButton: true,
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
     confirmButtonColor: "#d33",
     confirmButtonText: "Sí, borrar todo",
     cancelButtonText: "Cancelar",
@@ -127,6 +141,9 @@ const deleteAll = async () => {
   // 🔒 Loading bloqueante
   Swal.fire({
     title: "Eliminando gastos...",
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",      
     allowOutsideClick: false,
     allowEscapeKey: false,
     didOpen: () => {
@@ -142,6 +159,11 @@ const deleteAll = async () => {
       icon: "success",
       title: "Eliminados",
       text: "Todos los gastos fueron eliminados",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
+      confirmButtonText:"listo",
       allowOutsideClick: false,
     });
   } catch (error) {

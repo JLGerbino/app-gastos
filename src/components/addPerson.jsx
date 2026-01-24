@@ -12,11 +12,35 @@ export default function AddPerson({
 
   const totalPersonas = people.reduce((acc, p) => acc + p.count, 0);
   const addPerson = () => {
-    if (!name.trim()) return alert("Falta el nombre");
-    if (count < 1) return alert("Cantidad inválida");
+    if (!name.trim())  return Swal.fire({
+          icon: "warning",
+          title: "Falta el nombre del participante",
+          background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",
+          confirmButtonColor:"#35b67e",
+          confirmButtonText:"Cerrar",
+        });
+    if (count < 1) return Swal.fire({
+          icon: "warning",
+          title: "Cantidad inválida",
+          background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",
+          confirmButtonColor:"#35b67e",
+          confirmButtonText:"Cerrar",
+        });
 
     if (people.some(p => p.name === name.trim())) {
-      return alert("Ya existe ese participante");
+      return Swal.fire({
+            icon: "warning",
+            title: "Ya existe ese participante",
+            background: "#dee0e0",
+            color:"#283655",
+            iconColor:"#269181",
+            confirmButtonColor:"#35b67e",
+            confirmButtonText:"Cerrar",
+          });
     }
 
     addPersonToDB({
@@ -36,6 +60,10 @@ export default function AddPerson({
     text: "Se eliminará la persona y todos sus gastos",
     icon: "warning",
     showCancelButton: true,
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
     confirmButtonText: "Eliminar",
     cancelButtonText: "Cancelar",
   });
@@ -47,6 +75,10 @@ export default function AddPerson({
     title: "Eliminando participante...",
     allowOutsideClick: false,
     allowEscapeKey: false,
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
     didOpen: () => {
       Swal.showLoading();
     },
@@ -60,6 +92,11 @@ export default function AddPerson({
       icon: "success",
       title: "Eliminado",
       text: "La persona y sus gastos fueron eliminados",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
+      confirmButtonText:"Cerrar",
       allowOutsideClick: false,
     });
   } catch (error) {
@@ -69,6 +106,10 @@ export default function AddPerson({
       icon: "error",
       title: "Error",
       text: "No se pudo eliminar la persona",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
     });
   }
 };
@@ -147,6 +188,10 @@ const showPersonAlias = (person) => {
       }
     `,
     confirmButtonText: "Cerrar",
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
 
     didOpen: () => {
       if (!person.alias) return;
@@ -161,6 +206,10 @@ const showPersonAlias = (person) => {
           position: "top",
           icon: "success",
           title: "Alias copiado",
+          background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",
+          confirmButtonColor:"#35b67e",
           showConfirmButton: false,
           timer: 1500,
         });

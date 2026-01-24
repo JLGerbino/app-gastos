@@ -25,14 +25,24 @@ export default function CreateGroup({ onGroupCreated }) {
      if (!name.trim()) {
     Swal.fire({
       icon: "warning",
-      title: "Falta el nombre del grupo",     
+      title: "Falta el nombre del grupo",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
+      confirmButtonText:"Cerrar",
     });
     return;
   }
     if (!/^\d{6}$/.test(code)) {
         Swal.fire({
       icon: "warning",
-      title: "El código debe tener 6 digitos",     
+      title: "El código debe tener 6 digitos",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
+      confirmButtonText:"Cerrar",
     });
     return;      
     }
@@ -47,7 +57,12 @@ export default function CreateGroup({ onGroupCreated }) {
         Swal.fire({
       icon: "warning",
       title: "Ese grupo ya existe.", 
-      text: "Elegí otro código.",     
+      text: "Elegí otro código.",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
+      confirmButtonText:"Cerrar",     
     });
     return;      
     }
@@ -71,14 +86,24 @@ export default function CreateGroup({ onGroupCreated }) {
      if (!joinName.trim()) {
     Swal.fire({
       icon: "warning",
-      title: "Falta el nombre del grupo",      
+      title: "Falta el nombre del grupo",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
+      confirmButtonText:"Cerrar",     
     });
     return;
   }
     if (!/^\d{6}$/.test(joinCode)) {
        Swal.fire({
       icon: "warning",
-      title: "El código debe tener 6 digitos",     
+      title: "El código debe tener 6 digitos",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
+      confirmButtonText:"Cerrar",     
     });
     return;      
     }
@@ -92,7 +117,11 @@ export default function CreateGroup({ onGroupCreated }) {
     if (!snap.exists()) {
         Swal.fire({
       icon: "warning",
-      title: "No existe un grupo con esos datos",     
+      title: "No existe un grupo con esos datos",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",     
     });
     return;      
     }
