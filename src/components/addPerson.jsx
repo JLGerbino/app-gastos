@@ -4,7 +4,8 @@ import Swal from "sweetalert2";
 export default function AddPerson({
   people,
   addPersonToDB,
-  deletePerson, 
+  deletePerson,
+  editPersonInDB,
 }) {
   const [name, setName] = useState("");
   const [count, setCount] = useState(1);
@@ -218,91 +219,160 @@ const showPersonAlias = (person) => {
   });
 };
 
+// const editPerson = async (person) => {
+//   const result = await Swal.fire({
+//     title: "Editar participante",
+//     html: `
+//       <label>Nombre</label>
+//       <input
+//         class="swal2-input"
+//         value="${person.name}"
+//         disabled
+//       />
 
+//       <label>Cantidad de personas</label>
+//       <input
+//         id="editCount"
+//         type="number"
+//         min="1"
+//         class="swal2-input"
+//         value="${person.count}"
+//       />
 
+//       <label>Alias (opcional)</label>
+//       <input
+//         id="editAlias"
+//         class="swal2-input"
+//         value="${person.alias || ""}"
+//         placeholder="alias.mercadopago"
+//       />
+//     `,
+//     showCancelButton: true,
+//     confirmButtonText: "Guardar",
+//     cancelButtonText: "Cancelar",
+//     focusConfirm: false,
+//     preConfirm: () => {
+//       const count = Number(
+//         document.getElementById("editCount").value
+//       );
+//       const alias = document
+//         .getElementById("editAlias")
+//         .value
+//         .trim();
 
-
-
-
-
-
-// const showPersonAlias = (person) => {
-//     Swal.fire({
-//       title: person.name,
-//       html: `
-//         <p><strong>Cantidad:</strong> ${person.count}</p>
-
-//         ${
-//           person.alias
-//             ? `
-//               <hr />
-//               <p><strong>Alias para recibir transferencias</strong></p>
-//               <p style="font-size:22px">${person.alias}</p>
-//               <p style="font-size:12px">Pagá con</p>
-//               <img
-//                 src="mp-logo.png"
-//                 alt="Mercado Pago"
-//                 id="openMPPerson"
-//                 style="
-//                   width: 34px;
-//                   cursor: pointer;
-//                   margin-top: 10px;
-//                 "
-//               />              
-//             `
-//             : `<p style="color:gray">Sin alias cargado</p>`
-//         }
-//       `,
-//       confirmButtonText: "Cerrar",
-
-//       didOpen: () => {
-//   if (person.alias) {
-//     const btn = document.getElementById("openMPPerson");
-//     btn?.addEventListener("click", () => {
-//       navigator.clipboard.writeText(person.alias);
-
-//       const isAndroid = /Android/i.test(navigator.userAgent);
-
-//       if (isAndroid) {
-//         // 👉 Intent para Android
-//         window.location.href =
-//           "intent://#Intent;package=com.mercadopago.wallet;scheme=mercadopago;end";
-//       } else {
-//         // 👉 iOS o fallback
-//         window.open("https://www.mercadopago.com.ar", "_blank");
+//       if (!count || count < 1) {
+//         Swal.showValidationMessage(
+//           "La cantidad debe ser mayor a 0"
+//         );
+//         return;
 //       }
-//       // didOpen: () => {
-//       //   if (person.alias) {
-//       //     const btn = document.getElementById("openMPPerson");
-//       //     btn?.addEventListener("click", () => {
-//       //       navigator.clipboard.writeText(person.alias);
-//       //       window.location.href = "mercadopago://";
-//       //     });
-//       //   }
-//       // }
-//     })
-//   }
-//      }
-//     })
-//   };
 
+//       return { count, alias };
+//     },
+//   });
 
-//   const showPersonAlias = (person) => {
+//   if (!result.isConfirmed) return;
+
+//   const { count, alias } = result.value;
+
+//   updatePerson(person.name, count, alias);
+
 //   Swal.fire({
-//     title: person.name,
-//     html: person.alias
-//       ? `
-//         <p><strong>Alias para recibir transferencias</strong></p>
-//         <p style="font-size:16px">${person.alias}</p>
-//       `
-//       : `
-//         <p style="color:gray">
-//           Este participante no cargó alias
-//         </p>
-//       `,
-//     confirmButtonText: "Cerrar",
+//     toast: true,
+//     position: "top",
+//     icon: "success",
+//     title: "Participante actualizado",
+//     showConfirmButton: false,
+//     timer: 1500,
 //   });
 // };
+
+
+const handleEditPerson = async (person) => {
+  const result = await Swal.fire({
+    title: "Editar participante",
+    html: `
+      <div
+      style= "text-align: center;
+             font-size: 26px;
+             font-weight: 600;
+             color: #35b67e;
+             margin-bottom: 10px;">              
+        ${person.name}
+</div>
+        
+        <div>
+        <input
+          id="editCount"
+          type="number"
+          min="1"
+          class="swal2-input"
+          value="${person.count}"                  
+        /></div><label>Cantidad de personas</label>
+
+        
+        <div>        
+        <input
+          id="editAlias"
+          class="swal2-input"
+          value="${person.alias || ""}"          
+        />
+      </div><label>Alias opcional</label>
+    `,
+    showCancelButton: true,
+    confirmButtonText: "Guardar",
+    cancelButtonText: "Cancelar",
+    background: "#dee0e0",
+    color:"#283655",
+    confirmButtonColor:"#35b67e",
+    preConfirm: () => {
+      const count = Number(
+        document.getElementById("editCount").value
+      );
+      const alias = document
+        .getElementById("editAlias")
+        .value
+        .trim();
+
+      if (!count || count < 1) {
+        Swal.showValidationMessage(
+          "La cantidad debe ser mayor a 0"
+        );
+        return;
+      }
+
+      return { count, alias };
+    },
+  });
+
+  if (!result.isConfirmed) return;
+
+  Swal.fire({
+    title: "Guardando cambios...",
+    allowOutsideClick: false,
+    background: "#dee0e0",
+    didOpen: () => Swal.showLoading(),
+  });
+
+  try {
+    await editPersonInDB(person.id, result.value);
+
+    Swal.fire({
+      icon: "success",
+      title: "Participante actualizado",
+      timer: 1500,
+      showConfirmButton: false,
+      background: "#dee0e0",
+    });
+  } catch (error) {
+    console.error(error);
+    Swal.fire(
+      "Error",
+      "No se pudo actualizar el participante",
+      "error"
+    );
+  }
+};
 
 
   return (
@@ -341,7 +411,11 @@ const showPersonAlias = (person) => {
 </div>
       <ul>
         {people.map(p => (
-          <li key={p.id} className="people-item"><span
+          
+          <li key={p.id} className="people-item"><span><i
+      className="fa-solid fa-pen-to-square edit-icon"
+      onClick={() => handleEditPerson(p)}
+    ></i></span><span
   className="expense-payer people-name"
   onClick={() => showPersonAlias(p)}
 >

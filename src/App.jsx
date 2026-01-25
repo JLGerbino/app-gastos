@@ -14,6 +14,7 @@ import {
   where,
   getDocs,
   getDoc,
+  updateDoc,
 } from "firebase/firestore";
 import "./App.css";
 
@@ -129,6 +130,15 @@ function App() {
       )
     );
   };
+// Editar participante (cantidad + alias)
+const editPersonInDB = async (personId, data) => {
+  const ref = doc(db, "groups", groupId, "people", personId);
+
+  await updateDoc(ref, {
+    count: Number(data.count),
+    alias: data.alias.trim(),
+  });
+};
 
 
   // Salir del grupo
@@ -169,6 +179,9 @@ function App() {
   );
 }
 
+
+
+
   return (
     <div className="app">      
       <img src="logo.png" alt="Cuentas Claras" className="Create" />
@@ -185,6 +198,7 @@ function App() {
         people={people}
         addPersonToDB={addPersonToDB}
         deletePerson={deletePersonAndExpenses}
+        editPersonInDB={editPersonInDB}
       />
 
       <AddExpense

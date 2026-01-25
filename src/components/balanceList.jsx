@@ -134,68 +134,6 @@ const showDebtModal = (deuda) => {
   });
 };
 
-
-
-
-// const showDebtModal = (deuda) => {
-//   const alias = getAliasByName(deuda.to);
-
-//   Swal.fire({
-//     title: "Deuda",
-//     html: `
-//       <div style="font-size:27px; line-height:1.5;">
-//         <strong>${deuda.from}</strong> debe
-//       </div> 
-//       <br />       
-//       <div style="font-size:30px; line-height:1.5;">
-//         <strong>$${deuda.amount.toFixed(2)}</strong>
-//       </div>
-//       <br />
-//       <div style="font-size:27px; line-height:1.5;">
-//         a <strong>${deuda.to}</strong>
-//       </div>
-
-//       ${
-//         alias
-//           ? `<div style="margin-top:16px; font-size:18px; color:#1b5e20;">
-//                Alias: <strong>${alias}</strong>
-//              </div>`
-//           : ""
-//       }
-//     `,
-//     background: "#dee0e0",
-//     color: "#283655",
-//     iconColor: "#269181",
-//     confirmButtonColor: "#35b67e",
-//     confirmButtonText: "Cerrar",
-//     allowOutsideClick: true,
-//   });
-// };
-
-
-//   const showDebtModal = (deuda) => {
-//   Swal.fire({
-//     title: "Deuda",
-//     html: `
-//       <div style="font-size:27px; line-height:1.5;">
-//         <strong>${deuda.from}</strong> debe</div> 
-//         <br />       
-//         <div style="font-size:27px; line-height:1.5;">
-//         <strong>$${deuda.amount.toFixed(2)}</strong></div>
-//         <br />
-//         <div style="font-size:27px; line-height:1.5;">
-//         a <strong>${deuda.to}</strong>
-//       </div>
-//     `,   
-//     background: "#dee0e0",
-//     color:"#283655",
-//     iconColor:"#269181",
-//     confirmButtonColor:"#35b67e",
-//     confirmButtonText: "Cerrar",
-//     allowOutsideClick: true,
-//   });
-// };
-
   return (
     <div className="card">
       <h2>Balance</h2>
