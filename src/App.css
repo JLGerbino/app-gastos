@@ -65,7 +65,7 @@ h2{
   font-size: 21px;
 }
 li,p{
-  font-size: 18px;/*cambie antes 15*/
+  font-size: 16px;
   color: #283655;
 }
 
@@ -97,13 +97,13 @@ li,p{
   border-radius: 15px;
   color: white;
 }
-.people-list {
+.people-list {  
   list-style: none;
   padding: 0;
   margin: 0;
 }
 
-.people-item {
+.people-item {  
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -111,7 +111,7 @@ li,p{
   padding: 6px 0;
 }
 
-.people-name {
+.people-name {  
   flex: 1;
   text-align: center;
 }
