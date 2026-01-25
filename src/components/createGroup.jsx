@@ -159,6 +159,7 @@ export default function CreateGroup({ onGroupCreated }) {
           Entrar al grupo
         </button>
       </div>
+
       {showCreate && (
   <div className="modal-overlay"
   >
@@ -197,11 +198,21 @@ export default function CreateGroup({ onGroupCreated }) {
 )}
     </div> 
     
-    
+   <div className="nuevo-grupo-container">
   <h2 className="grupo">Nuevo grupo</h2>
+
+  <div
+    onClick={() => setShowCreate(true)}
+    className="nuevo nuevo-grupo"
+  >
+    <i className="fa-solid fa-circle-plus"></i>
+  </div>
+</div>
+ 
+  {/* <h2 className="grupo">Nuevo grupo</h2>
 <div onClick={() => setShowCreate(true)} className=" nuevo nuevo-grupo">  
     <i className="fa-solid fa-circle-plus"></i>  
-</div>
+</div> */}
        </div>
        
   );

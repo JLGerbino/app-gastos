@@ -236,8 +236,11 @@ const showPersonExpenses = (personName) => {
           : ""
       }
     `,
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
     confirmButtonText: "Cerrar",
-
     didOpen: () => {
       if (!alias) return;
 
@@ -251,6 +254,9 @@ const showPersonExpenses = (personName) => {
           position: "top",
           icon: "success",
           title: "Alias copiado",
+          background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",          
           showConfirmButton: false,
           timer: 1500,
         });

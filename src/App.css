@@ -16,7 +16,7 @@ html, body {
 }
 
 .card {
-  margin-top: 80px;/*nuevo*/
+  margin-top: 40px;/*nuevo*/
   background: #dee0e0;
   color: #283655;
   padding: 15px;
@@ -26,6 +26,7 @@ html, body {
 }
 
 input, select {
+  font-size: 18px;/*nuevo*/
   margin-bottom: 10px;
   padding: 6px;
   border: none;
@@ -64,7 +65,7 @@ h2{
   font-size: 21px;
 }
 li,p{
-  font-size: 15px;
+  font-size: 18px;/*cambie antes 15*/
   color: #283655;
 }
 
@@ -116,7 +117,10 @@ li,p{
 }
 
 .deudores{
-  padding: 5px;
+  padding: 5px;  
+}
+.deuda{
+  cursor: pointer;
 }
 .expense-payer {
   font-weight: bold;
@@ -186,7 +190,41 @@ li,p{
   font-size: 36px;
 }
 
+.nuevo-grupo-container {
+  position: fixed;
+  bottom: 20px;              /* separación del borde inferior */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1000;
+}
 .grupo {
+  margin-bottom: 8px;
+  /*font-size: 16px;*/
+  text-align: center;
+}
+.nuevo-grupo {
+  width: 60px;
+  height: 60px;
+  background-color: #35b67e; /* verde */
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.nuevo-grupo:active {
+  transform: scale(0.95);
+}
+
+
+/* .grupo {
   margin-top: 90px;
   text-align: center;
   margin-bottom: 8px;
@@ -194,24 +232,5 @@ li,p{
 
 .nuevo-grupo {
   margin-top: 10px;
-}
+} */
 
-/* .nuevo{
-  width: 56px;  
-  height: 56px;
-  margin: 0 auto;
-  border-radius: 50px;
-  background-color: #35b67e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 26px;
-}
-.grupo{
- font-family: "Ubuntu Mono", monospace;
- font-size: 25px;
- color: #283655;
- margin-top: 90px;
- margin-bottom: 5px; 
-} */ 
