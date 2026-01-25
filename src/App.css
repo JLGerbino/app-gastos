@@ -120,6 +120,7 @@ li,p{
   padding: 5px;  
 }
 .deuda{
+  margin-top: 5px;
   cursor: pointer;
 }
 .expense-payer {

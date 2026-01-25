@@ -62,11 +62,15 @@ export default function BalanceList({ people, expenses }) {
     title: "Deuda",
     html: `
       <div style="font-size:27px; line-height:1.5;">
-        <strong>${deuda.from}</strong> debe 
-        <strong>$${deuda.amount.toFixed(2)}</strong> a 
-        <strong>${deuda.to}</strong>
+        <strong>${deuda.from}</strong> debe</div> 
+        <br />       
+        <div style="font-size:27px; line-height:1.5;">
+        <strong>$${deuda.amount.toFixed(2)}</strong></div>
+        <br />
+        <div style="font-size:27px; line-height:1.5;">
+        a <strong>${deuda.to}</strong>
       </div>
-    `,
+    `,   
     background: "#dee0e0",
     color:"#283655",
     iconColor:"#269181",
@@ -75,7 +79,6 @@ export default function BalanceList({ people, expenses }) {
     allowOutsideClick: true,
   });
 };
-
 
   return (
     <div className="card">
@@ -110,10 +113,10 @@ export default function BalanceList({ people, expenses }) {
               <strong>{d.from}</strong> debe{" "}
               <strong>${d.amount.toFixed(2)}</strong> a{" "}
               <strong>{d.to}</strong>
-            </li>
-          ))}
+            </li>         
+          ))} 
         </ul>
-      )}
+      )} 
 
       
     </div>
