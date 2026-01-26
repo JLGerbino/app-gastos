@@ -127,27 +127,6 @@ li,p{
   margin-top: 5px;
   cursor: pointer;
 }
-.deuda-row {
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  
-}
-
-.deudor {
-  text-align: right;  
-}
-
-.monto {
-  text-align: center;
-  white-space: nowrap;
-  width: 200px;
-}
-
-.acreedor {
-  text-align: left;  
-}
-
 .expense-payer {
   font-weight: bold;
   cursor: pointer;

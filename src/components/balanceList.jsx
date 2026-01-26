@@ -158,31 +158,31 @@ const showDebtModal = (deuda) => {
         <ul>
           {deudas.map((d, i) => (
 
-            <li
-  className="deudores deuda deuda-row"
-  key={i}
-  onClick={() => showDebtModal(d)}
->
-  <span className="deudor"><strong>{d.from}</strong></span>
-
-  <span className="monto">
-    debe <strong>${d.amount.toFixed(2)}</strong> a
-  </span>
-
-  <span className="acreedor"><strong>{d.to}</strong></span>
-</li>
-
 //             <li
 //   className="deudores deuda deuda-row"
-//   key={i}  
+//   key={i}
 //   onClick={() => showDebtModal(d)}
 // >
+//   <span className="deudor"><strong>{d.from}</strong></span>
 
-//             {/* <li className="deudores" key={i}> */}
-//               <span className="deudor"><strong>{d.from}</strong></span> <span> debe{" "}
-//               <strong className="monto">${d.amount.toFixed(2)}</strong> a{" "}</span>
-//               <span><strong className="acreedor">{d.to}</strong></span>
-//             </li>         
+//   <span className="monto">
+//     debe <strong>${d.amount.toFixed(2)}</strong> a
+//   </span>
+
+//   <span className="acreedor"><strong>{d.to}</strong></span>
+// </li>
+
+            <li
+  className="deudores deuda"
+  key={i}  
+  onClick={() => showDebtModal(d)}
+>
+
+            {/* <li className="deudores" key={i}> */}
+              <strong className="deudor">{d.from}</strong>  debe{" "}
+              <strong className="monto">${d.amount.toFixed(2)}</strong> a{" "}
+              <strong className="acreedor">{d.to}</strong>
+            </li>         
           ))} 
         </ul>
       )} 
