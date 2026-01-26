@@ -307,10 +307,8 @@ const handleEditPerson = async (person) => {
           type="number"
           min="1"
           class="swal2-input"
-          value="${person.count}"               
-        /></div><label>Cantidad de personas</label>
-
-        
+          value="${person.count}"                        
+        /></div><label>Cantidad de personas</label>        
         <div>        
         <input
           id="editAlias"
@@ -336,7 +334,7 @@ const handleEditPerson = async (person) => {
 
       if (!count || count < 1) {
         Swal.showValidationMessage(
-          "La cantidad debe ser mayor a 0"
+          "La cantidad debe ser mayor a 0"          
         );
         return;
       }
