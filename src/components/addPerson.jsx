@@ -307,7 +307,7 @@ const handleEditPerson = async (person) => {
           type="number"
           min="1"
           class="swal2-input"
-          value="${person.count}"                  
+          value="${person.count}"               
         /></div><label>Cantidad de personas</label>
 
         
@@ -412,10 +412,9 @@ const handleEditPerson = async (person) => {
       <ul>
         {people.map(p => (
           
-          <li key={p.id} className="people-item"><span><i
-      className="fa-solid fa-pen-to-square edit-icon"
-      onClick={() => handleEditPerson(p)}
-    ></i></span><span
+          <li key={p.id} className="people-item"><span> <button onClick={() => handleEditPerson(p)}> <i className="fa-solid fa-pencil edit-icon"
+      
+    ></i></button></span><span
   className="expense-payer people-name"
   onClick={() => showPersonAlias(p)}
 >

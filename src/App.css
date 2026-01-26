@@ -76,6 +76,10 @@ li,p{
   color: #283655;
   cursor: pointer;
 }
+.fa-pencil{
+  color: #283655;
+  cursor: pointer;
+}
 .welcome {
   background-color: #ADC1c0;
   text-align: center;
