@@ -227,6 +227,18 @@ li,p{
 .nuevo-grupo:active {
   transform: scale(0.95);
 }
+.swal2-input {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  border-radius: 8px !important;
+  .swal2-input {
+  width: 80% !important;
+  max-width: 300px;
+  margin: 8px auto !important;
+  font-size: 16px !important;
+}
+
+}
 
 
 /* .grupo {
