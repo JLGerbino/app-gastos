@@ -57,7 +57,7 @@ export default function AddPerson({
 
   const handleDeletePerson = async (person) => {
   const result = await Swal.fire({
-    title: "¿Seguro de eliminar participante?",
+    title:  `¿Seguro de eliminar a ${person.name}?`,
     text: "Se eliminará la persona y todos sus gastos",
     icon: "warning",
     showCancelButton: true,
