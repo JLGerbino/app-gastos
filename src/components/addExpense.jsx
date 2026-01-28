@@ -29,19 +29,56 @@ export default function AddExpense({
     setPayer("");
   };
 
-  const deleteExpense = async (expenseId) => {
-  const result = await Swal.fire({
-    title: "¿Seguro de eliminar gasto?",
-    text: "Esta acción no se puede deshacer",
-    icon: "warning",
-    showCancelButton: true,
-    background: "#dee0e0",
-    color:"#283655",
-    iconColor:"#269181",
-    confirmButtonColor:"#35b67e",        
-    confirmButtonText: "Eliminar",
-    cancelButtonText: "Cancelar",
-  });
+  const deleteExpense = async (expenseId) => { 
+    const expense = expenses.find(e => e.id === expenseId);
+    const result = await Swal.fire({
+  title: "¿Eliminar gasto?",  
+  html: `
+    <div style="text-align:center; font-size:26px; margin-top:10px;">
+      <p style=font-size:26px; margin-top:10px;"><strong>Pagó:</strong> ${expense.payer}</p>
+      <p style=font-size:26px; margin-top:10px;"><strong>Detalle:</strong> ${expense.desc || "Sin descripción"}</p>
+      <p style="font-size:26px; margin-top:10px;">
+        <strong>Monto:</strong> $${Number(expense.amount).toFixed(2)}
+      </p>
+    </div>
+    <p style="font-size:18px; margin-top:10px;">
+        Esta acción no se puede deshacer
+      </p>
+
+  `,
+
+  icon: "warning",
+  showCancelButton: true,
+  background: "#dee0e0",
+  color: "#283655",
+  iconColor: "#269181",
+  confirmButtonColor: "#35b67e",
+  confirmButtonText: "Eliminar",
+  cancelButtonText: "Cancelar",
+});
+
+
+  // const result = await Swal.fire({
+  //   title: `¿Seguro de eliminar gasto?`,
+  //    html: `
+  //   <div style="text-align:left; font-size:16px; margin-top:10px;">
+  //     <p><strong>Pagó:</strong> ${payer}</p>
+  //     <p><strong>Detalle:</strong> ${desc || "Sin descripción"}</p>
+  //     <p style="font-size:18px; margin-top:10px;">
+  //       <strong>Monto:</strong> $${Number(amount).toFixed(2)}
+  //     </p>
+  //   </div>
+  // `,
+  //   text: "Esta acción no se puede deshacer",
+  //   icon: "warning",
+  //   showCancelButton: true,
+  //   background: "#dee0e0",
+  //   color:"#283655",
+  //   iconColor:"#269181",
+  //   confirmButtonColor:"#35b67e",        
+  //   confirmButtonText: "Eliminar",
+  //   cancelButtonText: "Cancelar",
+  // });
 
   if (!result.isConfirmed) return;
 
@@ -264,176 +301,6 @@ const showPersonExpenses = (personName) => {
     },
   });
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const showPersonExpenses = (personName) => {
-//   const personExpenses = expenses.filter(
-//     e => e.payer === personName
-//   );
-
-//   const person = people.find(p => p.name === personName);
-//   const alias = person?.alias;
-
-//   if (personExpenses.length === 0) {
-//     Swal.fire(
-//       "Sin gastos",
-//       `${personName} no tiene gastos registrados`,
-//       "info"
-//     );
-//     return;
-//   }
-
-//   const total = personExpenses.reduce(
-//     (sum, e) => sum + Number(e.amount),
-//     0
-//   );
-
-//   const listHtml = personExpenses
-//     .map(e => `<li>${e.desc || "Sin descripción"} - $${e.amount}</li>`)
-//     .join("");
-
-//   Swal.fire({
-//     title: `Gastos de ${personName}`,
-//     html: `
-//       <ul style="text-align:left">
-//         ${listHtml}
-//       </ul>
-
-//       <hr />
-
-//       <strong>Total: $${total}</strong>
-
-//       ${
-//         alias
-//           ? `
-//             <hr />
-//             <p><strong>Alias para recibir transferencias</strong></p>
-//             <p style="font-size:22px">${alias}</p>
-//             <p style="font-size:12px">Pagá con</p>
-//             <img 
-//               src="mp-logo.png"
-//               alt="Mercado Pago"
-//               id="openMP"
-//               style="
-//                 width: 34px;
-//                 cursor: pointer;
-//                 margin-top: 10px;
-//               "
-//             />
-            
-//           `
-//           : ""
-//       }
-//     `,
-//     confirmButtonText: "Cerrar",
-//     didOpen: () => {
-//   if (person.alias) {
-//     const btn = document.getElementById("openMPPerson");
-//     btn?.addEventListener("click", () => {
-//       navigator.clipboard.writeText(person.alias);
-
-//       const isAndroid = /Android/i.test(navigator.userAgent);
-
-//       if (isAndroid) {
-//         // 👉 Intent para Android
-//         window.location.href =
-//           "intent://#Intent;package=com.mercadopago.wallet;scheme=mercadopago;end";
-//       } else {
-//         // 👉 iOS o fallback
-//         window.open("https://www.mercadopago.com.ar", "_blank");
-//       }
-//     });
-//   }
-// }
-//     // didOpen: () => {
-//     //   if (alias) {
-//     //     const mpBtn = document.getElementById("openMP");
-//     //     if (mpBtn) {
-//     //       mpBtn.addEventListener("click", () => {
-//     //         navigator.clipboard.writeText(alias);
-//     //         window.location.href = "mercadopago://";
-//     //       });
-//     //     }
-//     //   }
-//     // }
-//   });
-// };
-
-
-
-
-
-
-
-// const showPersonExpenses = (personName) => {
-//   const personExpenses = expenses.filter(
-//     e => e.payer === personName
-//   );
-
-//   const person = people.find(p => p.name === personName);
-//   const alias = person?.alias;
-
-//   if (personExpenses.length === 0) {
-//     Swal.fire(
-//       "Sin gastos",
-//       `${personName} no tiene gastos registrados`,
-//       "info"
-//     );
-//     return;
-//   }
-
-//   const total = personExpenses.reduce(
-//     (sum, e) => sum + Number(e.amount),
-//     0
-//   );
-
-//   const listHtml = personExpenses
-//     .map(e => `<li>${e.desc || "Sin descripción"} - $${e.amount}</li>`)
-//     .join("");
-
-//   Swal.fire({
-//     title: `Gastos de ${personName}`,
-//     html: `
-//       <ul style="text-align:left">
-//         ${listHtml}
-//       </ul>
-
-//       <hr />
-
-//       <strong>Total: $${total}</strong>
-
-//       ${
-//         alias
-//           ? `
-//             <hr />
-//             <p><strong>Alias para recibir transferencias</strong></p>
-//             <p style="font-size:16px">${alias}</p>
-//           `
-//           : ""
-//       }      
-//     `,
-//     confirmButtonText: "Cerrar",
-//   });
-// };
-
-//nuevo
-
-
-
-
 
   return (
     <div className="card">
