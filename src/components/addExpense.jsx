@@ -57,29 +57,6 @@ export default function AddExpense({
   cancelButtonText: "Cancelar",
 });
 
-
-  // const result = await Swal.fire({
-  //   title: `¿Seguro de eliminar gasto?`,
-  //    html: `
-  //   <div style="text-align:left; font-size:16px; margin-top:10px;">
-  //     <p><strong>Pagó:</strong> ${payer}</p>
-  //     <p><strong>Detalle:</strong> ${desc || "Sin descripción"}</p>
-  //     <p style="font-size:18px; margin-top:10px;">
-  //       <strong>Monto:</strong> $${Number(amount).toFixed(2)}
-  //     </p>
-  //   </div>
-  // `,
-  //   text: "Esta acción no se puede deshacer",
-  //   icon: "warning",
-  //   showCancelButton: true,
-  //   background: "#dee0e0",
-  //   color:"#283655",
-  //   iconColor:"#269181",
-  //   confirmButtonColor:"#35b67e",        
-  //   confirmButtonText: "Eliminar",
-  //   cancelButtonText: "Cancelar",
-  // });
-
   if (!result.isConfirmed) return;
 
   // 🔒 Loading bloqueante
@@ -121,43 +98,6 @@ export default function AddExpense({
     });
   }
 };
-
-
-
-
-
-// const deleteExpense = async (expenseId) => {
-//   const result = await Swal.fire({
-//     title: "¿Seguro de eliminar gasto?",
-//     text: "Esta acción no se puede deshacer",
-//     icon: "warning",
-//     showCancelButton: true,
-//     confirmButtonColor: "#3085d6",
-//     cancelButtonColor: "#d33",
-//     confirmButtonText: "Eliminar",
-//     cancelButtonText: "Cancelar",
-//   });
-
-//   if (!result.isConfirmed) return;
-
-//   try {
-//     await deleteExpenseFromDB(expenseId);
-
-//     Swal.fire({
-//       title: "Eliminado",
-//       text: "El gasto fue eliminado",
-//       icon: "success",
-//     });
-//   } catch (error) {
-//     console.error("Error eliminando gasto:", error);
-
-//     Swal.fire({
-//       title: "Error",
-//       text: "No se pudo eliminar el gasto",
-//       icon: "error",
-//     });
-//   }
-// };
 
 const deleteAll = async () => {
   const result = await Swal.fire({

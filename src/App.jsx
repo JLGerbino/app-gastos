@@ -15,6 +15,7 @@ import {
   getDocs,
   getDoc,
   updateDoc,
+  serverTimestamp, //agregado para pagos
 } from "firebase/firestore";
 import "./App.css";
 
@@ -33,6 +34,8 @@ function App() {
   const [people, setPeople] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [started, setStarted] = useState(false);  
+  const [payments, setPayments] = useState([]);//agregado para pagos
+
 
   // Guardar groupId en localStorage
   useEffect(() => {
@@ -87,6 +90,21 @@ function App() {
     return unsub;
   }, [groupId]);
 
+  //ver pago en tiemo real // agregado para pagos
+  useEffect(() => {
+  if (!groupId) return;
+
+  const unsub = onSnapshot(
+    collection(db, "groups", groupId, "payments"),
+    (snap) => {
+      setPayments(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    }
+  );
+
+  return unsub;
+}, [groupId]);
+
+
   // Agregar Persona
   const addPersonToDB = (person) =>
     addDoc(collection(db, "groups", groupId, "people"), person);
@@ -111,6 +129,14 @@ function App() {
   // Agregar Gasto
   const addExpenseToDB = (expense) =>
     addDoc(collection(db, "groups", groupId, "expenses"), expense);
+
+  //Agregar un pago //agregado para pagos
+  const addPaymentToDB = (payment) =>
+  addDoc(collection(db, "groups", groupId, "payments"), {
+    ...payment,
+    createdAt: serverTimestamp(),
+  });
+
 
   // Borrar Gasto
   const deleteExpenseFromDB = (expenseId) =>
@@ -185,7 +211,7 @@ const editPersonInDB = async (personId, data) => {
   return (
     <div className="app">      
       <img src="logo.png" alt="Cuentas Claras" className="Create" />
-      <p>La manera mas facil de compartir gastos</p>
+      <p>La manera más fácil de compartir gastos</p>
 <h1 className="group-title">{groupName}</h1>
 <p className="group-code">
   <strong>{groupCode}</strong>  
@@ -209,7 +235,7 @@ const editPersonInDB = async (personId, data) => {
         deleteAllExpenses={deleteAllExpenses}
       />
 
-      <BalanceList people={people} expenses={expenses} />
+      <BalanceList people={people} expenses={expenses} payments={payments} addPayment={addPaymentToDB}/>
     </div>
   );
 }

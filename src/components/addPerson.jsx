@@ -115,50 +115,6 @@ export default function AddPerson({
   }
 };
 
-
-
-
-
-
-
-
-  // const handleDeletePerson = async (person) => {
-  //   const result = await Swal.fire({
-  //     title: "¿Seguro de eliminar participante?",
-  //     text: "Se eliminará la persona y todos sus gastos",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Eliminar",
-  //     cancelButtonText: "Cancelar",
-  //   });
-    
-    
-
-  //   if (!result.isConfirmed) return;
-    
-  //   Swal.fire({
-  //   title: "Eliminando participante...",
-  //   allowOutsideClick: false,
-  //   allowEscapeKey: false,
-  //   didOpen: () => {
-  //     Swal.showLoading();
-  //   },
-  // });
-
-  //   try {
-  //     await deletePerson(person);
-
-  //     Swal.fire(
-  //       "Eliminado",
-  //       "La persona y sus gastos fueron eliminados",        
-    
-  //     );
-  //   } catch (error) {
-  //     console.error("Error eliminando persona:", error);
-  //     Swal.fire("Error", "No se pudo eliminar la persona", "error");
-  //   }
-  // };
-
 const showPersonAlias = (person) => {
   Swal.fire({
     title: person.name,
@@ -218,75 +174,6 @@ const showPersonAlias = (person) => {
     },
   });
 };
-
-// const editPerson = async (person) => {
-//   const result = await Swal.fire({
-//     title: "Editar participante",
-//     html: `
-//       <label>Nombre</label>
-//       <input
-//         class="swal2-input"
-//         value="${person.name}"
-//         disabled
-//       />
-
-//       <label>Cantidad de personas</label>
-//       <input
-//         id="editCount"
-//         type="number"
-//         min="1"
-//         class="swal2-input"
-//         value="${person.count}"
-//       />
-
-//       <label>Alias (opcional)</label>
-//       <input
-//         id="editAlias"
-//         class="swal2-input"
-//         value="${person.alias || ""}"
-//         placeholder="alias.mercadopago"
-//       />
-//     `,
-//     showCancelButton: true,
-//     confirmButtonText: "Guardar",
-//     cancelButtonText: "Cancelar",
-//     focusConfirm: false,
-//     preConfirm: () => {
-//       const count = Number(
-//         document.getElementById("editCount").value
-//       );
-//       const alias = document
-//         .getElementById("editAlias")
-//         .value
-//         .trim();
-
-//       if (!count || count < 1) {
-//         Swal.showValidationMessage(
-//           "La cantidad debe ser mayor a 0"
-//         );
-//         return;
-//       }
-
-//       return { count, alias };
-//     },
-//   });
-
-//   if (!result.isConfirmed) return;
-
-//   const { count, alias } = result.value;
-
-//   updatePerson(person.name, count, alias);
-
-//   Swal.fire({
-//     toast: true,
-//     position: "top",
-//     icon: "success",
-//     title: "Participante actualizado",
-//     showConfirmButton: false,
-//     timer: 1500,
-//   });
-// };
-
 
 const handleEditPerson = async (person) => {
   const result = await Swal.fire({
