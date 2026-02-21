@@ -121,7 +121,11 @@ li,p{
 }
 
 .deudores{
-  padding: 5px;  
+  padding: 5px; 
+  cursor: pointer; 
+}
+.deudores:hover{
+  color: #2c7be5;
 }
 .deuda{
   margin-top: 5px;
@@ -145,7 +149,7 @@ li,p{
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 9999;
 }
 
 /* Caja del modal */
@@ -156,7 +160,9 @@ li,p{
   width: 90%;
   max-width: 400px;
   position: relative;
-  text-align: center;
+  text-align: center;  
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 /* Botón cerrar */

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 
 export default function AddPerson({
@@ -6,10 +6,14 @@ export default function AddPerson({
   addPersonToDB,
   deletePerson,
   editPersonInDB,
+  group,
+  canEdit,
 }) {
   const [name, setName] = useState("");
   const [count, setCount] = useState(1);
   const [alias, setAlias] = useState("");
+
+
 
   const totalPersonas = people.reduce((acc, p) => acc + p.count, 0);
   const addPerson = () => {
@@ -270,6 +274,7 @@ const handleEditPerson = async (person) => {
         placeholder="Nombre"
         value={name}
         onChange={e => setName(e.target.value)}
+        disabled={!canEdit}
       />
 </div>
 <div>
@@ -280,6 +285,7 @@ const handleEditPerson = async (person) => {
         value={count}
         onChange={e => setCount(e.target.value)}
         placeholder="Cantidad de personas"
+        disabled={!canEdit}
       />
 </div>
 <div>
@@ -289,17 +295,19 @@ const handleEditPerson = async (person) => {
         placeholder="Opcional"
         value={alias}
         onChange={e => setAlias(e.target.value)}
+        disabled={!canEdit}
       />
 </div>
 <div>
-      <button className="boton" onClick={addPerson}>Agregar</button>
+{canEdit && (
+      <button className="boton" onClick={addPerson}>Agregar</button>)}
 </div>
       <ul>
         {people.map(p => (
           
-          <li key={p.id} className="people-item"><span> <button onClick={() => handleEditPerson(p)}> <i className="fa-solid fa-pencil edit-icon"
+          <li key={p.id} className="people-item"><span> {canEdit && (<button onClick={() => handleEditPerson(p)}> <i className="fa-solid fa-pencil edit-icon"
       
-    ></i></button></span><span
+    ></i></button>)}</span><span
   className="expense-payer people-name"
   onClick={() => showPersonAlias(p)}
 >
@@ -307,9 +315,9 @@ const handleEditPerson = async (person) => {
 </span>
 
             
-            <button className="delete-btn" onClick={() => handleDeletePerson(p)}>
+            {canEdit && (<button className="delete-btn" onClick={() => handleDeletePerson(p)}>
               <i className="fa-solid fa-trash"></i>
-            </button>
+            </button>)}
           </li>
         ))}
       </ul>

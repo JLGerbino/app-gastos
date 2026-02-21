@@ -1,10 +1,13 @@
+import {
+  doc,
+  deleteDoc,
+  updateDoc
+} from "firebase/firestore";
+import { db } from "../firebase";
 import Swal from "sweetalert2";
 
-
-export default function BalanceList({ people, expenses, payments, addPayment}) {
-  if (people.length === 0) return null;
-
-  // Totales por persona
+// 👇 NO tocamos tu algoritmo
+const calculateDebts = (people, expenses, payments) => {
   const totals = {};
   people.forEach((p) => (totals[p.name] = 0));
 
@@ -12,22 +15,26 @@ export default function BalanceList({ people, expenses, payments, addPayment}) {
     totals[e.payer] += e.amount;
   });
 
-  // Calcular total ponderado por cantidad
   const totalPersonas = people.reduce((acc, p) => acc + p.count, 0);
   const totalGasto = expenses.reduce((acc, e) => acc + e.amount, 0);
   const costoPorPersona = totalGasto / totalPersonas;
 
-  // Balance original (NO modificar)
   const balances = people.map((p) => {
     const gastoEsperado = p.count * costoPorPersona;
     const balance = totals[p.name] - gastoEsperado;
     return { name: p.name, balance };
   });
 
-  // CLON para calcular deudas
-  const balancesForDebts = balances.map(b => ({ ...b }));
+  payments.forEach((p) => {
+    const payer = balances.find((b) => b.name === p.from);
+    const receiver = balances.find((b) => b.name === p.to);
 
-  // Deudores y acreedores
+    if (payer) payer.balance += p.amount;
+    if (receiver) receiver.balance -= p.amount;
+  });
+
+  const balancesForDebts = balances.map((b) => ({ ...b }));
+
   const deudores = balancesForDebts.filter((b) => b.balance < -0.01);
   const acreedores = balancesForDebts.filter((b) => b.balance > 0.01);
 
@@ -39,10 +46,10 @@ export default function BalanceList({ people, expenses, payments, addPayment}) {
   let j = 0;
 
   while (i < deudores.length && j < acreedores.length) {
-    const debe = Math.abs(deudores[i].balance);
-    const recibe = acreedores[j].balance;
-
-    const monto = Math.min(debe, recibe);
+    const monto = Math.min(
+      Math.abs(deudores[i].balance),
+      acreedores[j].balance
+    );
 
     deudas.push({
       from: deudores[i].name,
@@ -56,257 +63,135 @@ export default function BalanceList({ people, expenses, payments, addPayment}) {
     if (Math.abs(deudores[i].balance) < 0.01) i++;
     if (acreedores[j].balance < 0.01) j++;
   }
-  const getAliasByName = (name) => {
-  const person = people.find(p => p.name === name);
-  return person?.alias || null;
+
+  return { balances, deudas, totalGasto, costoPorPersona };
 };
 
-//este es nuevo por pagos
-// const showDebtModal = (deuda) => {
-//   const person = people.find(p => p.name === deuda.to);
-//   const alias = person?.alias;
-
-//   Swal.fire({
-//     title: "Deuda",
-//     html: `
-//       <div style="font-size:26px; line-height:1.5;">
-//         <strong style="color: green">${deuda.from}</strong> debe
-//       </div> 
-//       <br />       
-//       <div style="font-size:30px; line-height:1.5;">
-//         <strong>$${deuda.amount.toFixed(2)}</strong>
-//       </div>
-//       <br />
-//       <div style="font-size:27px; line-height:1.5;">
-//         a <strong style="color: green">${deuda.to}</strong>
-//       </div>
-
-//       ${
-//         alias
-//           ? `
-//             <hr />
-//             <div>
-//               Alias de ${deuda.to}:
-//               <div
-//                 id="copyAliasPerson"
-//                 style="
-//                   margin-top: 12px;
-//                   font-size: 22px;
-//                   cursor: pointer;
-//                   color: #1976d2;
-//                 "
-//               >
-//                 <strong>${alias}</strong>
-//               </div>
-//               <span style="font-size:12px">
-//                 Tocá el alias para copiarlo
-//               </span>
-//             </div>
-//           `
-//           : ""
-//       }
-//     `,
-//     background: "#dee0e0",
-//     color: "#283655",
-//     iconColor: "#269181",
-//     showCancelButton: true,
-//     confirmButtonColor: "#35b67e",
-//     confirmButtonText: "Marcar como pagado",
-//     cancelButtonText: "Cerrar",
-//     allowOutsideClick: true,
-
-//     didOpen: () => {
-//       if (!alias) return;
-
-//       const aliasEl = document.getElementById("copyAliasPerson");
-
-//       aliasEl?.addEventListener("click", async () => {
-//         await navigator.clipboard.writeText(alias);
-
-//         Swal.fire({
-//           toast: true,
-//           position: "top",
-//           icon: "success",
-//           title: "Alias copiado",
-//           background: "#dee0e0",
-//           color: "#283655",
-//           iconColor: "#269181",
-//           showConfirmButton: false,
-//           timer: 1500,
-//         });
-//       });
-//     },
-//   }).then(async (result) => {
-//     if (!result.isConfirmed) return;
-
-//     // 💸 Registrar pago
-//     await addPayment({
-//       from: deuda.from,
-//       to: deuda.to,
-//       amount: deuda.amount,
-//     });
-
-//     Swal.fire({
-//       toast: true,
-//       position: "top",
-//       icon: "success",
-//       title: "Pago registrado",
-//       background: "#dee0e0",
-//       color: "#283655",
-//       iconColor: "#269181",
-//       showConfirmButton: false,
-//       timer: 1500,
-//     });
-//   });
-// };
 
 
+export default function BalanceList({ people, expenses }) {
+  if (!people.length) return null;
 
+  const {
+    balances,
+    deudas,
+    totalGasto,
+    costoPorPersona,
+  } = calculateDebts(people, expenses, []);
 
+  // 👉 MODAL SOLO INFORMATIVO
+  const showDebtModal = (deuda) => {
+    const person = people.find(p => p.name === deuda.to);
+    const alias = person?.alias;
 
+    Swal.fire({
+      title: "Deuda entre personas",
+      html: `
+        <div style="font-size:26px; line-height:1.5;">
+          <strong style="color:#269181">${deuda.from}</strong> debe
+        </div>
 
+        <div style="font-size:34px; margin:10px 0;">
+          <strong>$${deuda.amount.toFixed(2)}</strong>
+        </div>
 
+        <div style="font-size:26px;">
+          a <strong style="color:#269181">${deuda.to}</strong>
+        </div>
 
+        ${
+          alias
+            ? `
+              <hr />
+              <p><strong>Alias para pagar</strong></p>
+              <p
+                id="copyAlias"
+                style="
+                  font-size:22px;
+                  cursor:pointer;
+                  color:#1976d2;
+                  user-select:all;
+                "
+              >
+                ${alias}
+              </p>
+              <p style="font-size:12px;color:gray">
+                Tocá el alias para copiarlo
+              </p>
+            `
+            : ""
+        }
+      `,
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      confirmButtonText: "Cerrar",
+      didOpen: () => {
+        if (!alias) return;
 
+        const el = document.getElementById("copyAlias");
+        el?.addEventListener("click", async () => {
+          await navigator.clipboard.writeText(alias);
 
-
-
-//este ando pero tiene unos agregados
-const showDebtModal = (deuda) => {
-  const person = people.find(p => p.name === deuda.to);
-  const alias = person?.alias;
-
-  Swal.fire({
-    title: "Deuda",    
-    html: `
-      <div style="font-size:26px; line-height:1.5; ">
-        <strong style="color: green">${deuda.from}</strong> debe
-      </div> 
-      <br />       
-      <div style="font-size:30px; line-height:1.5;">
-        <strong>$${deuda.amount.toFixed(2)}</strong>
-      </div>
-      <br />
-      <div style="font-size:27px; line-height:1.5;">
-        a <strong style="color: green">${deuda.to}</strong>
-      </div>
-
-      ${
-        alias
-          ? `
-            <hr />
-            <div>
-              Alias de ${deuda.to}: <div
-              id="copyAliasPerson"
-              style="
-                margin-top: 12px;
-                font-size: 22px;
-                cursor:pointer;
-                color:#1976d2;
-                cursor: pointer;                
-              "
-            ><strong>${alias}</strong></div>
-              <br />
-              <span style="font-size:12px">Tocá el alias para copiarlo</span>
-            </div>
-          `
-          : ""
-      }
-    `,
-    background: "#dee0e0",
-    color: "#283655",
-    iconColor: "#269181",
-    confirmButtonColor: "#35b67e",
-    //confirmButtonText: "Marcar como pagado",//agregado para pagos
-    confirmButtonText: "Cerrar",
-    allowOutsideClick: true,
-
-    didOpen: () => {
-      if (!alias) return;
-
-      const aliasEl = document.getElementById("copyAliasPerson");
-
-      aliasEl?.addEventListener("click", async () => {
-        await navigator.clipboard.writeText(alias);
-
-        Swal.fire({
-          toast: true,
-          position: "top",
-          icon: "success",
-          title: "Alias copiado",
-          background: "#dee0e0",
-          color: "#283655",
-          iconColor: "#269181",
-          showConfirmButton: false,
-          timer: 1500,
+          Swal.fire({
+            toast: true,
+            position: "top",
+            icon: "success",
+            title: "Alias copiado",
+            timer: 1500,
+            showConfirmButton: false,
+          });
         });
-      });
-    },
-  });
-};
-
-//agregado para pagos
-const deudasFinales = deudas.map(d => {
-  const pagosAplicados = payments
-    .filter(
-      p => p.from === d.from && p.to === d.to
-    )
-    .reduce((acc, p) => acc + p.amount, 0);
-
-  return {
-    ...d,
-    amount: d.amount - pagosAplicados,
+      },
+    });
   };
-}).filter(d => d.amount > 0.01);
 
-
-
-
-
-
-
-
-
-  return (
+ return (
     <div className="card">
       <h2>Balance</h2>
-      <strong><p>Total gastado: ${totalGasto.toFixed(2)}</p></strong>
-      <strong><p>A pagar cada uno: ${costoPorPersona.toFixed(2)}</p></strong>
-<br />
-      <h3 className="balance">Balance individual</h3>
-      <ul>
-        {balances.map((b, i) => {
-          let text = "está justo";
-          if (b.balance > 0.01)  text =`le deben $${b.balance.toFixed(2)}`;
-          if (b.balance < -0.01) text = `debe $${Math.abs(b.balance).toFixed(2)}`;
-          return <li className="deudores" key={i}>{b.name}: {text}</li>;
-        })}
-      </ul>
 
-<br />
+      <strong>Total gastado: ${totalGasto.toFixed(2)}</strong>
+      <br />
+      <strong>A pagar cada uno: ${costoPorPersona.toFixed(2)}</strong>
+
+      {/* {!isClosed && ( */}
+        <>
+          <h3 className="balance">Balance individual</h3>
+          <ul>
+            {balances.map((b, i) => (
+              <li key={i}>
+                {b.name}:{" "}
+                {b.balance > 0.01
+                  ? `le deben $${b.balance.toFixed(2)}`
+                  : b.balance < -0.01
+                  ? `debe $${Math.abs(b.balance).toFixed(2)}`
+                  : "está justo"}
+              </li>
+            ))}
+          </ul>
+        </>
+      {/* )} */}
+
       <h3 className="balance">Deudas entre personas</h3>
-      {deudasFinales.length === 0 ? ( ///deudaFinales cambie por deudas
+
+      {deudas.length === 0 ? (
         <p>Todos están a mano</p>
       ) : (
+
         <ul>
-          {deudas.map((d, i) => (
-            <li
-  className="deudores deuda"
-  key={i}  
-  onClick={() => showDebtModal(d)}
->
-
-            {/* <li className="deudores" key={i}> */}
-              <strong className="deudor">{d.from}</strong>  debe{" "}
-              <strong className="monto">${d.amount.toFixed(2)}</strong> a{" "}
-              <strong className="acreedor">{d.to}</strong>
-            </li>         
-          ))} 
-        </ul>
-      )} 
-
-      
+    {deudas.map((d, i) => (
+      <li className="deudores clickable" 
+        key={`${d.from}-${d.to}-${i}`}        
+        onClick={() => showDebtModal(d)}
+      >
+        <strong className="deudor">{d.from}</strong> debe $<strong className="monto">{d.amount.toFixed(2)}</strong> a{" "}
+        <strong className="acreedor">{d.to}</strong>
+      </li>
+    ))}
+  </ul>
+        
+      )}
     </div>
-    
   );
 }

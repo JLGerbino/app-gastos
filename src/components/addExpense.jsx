@@ -1,20 +1,30 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
-
 export default function AddExpense({
-  groupId,
+  //groupId,
+  group,
   people,
   expenses,
   addExpenseToDB,
   deleteExpenseFromDB,
-  deleteAllExpenses
+  deleteAllExpenses,
+  canEdit,
+ 
 }) {
   const [payer, setPayer] = useState("");
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
 
   const addExpense = () => {
-    if (!payer || !amount) return alert("Completa todos los campos");
+    if (!payer || !amount) return Swal.fire({
+      icon: "warning",
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      title:"Completa todos los campos",
+      confirmButtonText: "Eliminar",
+  });
 
     const newExpense = {
       payer,
@@ -241,12 +251,13 @@ const showPersonExpenses = (personName) => {
     },
   });
 };
-
+console.log("AddExpense group:", group);
   return (
     <div className="card">
       <h2>Agregar gasto</h2>
 <div>
-      <select value={payer} onChange={(e) => setPayer(e.target.value)}>
+      <select value={payer} onChange={(e) => setPayer(e.target.value)} disabled={!canEdit}>
+        
         <option value="">--     Quién realizó el gasto    --</option>
         {people.map((p) => (
           <option key={p.id} value={p.name}>
@@ -262,6 +273,7 @@ const showPersonExpenses = (personName) => {
         placeholder="Ingresar descripción"
         value={desc}
         onChange={(e) => setDesc(e.target.value)}
+        disabled={!canEdit}
       />
 </div>
 <div>
@@ -271,10 +283,11 @@ const showPersonExpenses = (personName) => {
         placeholder="Ingresar importe"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}
+        disabled={!canEdit}
       />
 </div>
 <div>
-      <button className="boton" onClick={addExpense}>Agregar</button>
+      {group?.status !== "closed" && (<button className="boton" onClick={addExpense}>Agregar</button>)}
 </div>
 
       <ul>        
@@ -288,18 +301,18 @@ const showPersonExpenses = (personName) => {
   
   {" "}pagó ${e.amount} ({e.desc})</span>
 
-  <button onClick={() => deleteExpense(e.id)}>
+  {canEdit && (<button onClick={() => deleteExpense(e.id)}>
     <i className="fa-solid fa-trash"></i>
-  </button>
+  </button>)}
 </li>          
         ))}        
       </ul> 
       <div>
-        <button
+        {canEdit && (<button
   onClick={deleteAll}
   style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
 >
-  <i className="fa-solid fa-trash"></i> Borrar todos los gastos</button>
+  <i className="fa-solid fa-trash"></i> Borrar todos los gastos</button>)}
 
         </div>     
     </div>    
