@@ -135,33 +135,62 @@ const handleAdminPinLogin = async () => {
   const { value: pin } = await Swal.fire({
     title: "Ingresar PIN de administrador",
     input: "password",
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
+    confirmButtonText:"Confirmar",
     inputAttributes: {
       maxlength: 4,
       inputmode: "numeric",
     },
-    inputPlaceholder: "PIN de 4 dígitos",
-    showCancelButton: true,
+    inputPlaceholder: "PIN de 4 dígitos",    
   });
 if (pin === group.adminPin) {
 
   const { value: newName } = await Swal.fire({
-    title: "Ingresá tu nombre como administrador",
+    title: "Ingresá el nombre del administrador",
     input: "text",
     inputPlaceholder: "Tu nombre",
-    showCancelButton: true,
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
+    confirmButtonText:"Confirmar", 
+    inputValidator: (value)=>{
+      if(!value || !value.trim()) {
+        return "Tenés que ingresar el nombre del nuevo administrador"
+      }
+   
+    } 
   });
 
-  if (!newName) return;
+  // if (!newName) return;
 
   await updateDoc(doc(db, "groups", groupId), {
     adminUid: user.uid,
     adminName: newName,
   });
 
-  Swal.fire("Ahora sos el administrador del grupo");
+  Swal.fire({
+    title: "Ahora sos el administrador del grupo",
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
+    confirmButtonText:"Cerrar",    
+  });  
 }  
   else {
-    Swal.fire("PIN incorrecto");
+    Swal.fire({
+    title: "PIN incorrecto",
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
+    confirmButtonText:"Cerrar",    
+  });  
+    
   }
 };
 
@@ -432,6 +461,7 @@ const canCloseAccounts = !group?.adminUid;
       onPayDebt={addPayment}
       groupId={groupId}
       isAdminMode={isAdminMode}
+      canEdit={canEdit}
       />
     </div>
   );

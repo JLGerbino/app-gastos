@@ -23,7 +23,7 @@ export default function AddExpense({
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
       title:"Completa todos los campos",
-      confirmButtonText: "Eliminar",
+      confirmButtonText: "Cerrar",
   });
 
     const newExpense = {
@@ -287,7 +287,7 @@ console.log("AddExpense group:", group);
       />
 </div>
 <div>
-      {group?.status !== "closed" && (<button className="boton" onClick={addExpense}>Agregar</button>)}
+      {canEdit && (<button className="boton" onClick={addExpense}>Agregar</button>)}
 </div>
 
       <ul>        

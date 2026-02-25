@@ -58,6 +58,11 @@ export default function CreateGroup({ onGroupCreated, user }) {
       Swal.fire({
         icon: "warning",
         title: "Falta el nombre del grupo",
+        background: "#dee0e0",
+        color:"#283655",
+        iconColor:"#269181",
+        confirmButtonColor:"#35b67e",
+        confirmButtonText:"Cerrar",
       });
       return;
     }
@@ -66,6 +71,11 @@ export default function CreateGroup({ onGroupCreated, user }) {
       Swal.fire({
         icon: "warning",
         title: "El código debe tener 6 dígitos",
+        background: "#dee0e0",
+        color:"#283655",
+        iconColor:"#269181",
+        confirmButtonColor:"#35b67e",
+        confirmButtonText:"Cerrar",
       });
       return;
     }
@@ -80,7 +90,7 @@ export default function CreateGroup({ onGroupCreated, user }) {
   closeCreateModal();
   document.activeElement?.blur();
   Swal.fire({
-    title: "El grupo ya existe",
+    title: "Ya existe un grupo con ese nombre o código",
     text: "Elegí otro nombre o código",
     icon: "error",
     background: "#dee0e0",
@@ -88,6 +98,7 @@ export default function CreateGroup({ onGroupCreated, user }) {
           iconColor:"#269181",
           confirmButtonColor:"#35b67e",
           confirmButtonText:"Cerrar",
+          className:"swal-container",
   });
     
       return;
@@ -95,29 +106,37 @@ export default function CreateGroup({ onGroupCreated, user }) {
 if (isAdmin && !adminName.trim()) {
   Swal.fire({
     icon: "warning",
-    title: "Ingresá tu nombre como administrador",
+    title: "Ingresá el nombre del administrador",
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
+    confirmButtonText:"Cerrar",
   });
   return;
 }
 if (isAdmin) {
   if (!adminName.trim()) {
-    Swal.fire({
-      icon: "warning",
-      title: "Ingresá tu nombre como administrador",
-    });
+   
     return;
   }
 
   if (!/^\d{4}$/.test(adminPin)) {
-    Swal.fire({
+     Swal.fire({
       icon: "warning",
       title: "El PIN debe tener 4 números",
+      background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",
+          confirmButtonColor:"#35b67e",
+          confirmButtonText:"Cerrar",
     });
+    
     return;
   }
 }
 // if (!/^\d{4}$/.test(adminPin)) {
-//     Swal.fire("El PIN debe tener 4 números");
+//     Swal.fire("");
 //     return;
 //   }
     await setDoc(ref, {
@@ -147,12 +166,28 @@ onGroupCreated({
   // 👉 Entrar a grupo existente
   const joinGroup = async () => {
     if (!joinName.trim()) {
-      Swal.fire("Falta el nombre del grupo");
+      Swal.fire({
+      icon: "warning",
+      title: "Falta el nombre del grupo",
+      background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",
+          confirmButtonColor:"#35b67e",
+          confirmButtonText:"Cerrar",
+    });
       return;
     }
 
     if (!/^\d{6}$/.test(joinCode)) {
-      Swal.fire("El código debe tener 6 dígitos");
+      Swal.fire({
+      icon: "warning",
+      title: "El código debe tener 6 dígitos",
+      background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",
+          confirmButtonColor:"#35b67e",
+          confirmButtonText:"Cerrar",
+    });
       return;
     }
 
@@ -165,7 +200,15 @@ onGroupCreated({
     const snap = await getDoc(ref);
 
     if (!snap.exists()) {
-      Swal.fire("No existe un grupo con esos datos");
+      Swal.fire({      
+      title: "No existe un grupo con esos datos",
+      background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",
+          confirmButtonColor:"#35b67e",
+          confirmButtonText:"Cerrar",
+    });
+      
       return;
     }
 
@@ -211,7 +254,8 @@ onGroupCreated({
                 className="modal-close"
                 onClick={closeCreateModal}
               >
-                ✖
+                {/* ✖ */}
+              <i class="fa-solid fa-x"></i>               
               </button>
 
               <h2>Crear nuevo grupo</h2>
@@ -231,6 +275,7 @@ onGroupCreated({
 <div>
               <label>
                 <input
+                  className="checkbox"
                   type="checkbox"
                   checked={isAdmin}                  
                      onChange={(e) => {
