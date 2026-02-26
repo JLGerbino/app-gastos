@@ -253,8 +253,8 @@ const showPersonExpenses = (personName) => {
 };
 console.log("AddExpense group:", group);
   return (
-    <div className="card">
-      <h2 id="section-expense" className="titulo">Agregar gasto</h2>
+    <div className="card" id="section-expense">
+      <h2  className="titulo">Agregar gasto</h2>
 <div>
       <select value={payer} onChange={(e) => setPayer(e.target.value)} disabled={!canEdit}>
         

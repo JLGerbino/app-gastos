@@ -235,9 +235,8 @@ export default function BalanceList({
   };
 
   return (
-    <div className="card">
-      <h2 id="section-balance" className="titulo">Balance</h2>
-
+    <div className="card" id="section-balance">
+      <h2  className="titulo">Balance</h2>
       <strong>Total gastado: ${totalGasto.toFixed(2)}</strong>
       <br />
       <strong>A pagar cada uno: ${costoPorPersona.toFixed(2)}</strong>

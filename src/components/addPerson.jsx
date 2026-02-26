@@ -265,8 +265,8 @@ const handleEditPerson = async (person) => {
 
 
   return (
-    <div className="card">
-      <h2 id="section-people" className="titulo">Agregar participantes</h2>
+    <div className="card" id="section-people">
+      <h2  className="titulo">Agregar participantes</h2>
 <div>
   <h3>Nombre</h3>
       <input
