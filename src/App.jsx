@@ -36,17 +36,17 @@ function App() {
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [user, setUser] = useState(null);
   const [group, setGroup] = useState(null);
-  const [groupCode, setGroupCode] = useState("");  
+  const [groupCode, setGroupCode] = useState("");
   const [people, setPeople] = useState([]);
   const [expenses, setExpenses] = useState([]);
-  const [started, setStarted] = useState(false);  
+  const [started, setStarted] = useState(false);
   const [payments, setPayments] = useState([]);//agregado para pagos
   const [debts, setDebts] = useState([]);
   const hasAdmin = !!group?.adminUid;
   const isAdmin = !!group?.adminUid && group.adminUid === user?.uid;
   //const [pinAdminMode, setPinAdminMode] = useState(false);
 
-  
+
   // Guardar groupId en localStorage
   useEffect(() => {
     if (groupId) {
@@ -118,8 +118,8 @@ useEffect(() => {
 //       setGroupName(data.name || "");
 //       setGroupCode(data.code || "");
 
-      
-      
+
+
 
 //       // si el grupo NO tiene admin → todos pueden editar
 //       setIsAdminMode(!data.hasAdmin);
@@ -129,8 +129,99 @@ useEffect(() => {
 //   fetchGroupInfo();
 // }, [groupId]);
 
+//Borra grupo
+const handleDeleteGroup = async () => {
+  // Primera confirmación
+  const confirm1 = await Swal.fire({
+    title: "Eliminar grupo",
+    text: "Esta acción eliminará el grupo con TODOS los participantes, gastos y pagos.",
+    icon: "warning",
+    iconColor:"#269181",
+    showCancelButton: true,
+    confirmButtonText: "Continuar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#d33",
+    background: "#dee0e0",
+    color: "#283655",
+  });
+
+  if (!confirm1.isConfirmed) return;
+
+  // Segunda confirmación fuerte
+  const confirm2 = await Swal.fire({
+    title: "¿Estás completamente seguro?",
+    text: "Esta acción es irreversible.",
+    icon: "error",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar definitivamente",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#d33",
+    background: "#dee0e0",
+    color: "#283655",
+  });
+
+  if (!confirm2.isConfirmed) return;
+
+  try {
+    // 🔹 Borrar expenses
+    const expensesSnap = await getDocs(
+      collection(db, "groups", groupId, "expenses")
+    );
+    for (const docu of expensesSnap.docs) {
+      await deleteDoc(docu.ref);
+    }
+
+    // 🔹 Borrar payments
+    const paymentsSnap = await getDocs(
+      collection(db, "groups", groupId, "payments")
+    );
+    for (const docu of paymentsSnap.docs) {
+      await deleteDoc(docu.ref);
+    }
+
+    // 🔹 Borrar people
+    const peopleSnap = await getDocs(
+      collection(db, "groups", groupId, "people")
+    );
+    for (const docu of peopleSnap.docs) {
+      await deleteDoc(docu.ref);
+    }
+
+    // 🔹 Borrar grupo
+    await deleteDoc(doc(db, "groups", groupId));
+
+    await Swal.fire({
+      title: "Grupo eliminado",
+      icon: "success",
+      timer: 1500,
+      showConfirmButton: false,
+      background: "#dee0e0",
+      color: "#283655",
+    });
+
+    // 🔹 Volver a pantalla inicial
+    setGroupId(null);
+
+  } catch (error) {
+    console.error(error);
+    Swal.fire({
+      title: "Error al eliminar",
+      text: "Intentá nuevamente",
+      icon: "error",
+    });
+  }
+};
+
+//Scroll secciones
+const scrollToSection = (id) => {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+};
 
 
+//traspasar administrador
 const handleAdminPinLogin = async () => {
   const { value: pin } = await Swal.fire({
     title: "Ingresar PIN de administrador",
@@ -144,7 +235,7 @@ const handleAdminPinLogin = async () => {
       maxlength: 4,
       inputmode: "numeric",
     },
-    inputPlaceholder: "PIN de 4 dígitos",    
+    inputPlaceholder: "PIN de 4 dígitos",
   });
 if (pin === group.adminPin) {
 
@@ -156,16 +247,14 @@ if (pin === group.adminPin) {
     color:"#283655",
     iconColor:"#269181",
     confirmButtonColor:"#35b67e",
-    confirmButtonText:"Confirmar", 
+    confirmButtonText:"Confirmar",
     inputValidator: (value)=>{
       if(!value || !value.trim()) {
         return "Tenés que ingresar el nombre del nuevo administrador"
       }
-   
-    } 
-  });
 
-  // if (!newName) return;
+    }
+  });
 
   await updateDoc(doc(db, "groups", groupId), {
     adminUid: user.uid,
@@ -178,9 +267,9 @@ if (pin === group.adminPin) {
     color:"#283655",
     iconColor:"#269181",
     confirmButtonColor:"#35b67e",
-    confirmButtonText:"Cerrar",    
-  });  
-}  
+    confirmButtonText:"Cerrar",
+  });
+}
   else {
     Swal.fire({
     title: "PIN incorrecto",
@@ -188,9 +277,9 @@ if (pin === group.adminPin) {
     color:"#283655",
     iconColor:"#269181",
     confirmButtonColor:"#35b67e",
-    confirmButtonText:"Cerrar",    
-  });  
-    
+    confirmButtonText:"Cerrar",
+  });
+
   }
 };
 
@@ -362,19 +451,51 @@ const closeGroupAccounts = async () => {
 const canCloseAccounts = !group?.adminUid;
 
   // Salir del grupo
-  const exitGroup = () => {
-    localStorage.removeItem("groupId");
-    setGroupId(null);
-    setPeople([]);
-    setExpenses([]);
-  };
+const exitGroup = async () => {
+  const result = await Swal.fire({
+    title: "Salir del grupo",
+    text: "¿Estás seguro que querés salir del grupo actual?",
+    icon: "question",
+    iconColor:"#269181",
+    showCancelButton: true,
+    confirmButtonText: "Salir",
+    cancelButtonText: "Cerrar",
+    confirmButtonColor: "#35b67e",
+    background: "#dee0e0",
+    color: "#283655",
+  });
+
+  if (!result.isConfirmed) return;
+
+  localStorage.removeItem("groupId");
+  setGroupId(null);
+  setPeople([]);
+  setExpenses([]);
+
+  Swal.fire({
+    title: "Saliste del grupo",
+    icon: "success",
+    timer: 1200,
+    iconColor:"#269181",
+    showConfirmButton: false,    
+    background: "#dee0e0",
+    color: "#283655",
+  });
+};
+
+  // const exitGroup = () => {    
+  //   localStorage.removeItem("groupId");    
+  //   setGroupId(null);
+  //   setPeople([]);
+  //   setExpenses([]);
+  // };
 
 //Bienvenida
   if (!started && !groupId) {
   return (
     <div className="app welcome">
       <img src="logo.png" alt="Cuentas Claras" className="logo" />
-      <h2>La manera más fácil de compartir gastos</h2>      
+      <h2>La manera más fácil de compartir gastos</h2>
       <h3>Ideal para resolver las cuentas en vacaciones, juntadas, salidas o cuando lo nesecites!!!</h3>
       <button className="boton" onClick={() => setStarted(true)}>
         Ingresar
@@ -396,19 +517,19 @@ const canCloseAccounts = !group?.adminUid;
   onGroupCreated={({ groupId, groupName, hasAdmin }) => {
     setGroupId(groupId);
     setGroupName(groupName);
-  }}  
-/>      
+  }}
+/>
     </div>
   );
 }
 
   return (
-    <div className="app">      
+    <div className="app">
       <img src="logo.png" alt="Cuentas Claras" className="Create" />
       <p>La manera más fácil de compartir gastos</p>
 <h1 className="group-title">{groupName}</h1>
 <p className="group-code">
-  <strong>{groupCode}</strong>  
+  <strong>{groupCode}</strong>
 </p>
 {group?.adminUid && (
   <p className="admin-label">
@@ -418,18 +539,18 @@ const canCloseAccounts = !group?.adminUid;
 )}
 <div>
 {!isAdmin && group?.adminPin && (
-  
+
   <button
     className="boton"
     onClick={handleAdminPinLogin}
   >Ser administrador
   </button>
 )}</div>
-<div>
+{/* <div>
       <button className="exit-btn" onClick={exitGroup}>
         Salir <i className="fa fa-sign-out" aria-hidden="true"></i>
       </button>
-</div>
+</div> */}
 
       <AddPerson
         people={people}
@@ -453,8 +574,8 @@ const canCloseAccounts = !group?.adminUid;
       />
 
       <BalanceList
-      people={people} 
-      expenses={expenses} 
+      people={people}
+      expenses={expenses}
       payments={payments}
       debts={debts}
       group={group}
@@ -463,7 +584,50 @@ const canCloseAccounts = !group?.adminUid;
       isAdminMode={isAdminMode}
       canEdit={canEdit}
       />
+
+
+{groupId && (
+  <div className="bottom-bar">
+    
+
+    <div className="bottom-icon" onClick={() => scrollToSection("section-people")}>
+  <i class="fa-solid fa-person-circle-plus"></i>
+  <small>Persona</small>
+</div>
+
+<div className="bottom-icon" onClick={() => scrollToSection("section-expense")}>
+  <i class="fa-solid fa-circle-plus"></i>
+  <small>Gasto</small>
+</div>
+
+<div className="bottom-icon" onClick={() => scrollToSection("section-balance")}>
+  <i class="fa-solid fa-calculator"></i>
+  <small>Balance</small>
+</div>
+   
+{group?.adminUid && group.adminUid !== user?.uid && (
+    <div className="bottom-icon" onClick={handleAdminPinLogin}>
+      <i class="fa-solid fa-crown"></i>
+      <small>Admin</small>
     </div>
+  )} 
+
+  <div className="bottom-icon" onClick={exitGroup}>    
+      <i class="fa-solid fa-house"></i>
+      <small>Inicio</small>
+    </div>
+
+    {canEdit && (
+      <div className="bottom-icon" onClick={handleDeleteGroup}>
+        <i class="fa-solid fa-trash-arrow-up"></i>
+        <small>Grupo</small>
+      </div>
+     )}
+  </div>
+  
+)}
+
+  </div>
   );
 }
 

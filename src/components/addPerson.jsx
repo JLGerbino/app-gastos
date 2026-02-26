@@ -92,7 +92,7 @@ export default function AddPerson({
   try {
     await deletePerson(person);
 
-    // ✅ Reemplaza el loading
+    // Reemplaza el loading
     await Swal.fire({
       icon: "success",
       title: "Eliminado",
@@ -266,7 +266,7 @@ const handleEditPerson = async (person) => {
 
   return (
     <div className="card">
-      <h2>Agregar participantes</h2>
+      <h2 id="section-people" className="titulo">Agregar participantes</h2>
 <div>
   <h3>Nombre</h3>
       <input

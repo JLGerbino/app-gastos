@@ -2,6 +2,7 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
+  scroll-behavior: smooth;
   background-color: #ADC1c0;
 }
 
@@ -63,6 +64,8 @@ h2{
 }
 .balance{
   font-size: 21px;
+  background-color:#ADC1c0;
+  border-radius: 6px;
 }
 li,p{
   font-size: 16px;
@@ -138,6 +141,11 @@ li,p{
 
 .expense-payer:hover {
   color: #2c7be5;
+}
+
+.titulo{
+  background-color: #35b67e;
+  border-radius: 6px;
 }
  
 /*nueva entrada*/
@@ -262,8 +270,37 @@ li,p{
   accent-color: #35b67e;  
 }
 
+/*Barra fija*/
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #dee0e0;
+  border-top: 1px solid #ccc;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  z-index: 800; /* debajo de modal */
+}
 
+.bottom-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
+  color: #283655;
+}
 
+.bottom-icon:hover {
+  color: #35b67e;
+}
+
+.app {
+  padding-bottom: 80px;
+}
 
 /* .grupo {
   margin-top: 90px;

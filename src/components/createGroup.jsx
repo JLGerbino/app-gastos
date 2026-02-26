@@ -255,7 +255,7 @@ onGroupCreated({
                 onClick={closeCreateModal}
               >
                 {/* ✖ */}
-              <i class="fa-solid fa-x"></i>               
+              <i className="fa-solid fa-x"></i>               
               </button>
 
               <h2>Crear nuevo grupo</h2>

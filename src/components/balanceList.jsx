@@ -236,7 +236,7 @@ export default function BalanceList({
 
   return (
     <div className="card">
-      <h2>Balance</h2>
+      <h2 id="section-balance" className="titulo">Balance</h2>
 
       <strong>Total gastado: ${totalGasto.toFixed(2)}</strong>
       <br />
@@ -255,9 +255,9 @@ export default function BalanceList({
           </li>
         ))}
       </ul>
-
+<div className="titulo">
       <h3 className="balance">Deudas entre personas</h3>
-
+</div>
       {deudas.length === 0 ? (
         <p>Están todos a mano</p>
       ) : (
