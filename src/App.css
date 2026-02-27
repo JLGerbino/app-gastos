@@ -276,7 +276,8 @@ li,p{
   bottom: 0;
   left: 0;
   width: 100%;
-  background: #dee0e0;
+  
+  background-color: #35b67e ;
   border-top: 1px solid #ccc;
   display: flex;
   justify-content: space-around;
@@ -294,8 +295,8 @@ li,p{
   color: #283655;
 }
 
-.bottom-icon:hover {
-  color: #35b67e;
+.bottom-icon:hover { 
+  color: #dee0e0;
 }
 
 .app {

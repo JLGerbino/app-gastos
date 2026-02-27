@@ -289,7 +289,7 @@ console.log("AddExpense group:", group);
 <div>
       {canEdit && (<button className="boton" onClick={addExpense}>Agregar</button>)}
 </div>
-
+<h3>Gastos</h3>
       <ul>        
         {expenses.map((e) => (
           <li key={e.id} className="people-item expense-item">

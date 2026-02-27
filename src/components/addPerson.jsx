@@ -302,6 +302,8 @@ const handleEditPerson = async (person) => {
 {canEdit && (
       <button className="boton" onClick={addPerson}>Agregar</button>)}
 </div>
+<h3>Participantes</h3>
+
       <ul>
         {people.map(p => (
           
@@ -321,7 +323,7 @@ const handleEditPerson = async (person) => {
           </li>
         ))}
       </ul>
-      <p>Cantidad participantes:{totalPersonas}</p>
+      <p>Total de personas:{totalPersonas}</p>
     </div>
   );
 }

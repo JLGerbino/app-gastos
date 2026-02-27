@@ -277,7 +277,7 @@ export default function BalanceList({
 
               {canEdit && (<button
                 onClick={() => markAsPaid(d)}
-              ><i class="fa-solid fa-dollar-sign"></i>               
+              ><i className="fa-solid fa-dollar-sign"></i>               
               </button>)}
             </li>
           ))}

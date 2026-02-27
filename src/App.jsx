@@ -217,6 +217,9 @@ const scrollToSection = (id) => {
   const element = document.getElementById(id);
   if (element) {
     element.scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() =>{
+      document.activeElement?.blur();
+    }, 300);
   }
 };
 
@@ -224,7 +227,8 @@ const scrollToSection = (id) => {
 //traspasar administrador
 const handleAdminPinLogin = async () => {
   const { value: pin } = await Swal.fire({
-    title: "Ingresar PIN de administrador",
+    title: "Queres ser administrador?",
+    text: "Ingresa el PIN",
     input: "password",
     background: "#dee0e0",
     color:"#283655",
@@ -375,6 +379,7 @@ if (pin === group.adminPin) {
       )
     );
   };
+
 // Editar participante (cantidad + alias)
 const editPersonInDB = async (personId, data) => {
   const ref = doc(db, "groups", groupId, "people", personId);
@@ -537,7 +542,7 @@ const exitGroup = async () => {
     {isAdmin && " (vos)"}
   </p>
 )}
-<div>
+{/* <div>
 {!isAdmin && group?.adminPin && (
 
   <button
@@ -545,7 +550,7 @@ const exitGroup = async () => {
     onClick={handleAdminPinLogin}
   >Ser administrador
   </button>
-)}</div>
+)}</div> */}
 {/* <div>
       <button className="exit-btn" onClick={exitGroup}>
         Salir <i className="fa fa-sign-out" aria-hidden="true"></i>
@@ -591,35 +596,35 @@ const exitGroup = async () => {
     
 
     <div className="bottom-icon" onClick={() => scrollToSection("section-people")}>
-  <i class="fa-solid fa-person-circle-plus"></i>
+  <i className="fa-solid fa-person-circle-plus"></i>
   <small>Persona</small>
 </div>
 
 <div className="bottom-icon" onClick={() => scrollToSection("section-expense")}>
-  <i class="fa-solid fa-circle-plus"></i>
+  <i className="fa-solid fa-circle-plus"></i>
   <small>Gasto</small>
 </div>
 
 <div className="bottom-icon" onClick={() => scrollToSection("section-balance")}>
-  <i class="fa-solid fa-calculator"></i>
+  <i className="fa-solid fa-calculator"></i>
   <small>Balance</small>
 </div>
    
 {group?.adminUid && group.adminUid !== user?.uid && (
     <div className="bottom-icon" onClick={handleAdminPinLogin}>
-      <i class="fa-solid fa-crown"></i>
+      <i className="fa-solid fa-crown"></i>
       <small>Admin</small>
     </div>
   )} 
 
   <div className="bottom-icon" onClick={exitGroup}>    
-      <i class="fa-solid fa-house"></i>
+      <i className="fa-solid fa-house"></i>
       <small>Inicio</small>
     </div>
 
     {canEdit && (
       <div className="bottom-icon" onClick={handleDeleteGroup}>
-        <i class="fa-solid fa-trash-arrow-up"></i>
+        <i className="fa-solid fa-trash-arrow-up"></i>
         <small>Grupo</small>
       </div>
      )}
