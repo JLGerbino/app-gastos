@@ -278,7 +278,7 @@ const handleEditPerson = async (person) => {
       />
 </div>
 <div>
-  <h3>Cantidad personas</h3>
+  <h3>Cantidad de personas a cargo</h3>
       <input
         type="number"
         min={1}

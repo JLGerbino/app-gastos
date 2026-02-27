@@ -32,7 +32,7 @@ function App() {
   const [groupName, setGroupName] = useState(() => {
     return localStorage.getItem("groupName") || "";
   });
-
+  const [loading, setLoading] = useState(false);
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [user, setUser] = useState(null);
   const [group, setGroup] = useState(null);
@@ -233,8 +233,10 @@ const handleAdminPinLogin = async () => {
     background: "#dee0e0",
     color:"#283655",
     iconColor:"#269181",
+    showCancelButton: true,
     confirmButtonColor:"#35b67e",
     confirmButtonText:"Confirmar",
+    cancelButtonText: "Cerrar",
     inputAttributes: {
       maxlength: 4,
       inputmode: "numeric",
@@ -252,6 +254,7 @@ if (pin === group.adminPin) {
     iconColor:"#269181",
     confirmButtonColor:"#35b67e",
     confirmButtonText:"Confirmar",
+    cancelButtonText: "Cancelar",
     inputValidator: (value)=>{
       if(!value || !value.trim()) {
         return "Tenés que ingresar el nombre del nuevo administrador"
@@ -383,26 +386,32 @@ if (pin === group.adminPin) {
 // Editar participante (cantidad + alias)
 const editPersonInDB = async (personId, data) => {
   const ref = doc(db, "groups", groupId, "people", personId);
-
+try {
   await updateDoc(ref, {
     count: Number(data.count),
     alias: data.alias.trim(),
   });
+} catch (error) {console.error(error);
+  
+}finally {
+    setLoading(false);
+  }
+  
 };
 
 //con grupo cerrado escuchar espejo
-useEffect(() => {
-  if (!groupId || group?.status !== "closed") return;
+// useEffect(() => {
+//   if (!groupId || group?.status !== "closed") return;
 
-  const unsub = onSnapshot(
-    collection(db, "groups", groupId, "debts"),
-    snap => {
-      setDebts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    }
-  );
+//   const unsub = onSnapshot(
+//     collection(db, "groups", groupId, "debts"),
+//     snap => {
+//       setDebts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+//     }
+//   );
 
-  return unsub;
-}, [groupId, group?.status]);
+//   return unsub;
+// }, [groupId, group?.status]);
 
 //guardar pago
 const addPayment = async (payment) => {
@@ -412,48 +421,87 @@ const addPayment = async (payment) => {
   );
 };
 
-//reabrir grupo
-const reopenGroup = async () => {
-  const ref = doc(db, "groups", groupId);
-
-  await updateDoc(ref, {
-    status: "open",
+const handleClearPayments = async () => {
+  const result = await Swal.fire({
+    title: "Eliminar todos los pagos",
+    text: "Esta acción no se puede deshacer",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Sí, eliminar",
+    cancelButtonText: "Cancelar",
+    confirmButtonColor: "#d33",
   });
 
-  setGroup(prev => ({ ...prev, status: "open" }));
+  if (!result.isConfirmed) return;
 
-  Swal.fire("Grupo reabierto 🔓");
+  setLoading(true);
+
+  try {
+    const q = query(
+      collection(db, "payments"),
+      where("groupId", "==", groupId)
+    );
+
+    const snapshot = await getDocs(q);
+
+    const batch = writeBatch(db);
+
+    snapshot.forEach((docu) => {
+      batch.delete(docu.ref);
+    });
+
+    await batch.commit();
+
+    Swal.fire("Pagos eliminados", "", "success");
+  } catch (error) {
+    console.error(error);
+  } finally {
+    setLoading(false);
+  }
 };
+
+//reabrir grupo
+// const reopenGroup = async () => {
+//   const ref = doc(db, "groups", groupId);
+
+//   await updateDoc(ref, {
+//     status: "open",
+//   });
+
+//   setGroup(prev => ({ ...prev, status: "open" }));
+
+//   Swal.fire("Grupo reabierto 🔓");
+// };
 
 //cerrar cuentas
-const closeGroupAccounts = async () => {
-  const ref = doc(db, "groups", groupId);
-  const debtsCol = collection(db, "groups", groupId, "debts");
+// const closeGroupAccounts = async () => {
+//   const ref = doc(db, "groups", groupId);
+//   const debtsCol = collection(db, "groups", groupId, "debts");
 
-  const { deudas } = calculateDebts(people, expenses);
+//   const { deudas } = calculateDebts(people, expenses);
 
-  const oldDebts = await getDocs(debtsCol);
+//   const oldDebts = await getDocs(debtsCol);
 
-  const batch = writeBatch(db);
+//   const batch = writeBatch(db);
 
-  // 🔥 borrar espejo anterior
-  oldDebts.forEach(d => batch.delete(d.ref));
+//   // 🔥 borrar espejo anterior
+//   oldDebts.forEach(d => batch.delete(d.ref));
 
-  // 🔒 guardar nuevo espejo
-  deudas.forEach(d => {
-    const debtRef = doc(debtsCol);
-    batch.set(debtRef, d);
-  });
+//   // 🔒 guardar nuevo espejo
+//   deudas.forEach(d => {
+//     const debtRef = doc(debtsCol);
+//     batch.set(debtRef, d);
+//   });
 
-  batch.update(ref, { status: "closed" });
-  await batch.commit();
+//   batch.update(ref, { status: "closed" });
+//   await batch.commit();
 
-  setGroup(prev => ({ ...prev, status: "closed" }));
-  Swal.fire("Cuentas cerradas ✅");
-};
+//   setGroup(prev => ({ ...prev, status: "closed" }));
+//   Swal.fire("Cuentas cerradas ✅");
+// };
 
 
-const canCloseAccounts = !group?.adminUid;
+// const canCloseAccounts = !group?.adminUid;
 
   // Salir del grupo
 const exitGroup = async () => {
@@ -463,7 +511,7 @@ const exitGroup = async () => {
     icon: "question",
     iconColor:"#269181",
     showCancelButton: true,
-    confirmButtonText: "Salir",
+    confirmButtonText: "Salir del grupo",
     cancelButtonText: "Cerrar",
     confirmButtonColor: "#35b67e",
     background: "#dee0e0",
@@ -528,6 +576,12 @@ const exitGroup = async () => {
   );
 }
 
+{loading && (
+  <div className="global-loader">
+    <div className="spinner"></div>
+  </div>
+)}
+
   return (
     <div className="app">
       <img src="logo.png" alt="Cuentas Claras" className="Create" />
@@ -588,6 +642,7 @@ const exitGroup = async () => {
       groupId={groupId}
       isAdminMode={isAdminMode}
       canEdit={canEdit}
+      handleClearPayments={handleClearPayments}
       />
 
 
@@ -631,9 +686,9 @@ const exitGroup = async () => {
   </div>
   
 )}
-
-  </div>
+  </div> 
   );
+  
 }
 
 export default App;

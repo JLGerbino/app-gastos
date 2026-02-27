@@ -69,6 +69,7 @@ export default function BalanceList({
   payments = [],
   groupId,
   canEdit,
+  handleClearPayments,
 }) {
   if (!people.length) return null;
 
@@ -309,6 +310,12 @@ export default function BalanceList({
     ))}
   </ul>
 )}
+{/* {canEdit && (
+  <div className="bottom-icon" onClick={handleClearPayments}>
+    💳
+    <small>Limpiar pagos</small>
+  </div>
+)} */}
 
     </div>
   );
