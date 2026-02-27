@@ -293,10 +293,17 @@ li,p{
   font-size: 20px;
   cursor: pointer;
   color: #283655;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .bottom-icon:hover { 
   color: #dee0e0;
+}
+
+.bottom-icon small{
+  pointer-events: none;
 }
 
 .app {

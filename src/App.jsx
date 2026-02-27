@@ -134,11 +134,11 @@ const handleDeleteGroup = async () => {
   // Primera confirmación
   const confirm1 = await Swal.fire({
     title: "Eliminar grupo",
-    text: "Esta acción eliminará el grupo con TODOS los participantes, gastos y pagos.",
+    text: "Esta acción eliminará el grupo con TODOS los participantes, gastos y pagos!",
     icon: "warning",
     iconColor:"#269181",
     showCancelButton: true,
-    confirmButtonText: "Continuar",
+    confirmButtonText: "Eliminar",
     cancelButtonText: "Cancelar",
     confirmButtonColor: "#d33",
     background: "#dee0e0",
