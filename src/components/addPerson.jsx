@@ -16,6 +16,8 @@ export default function AddPerson({
 
 
   const totalPersonas = people.reduce((acc, p) => acc + p.count, 0);
+
+  //Agregar persona
   const addPerson = () => {
     if (!name.trim())  return Swal.fire({
           icon: "warning",
@@ -59,11 +61,12 @@ export default function AddPerson({
     setAlias("");
   };
 
+  //Borrar persona
   const handleDeletePerson = async (person) => {
   const result = await Swal.fire({
     title:  `¿Seguro de eliminar a ${person.name}?`,
     text: "Se eliminará la persona y todos sus gastos",
-    icon: "warning",
+    icon: "question",
     showCancelButton: true,
     background: "#dee0e0",
     color:"#283655",
@@ -73,6 +76,7 @@ export default function AddPerson({
     cancelButtonText: "Cancelar",
   });
   if (!result.isConfirmed) return;
+
 Swal.fire({
         title: "Eliminando participante...",
         allowOutsideClick: false,
@@ -87,8 +91,7 @@ Swal.fire({
       });
   try {
     await deletePerson(person);
-
-    // Reemplaza el loading
+    
     await Swal.fire({
       icon: "success",
       title: "Eliminado",
@@ -115,6 +118,7 @@ Swal.fire({
   }
 };
 
+//Mostrar alias
 const showPersonAlias = (person) => {
   Swal.fire({
     title: person.name,
@@ -175,6 +179,7 @@ const showPersonAlias = (person) => {
   });
 };
 
+//Editar persona
 const handleEditPerson = async (person) => {
   const result = await Swal.fire({
     title: "Editar participante",
@@ -319,16 +324,7 @@ const handleEditPerson = async (person) => {
           </li>
         ))}
       </ul>
-      <p>Total de personas:{totalPersonas}</p>
-
-     {/* <div>
-        {canEdit && (<button
-  onClick={handleDeletePerson}
-  style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
->
-  <i className="fa-solid fa-trash"></i> Borrar participantes</button>)}
-
-        </div>      */}
+      <p>Total de personas:{totalPersonas}</p>    
     </div>
   );
 }

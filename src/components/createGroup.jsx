@@ -135,10 +135,6 @@ if (isAdmin) {
     return;
   }
 }
-// if (!/^\d{4}$/.test(adminPin)) {
-//     Swal.fire("");
-//     return;
-//   }
     await setDoc(ref, {
       name: name.trim(),
       code,
@@ -254,7 +250,7 @@ onGroupCreated({
                 className="modal-close"
                 onClick={closeCreateModal}
               >
-                {/* ✖ */}
+                
               <i className="fa-solid fa-x"></i>               
               </button>
 

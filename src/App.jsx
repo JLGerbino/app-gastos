@@ -15,11 +15,9 @@ import {
   doc,
   query,
   where,
-  getDocs,
-  //getDoc,
+  getDocs,  
   updateDoc,
-  writeBatch,
-  //serverTimestamp, //agregado para pagos
+  writeBatch,  
 } from "firebase/firestore";
 import "./App.css";
 
@@ -40,7 +38,7 @@ function App() {
   const [people, setPeople] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [started, setStarted] = useState(false);
-  const [payments, setPayments] = useState([]);//agregado para pagos
+  const [payments, setPayments] = useState([]);
   const [debts, setDebts] = useState([]);
   const hasAdmin = !!group?.adminUid;
   const isAdmin = !!group?.adminUid && group.adminUid === user?.uid;
@@ -98,40 +96,9 @@ useEffect(() => {
 }, [groupId]);
 
 
-// //traer nombre grupo de firebase
-// useEffect(() => {
-//   if (!groupId) return;
-
-//   const fetchGroupInfo = async () => {
-//     const ref = doc(db, "groups", groupId);
-//     const snap = await getDoc(ref);
-
-//     if (snap.exists()) {
-//       const data = snap.data();
-
-//       setGroup({
-//         id: snap.id,
-//         ...data,
-//         status: data.status || "open", // 👈 CLAVE
-//       });
-
-//       setGroupName(data.name || "");
-//       setGroupCode(data.code || "");
-
-
-
-
-//       // si el grupo NO tiene admin → todos pueden editar
-//       setIsAdminMode(!data.hasAdmin);
-//     }
-//   };
-
-//   fetchGroupInfo();
-// }, [groupId]);
 
 //Borra grupo
-const handleDeleteGroup = async () => {
-  // Primera confirmación
+const handleDeleteGroup = async () => {  
   const confirm1 = await Swal.fire({
     title: "Eliminar grupo",
     text: "Esta acción eliminará el grupo con TODOS los participantes, gastos y pagos!",
@@ -146,8 +113,7 @@ const handleDeleteGroup = async () => {
   });
 
   if (!confirm1.isConfirmed) return;
-
-  // Segunda confirmación fuerte
+  
   const confirm2 = await Swal.fire({
     title: "¿Estás completamente seguro?",
     text: "Esta acción es irreversible.",
@@ -174,32 +140,28 @@ const handleDeleteGroup = async () => {
           },
         });
 
-  try {
-    // 🔹 Borrar expenses
+  try {    
     const expensesSnap = await getDocs(
       collection(db, "groups", groupId, "expenses")
     );
     for (const docu of expensesSnap.docs) {
       await deleteDoc(docu.ref);
     }
-
-    // 🔹 Borrar payments
+    
     const paymentsSnap = await getDocs(
       collection(db, "groups", groupId, "payments")
     );
     for (const docu of paymentsSnap.docs) {
       await deleteDoc(docu.ref);
     }
-
-    // 🔹 Borrar people
+    
     const peopleSnap = await getDocs(
       collection(db, "groups", groupId, "people")
     );
     for (const docu of peopleSnap.docs) {
       await deleteDoc(docu.ref);
     }
-
-    // 🔹 Borrar grupo
+    
     await deleteDoc(doc(db, "groups", groupId));
 
     await Swal.fire({
@@ -211,8 +173,7 @@ const handleDeleteGroup = async () => {
       background: "#dee0e0",
       color: "#283655",
     });
-
-    // 🔹 Volver a pantalla inicial
+    
     setGroupId(null);
 
   } catch (error) {
@@ -240,7 +201,7 @@ const scrollToSection = (id) => {
 };
 
 
-//traspasar administrador
+//Traspasar administrador
 const handleAdminPinLogin = async () => {
   const result = await Swal.fire({
     title: "¿Querés ser administrador?",
@@ -259,13 +220,12 @@ const handleAdminPinLogin = async () => {
     },
     inputPlaceholder: "PIN de 4 dígitos",
   });
-
-  // 🔴 Si canceló o cerró
+  
   if (!result.isConfirmed) return;
 
   const pin = result.value;
 
-  // 🔴 Si confirmó pero dejó vacío
+  
   if (!pin || !pin.trim()) {
     await Swal.fire({
       title: "Tenés que ingresar el PIN",
@@ -276,9 +236,7 @@ const handleAdminPinLogin = async () => {
       color: "#283655",
     });
     return;
-  }
-
-  // 🔴 Si el PIN es incorrecto
+  }  
   if (pin !== group.adminPin) {
     await Swal.fire({
       title: "PIN incorrecto",
@@ -289,9 +247,7 @@ const handleAdminPinLogin = async () => {
       color: "#283655",
     });
     return;
-  }
-
-  // 🟢 Si el PIN es correcto
+  }  
   const { value: newName } = await Swal.fire({
     title: "Ingresá el nombre del administrador",
     input: "text",
@@ -338,85 +294,6 @@ const handleAdminPinLogin = async () => {
     color: "#283655",
   });
 };
-
-
-// const handleAdminPinLogin = async () => {
-//   const { value: pin } = await Swal.fire({
-//     title: "Queres ser administrador?",
-//     text: "Ingresa el PIN",
-//     input: "password",
-//     background: "#dee0e0",
-//     color:"#283655",
-//     iconColor:"#269181",
-//     showCancelButton: true,
-//     confirmButtonColor:"#35b67e",
-//     confirmButtonText:"Confirmar",
-//     cancelButtonText: "Cerrar",
-//     inputAttributes: {
-//       maxlength: 4,
-//       inputmode: "numeric",
-//     },
-//     inputPlaceholder: "PIN de 4 dígitos",
-//   });
-// if (pin === group.adminPin) {
-
-//   const { value: newName } = await Swal.fire({
-//     title: "Ingresá el nombre del administrador",
-//     input: "text",
-//     inputPlaceholder: "Tu nombre",
-//     background: "#dee0e0",
-//     color:"#283655",
-//     iconColor:"#269181",
-//     confirmButtonColor:"#35b67e",
-//     confirmButtonText:"Confirmar",
-//     cancelButtonText: "Cancelar",
-//     inputValidator: (value)=>{
-//       if(!value || !value.trim()) {
-//         return "Tenés que ingresar el nombre del nuevo administrador"
-//       }
-
-//     }
-//   });
-//   Swal.fire({
-//           title: "Cambiando de administrador...",
-//           allowOutsideClick: false,
-//           allowEscapeKey: false,
-//           background: "#dee0e0",
-//           color:"#283655",
-//           iconColor:"#269181",
-//           confirmButtonColor:"#35b67e",
-//           didOpen: () => {
-//             Swal.showLoading();
-//           },
-//         });
-
-//   await updateDoc(doc(db, "groups", groupId), {
-//     adminUid: user.uid,
-//     adminName: newName,
-//   });
-
-//   Swal.fire({
-//     title: "Ahora sos el administrador del grupo",
-//     background: "#dee0e0",
-//     color:"#283655",
-//     iconColor:"#269181",
-//     confirmButtonColor:"#35b67e",
-//     confirmButtonText:"Cerrar",
-//   });
-// }
-//   else {
-//     Swal.fire({
-//     title: "PIN incorrecto",
-//     background: "#dee0e0",
-//     color:"#283655",
-//     iconColor:"#269181",
-//     confirmButtonColor:"#35b67e",
-//     confirmButtonText:"Cerrar",
-//   });
-
-//   }
-// };
-
 
   // Ver personas en tiempo real
   useEffect(() => {
@@ -483,19 +360,11 @@ const handleAdminPinLogin = async () => {
   const addExpenseToDB = (expense) =>
     addDoc(collection(db, "groups", groupId, "expenses"), expense);
 
-  //Agregar un pago //agregado para pagos
-  // const addPaymentToDB = (payment) =>
-  // addDoc(collection(db, "groups", groupId, "payments"), {
-  //   ...payment,
-  //   createdAt: serverTimestamp(),
-  // });
-
-
   // Borrar Gasto
   const deleteExpenseFromDB = (expenseId) =>
     deleteDoc(doc(db, "groups", groupId, "expenses", expenseId));
 
-    //Borrar TODOS los gastos del grupo
+  //Borrar TODOS los gastos del grupo
   const deleteAllExpenses = async () => {
     const q = query(
       collection(db, "groups", groupId, "expenses")
@@ -526,20 +395,6 @@ try {
 
 };
 
-//con grupo cerrado escuchar espejo
-// useEffect(() => {
-//   if (!groupId || group?.status !== "closed") return;
-
-//   const unsub = onSnapshot(
-//     collection(db, "groups", groupId, "debts"),
-//     snap => {
-//       setDebts(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-//     }
-//   );
-
-//   return unsub;
-// }, [groupId, group?.status]);
-
 //guardar pago
 const addPayment = async (payment) => {
   await addDoc(
@@ -553,7 +408,7 @@ const handleClearPayments = async () => {
   const result = await Swal.fire({
     title: "Eliminar todos los pagos",
     text: "Esta acción no se puede deshacer",
-    icon: "warning",
+    icon: "question",
     showCancelButton: true,
     confirmButtonText: "Sí, eliminar",
     cancelButtonText: "Cancelar",
@@ -574,8 +429,7 @@ Swal.fire({
     didOpen: () => {
       Swal.showLoading();
     },
-  });
-  // setLoading(true);
+  });  
 
   try {
     const paymentsRef = collection(db, "groups", groupId, "payments");
@@ -598,51 +452,7 @@ Swal.fire({
   }
 };
 
-
-//reabrir grupo
-// const reopenGroup = async () => {
-//   const ref = doc(db, "groups", groupId);
-
-//   await updateDoc(ref, {
-//     status: "open",
-//   });
-
-//   setGroup(prev => ({ ...prev, status: "open" }));
-
-//   Swal.fire("Grupo reabierto 🔓");
-// };
-
-//cerrar cuentas
-// const closeGroupAccounts = async () => {
-//   const ref = doc(db, "groups", groupId);
-//   const debtsCol = collection(db, "groups", groupId, "debts");
-
-//   const { deudas } = calculateDebts(people, expenses);
-
-//   const oldDebts = await getDocs(debtsCol);
-
-//   const batch = writeBatch(db);
-
-//   // 🔥 borrar espejo anterior
-//   oldDebts.forEach(d => batch.delete(d.ref));
-
-//   // 🔒 guardar nuevo espejo
-//   deudas.forEach(d => {
-//     const debtRef = doc(debtsCol);
-//     batch.set(debtRef, d);
-//   });
-
-//   batch.update(ref, { status: "closed" });
-//   await batch.commit();
-
-//   setGroup(prev => ({ ...prev, status: "closed" }));
-//   Swal.fire("Cuentas cerradas ✅");
-// };
-
-
-// const canCloseAccounts = !group?.adminUid;
-
-  // Salir del grupo
+// Salir del grupo
 const exitGroup = async () => {
   const result = await Swal.fire({
     title: "Salir del grupo",
@@ -685,14 +495,7 @@ const exitGroup = async () => {
     background: "#dee0e0",
     color: "#283655",
   });
-};
-
-  // const exitGroup = () => {
-  //   localStorage.removeItem("groupId");
-  //   setGroupId(null);
-  //   setPeople([]);
-  //   setExpenses([]);
-  // };
+};  
 
 //Bienvenida
   if (!started && !groupId) {
@@ -707,7 +510,6 @@ const exitGroup = async () => {
     </div>
   );
 }
-
 
   // Pantalla crear/Entrar a grupo
   if (!groupId) {
@@ -727,12 +529,6 @@ const exitGroup = async () => {
   );
 }
 
-// {loading && (
-//   <div className="global-loader">
-//     <div className="spinner"></div>
-//   </div>
-// )}
-
   return (
     <div className="app">
       <img src="logo.png" alt="Cuentas Claras" className="Create" />
@@ -747,20 +543,6 @@ const exitGroup = async () => {
     {isAdmin && " (vos)"}
   </p>
 )}
-{/* <div>
-{!isAdmin && group?.adminPin && (
-
-  <button
-    className="boton"
-    onClick={handleAdminPinLogin}
-  >Ser administrador
-  </button>
-)}</div> */}
-{/* <div>
-      <button className="exit-btn" onClick={exitGroup}>
-        Salir <i className="fa fa-sign-out" aria-hidden="true"></i>
-      </button>
-</div> */}
 
       <AddPerson
         people={people}

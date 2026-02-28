@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
-export default function AddExpense({
-  //groupId,
+export default function AddExpense({  
   group,
   people,
   expenses,
@@ -15,6 +14,7 @@ export default function AddExpense({
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
 
+  //Agregar gasto
   const addExpense = () => {
     if (!payer || !amount) return Swal.fire({
       icon: "warning",
@@ -39,6 +39,7 @@ export default function AddExpense({
     setPayer("");
   };
 
+  //Borrar gasto
   const deleteExpense = async (expenseId) => { 
     const expense = expenses.find(e => e.id === expenseId);
     const result = await Swal.fire({
@@ -57,7 +58,7 @@ export default function AddExpense({
 
   `,
 
-  icon: "warning",
+  icon: "question",
   showCancelButton: true,
   background: "#dee0e0",
   color: "#283655",
@@ -68,8 +69,7 @@ export default function AddExpense({
 });
 
   if (!result.isConfirmed) return;
-
-  // 🔒 Loading bloqueante
+  
   Swal.fire({
     title: "Eliminando gasto...",
     allowOutsideClick: false,
@@ -85,8 +85,7 @@ export default function AddExpense({
 
   try {
     await deleteExpenseFromDB(expenseId);
-
-    // ✅ Reemplaza el loading
+    
     await Swal.fire({
       icon: "success",
       title: "Eliminado",
@@ -109,11 +108,12 @@ export default function AddExpense({
   }
 };
 
+//Borrar todos los gastos
 const deleteAll = async () => {
   const result = await Swal.fire({
     title: "¿Borrar TODOS los gastos?",
     text: "Esta acción no se puede deshacer",
-    icon: "warning",
+    icon: "question",
     showCancelButton: true,
     background: "#dee0e0",
     color:"#283655",
@@ -125,7 +125,6 @@ const deleteAll = async () => {
 
   if (!result.isConfirmed) return;
 
-  // 🔒 Loading bloqueante
   Swal.fire({
     title: "Eliminando los gastos...",
     background: "#dee0e0",
@@ -141,7 +140,6 @@ const deleteAll = async () => {
   try {
     await deleteAllExpenses();
 
-    // ✅ Reemplaza el loading
     await Swal.fire({
       icon: "success",
       title: "Eliminados",
@@ -163,7 +161,7 @@ const deleteAll = async () => {
   }
 };
 
-//nuevo
+//Mostrar gastos y alias
 const showPersonExpenses = (personName) => {
   const personExpenses = expenses.filter(
     e => e.payer === personName
@@ -251,7 +249,9 @@ const showPersonExpenses = (personName) => {
     },
   });
 };
+
 console.log("AddExpense group:", group);
+
   return (
     <div className="card" id="section-expense">
       <h2  className="titulo">Agregar gasto</h2>
