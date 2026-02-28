@@ -102,6 +102,18 @@ export default function BalanceList({
     });
 
     if (!result.isConfirmed) return;
+    Swal.fire({
+        title: "Registrando pago...",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        background: "#dee0e0",
+        color:"#283655",
+        iconColor:"#269181",
+        confirmButtonColor:"#35b67e",
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
 
     await addDoc(
       collection(db, "groups", groupId, "payments"),
@@ -143,6 +155,19 @@ export default function BalanceList({
   });
 
   if (!result.isConfirmed) return;
+   
+  Swal.fire({
+      title: "Eliminando pago...",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
   await deleteDoc(
     doc(db, "groups", groupId, "payments", payment.id)
@@ -152,6 +177,8 @@ export default function BalanceList({
     icon: "success",
     title: "Pago eliminado",
     timer: 1200,
+    color:"#283655",
+    iconColor:"#269181",
     showConfirmButton: false,
   });
 };
@@ -310,6 +337,15 @@ export default function BalanceList({
     ))}
   </ul>
 )}
+<div>
+        {canEdit && (<button
+  onClick={handleClearPayments}
+  style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
+>
+  <i className="fa-solid fa-trash"></i> Borrar todos los pagos</button>)}
+
+        </div>     
+     
 {/* {canEdit && (
   <div className="bottom-icon" onClick={handleClearPayments}>
     💳

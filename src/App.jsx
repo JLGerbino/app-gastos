@@ -161,6 +161,18 @@ const handleDeleteGroup = async () => {
   });
 
   if (!confirm2.isConfirmed) return;
+  Swal.fire({
+          title: "Eliminando grupo...",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",
+          confirmButtonColor:"#35b67e",
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
 
   try {
     // 🔹 Borrar expenses
@@ -193,6 +205,7 @@ const handleDeleteGroup = async () => {
     await Swal.fire({
       title: "Grupo eliminado",
       icon: "success",
+      iconColor:"#269181",
       timer: 1500,
       showConfirmButton: false,
       background: "#dee0e0",
@@ -208,6 +221,9 @@ const handleDeleteGroup = async () => {
       title: "Error al eliminar",
       text: "Intentá nuevamente",
       icon: "error",
+      iconColor:"#269181",
+      background: "#dee0e0",
+      color: "#283655",
     });
   }
 };
@@ -226,16 +242,16 @@ const scrollToSection = (id) => {
 
 //traspasar administrador
 const handleAdminPinLogin = async () => {
-  const { value: pin } = await Swal.fire({
-    title: "Queres ser administrador?",
-    text: "Ingresa el PIN",
+  const result = await Swal.fire({
+    title: "¿Querés ser administrador?",
+    text: "Ingresá el PIN",
     input: "password",
     background: "#dee0e0",
-    color:"#283655",
-    iconColor:"#269181",
+    color: "#283655",
+    iconColor: "#269181",
     showCancelButton: true,
-    confirmButtonColor:"#35b67e",
-    confirmButtonText:"Confirmar",
+    confirmButtonColor: "#35b67e",
+    confirmButtonText: "Confirmar",
     cancelButtonText: "Cerrar",
     inputAttributes: {
       maxlength: 4,
@@ -243,25 +259,71 @@ const handleAdminPinLogin = async () => {
     },
     inputPlaceholder: "PIN de 4 dígitos",
   });
-if (pin === group.adminPin) {
 
+  // 🔴 Si canceló o cerró
+  if (!result.isConfirmed) return;
+
+  const pin = result.value;
+
+  // 🔴 Si confirmó pero dejó vacío
+  if (!pin || !pin.trim()) {
+    await Swal.fire({
+      title: "Tenés que ingresar el PIN",
+      icon: "warning",
+      iconColor:"#269181",
+      confirmButtonColor: "#35b67e",
+      background: "#dee0e0",
+      color: "#283655",
+    });
+    return;
+  }
+
+  // 🔴 Si el PIN es incorrecto
+  if (pin !== group.adminPin) {
+    await Swal.fire({
+      title: "PIN incorrecto",
+      icon: "error",
+      iconColor:"#269181",
+      confirmButtonColor: "#35b67e",
+      background: "#dee0e0",
+      color: "#283655",
+    });
+    return;
+  }
+
+  // 🟢 Si el PIN es correcto
   const { value: newName } = await Swal.fire({
     title: "Ingresá el nombre del administrador",
     input: "text",
     inputPlaceholder: "Tu nombre",
     background: "#dee0e0",
-    color:"#283655",
-    iconColor:"#269181",
-    confirmButtonColor:"#35b67e",
-    confirmButtonText:"Confirmar",
+    color: "#283655",
+    confirmButtonColor: "#35b67e",
+    confirmButtonText: "Confirmar",
     cancelButtonText: "Cancelar",
-    inputValidator: (value)=>{
-      if(!value || !value.trim()) {
-        return "Tenés que ingresar el nombre del nuevo administrador"
+    showCancelButton: true,
+    inputValidator: (value) => {
+      if (!value || !value.trim()) {
+        return "Tenés que ingresar el nombre del nuevo administrador";
       }
-
-    }
+    },
   });
+
+  if (!newName) return;
+
+    Swal.fire({
+          title: "Cambiando de administrador...",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",
+          confirmButtonColor:"#35b67e",
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
 
   await updateDoc(doc(db, "groups", groupId), {
     adminUid: user.uid,
@@ -270,25 +332,90 @@ if (pin === group.adminPin) {
 
   Swal.fire({
     title: "Ahora sos el administrador del grupo",
+    icon: "success",
+    confirmButtonColor: "#35b67e",
     background: "#dee0e0",
-    color:"#283655",
-    iconColor:"#269181",
-    confirmButtonColor:"#35b67e",
-    confirmButtonText:"Cerrar",
+    color: "#283655",
   });
-}
-  else {
-    Swal.fire({
-    title: "PIN incorrecto",
-    background: "#dee0e0",
-    color:"#283655",
-    iconColor:"#269181",
-    confirmButtonColor:"#35b67e",
-    confirmButtonText:"Cerrar",
-  });
-
-  }
 };
+
+
+// const handleAdminPinLogin = async () => {
+//   const { value: pin } = await Swal.fire({
+//     title: "Queres ser administrador?",
+//     text: "Ingresa el PIN",
+//     input: "password",
+//     background: "#dee0e0",
+//     color:"#283655",
+//     iconColor:"#269181",
+//     showCancelButton: true,
+//     confirmButtonColor:"#35b67e",
+//     confirmButtonText:"Confirmar",
+//     cancelButtonText: "Cerrar",
+//     inputAttributes: {
+//       maxlength: 4,
+//       inputmode: "numeric",
+//     },
+//     inputPlaceholder: "PIN de 4 dígitos",
+//   });
+// if (pin === group.adminPin) {
+
+//   const { value: newName } = await Swal.fire({
+//     title: "Ingresá el nombre del administrador",
+//     input: "text",
+//     inputPlaceholder: "Tu nombre",
+//     background: "#dee0e0",
+//     color:"#283655",
+//     iconColor:"#269181",
+//     confirmButtonColor:"#35b67e",
+//     confirmButtonText:"Confirmar",
+//     cancelButtonText: "Cancelar",
+//     inputValidator: (value)=>{
+//       if(!value || !value.trim()) {
+//         return "Tenés que ingresar el nombre del nuevo administrador"
+//       }
+
+//     }
+//   });
+//   Swal.fire({
+//           title: "Cambiando de administrador...",
+//           allowOutsideClick: false,
+//           allowEscapeKey: false,
+//           background: "#dee0e0",
+//           color:"#283655",
+//           iconColor:"#269181",
+//           confirmButtonColor:"#35b67e",
+//           didOpen: () => {
+//             Swal.showLoading();
+//           },
+//         });
+
+//   await updateDoc(doc(db, "groups", groupId), {
+//     adminUid: user.uid,
+//     adminName: newName,
+//   });
+
+//   Swal.fire({
+//     title: "Ahora sos el administrador del grupo",
+//     background: "#dee0e0",
+//     color:"#283655",
+//     iconColor:"#269181",
+//     confirmButtonColor:"#35b67e",
+//     confirmButtonText:"Cerrar",
+//   });
+// }
+//   else {
+//     Swal.fire({
+//     title: "PIN incorrecto",
+//     background: "#dee0e0",
+//     color:"#283655",
+//     iconColor:"#269181",
+//     confirmButtonColor:"#35b67e",
+//     confirmButtonText:"Cerrar",
+//   });
+
+//   }
+// };
 
 
   // Ver personas en tiempo real
@@ -392,11 +519,11 @@ try {
     alias: data.alias.trim(),
   });
 } catch (error) {console.error(error);
-  
+
 }finally {
     setLoading(false);
   }
-  
+
 };
 
 //con grupo cerrado escuchar espejo
@@ -421,6 +548,7 @@ const addPayment = async (payment) => {
   );
 };
 
+//Borrar todos los pagos
 const handleClearPayments = async () => {
   const result = await Swal.fire({
     title: "Eliminar todos los pagos",
@@ -430,19 +558,29 @@ const handleClearPayments = async () => {
     confirmButtonText: "Sí, eliminar",
     cancelButtonText: "Cancelar",
     confirmButtonColor: "#d33",
+    iconColor:"#269181"
   });
 
   if (!result.isConfirmed) return;
 
-  setLoading(true);
+Swal.fire({
+    title: "Eliminando los pagos...",
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    confirmButtonColor:"#35b67e",
+    didOpen: () => {
+      Swal.showLoading();
+    },
+  });
+  // setLoading(true);
 
   try {
-    const q = query(
-      collection(db, "payments"),
-      where("groupId", "==", groupId)
-    );
+    const paymentsRef = collection(db, "groups", groupId, "payments");
 
-    const snapshot = await getDocs(q);
+    const snapshot = await getDocs(paymentsRef);
 
     const batch = writeBatch(db);
 
@@ -459,6 +597,7 @@ const handleClearPayments = async () => {
     setLoading(false);
   }
 };
+
 
 //reabrir grupo
 // const reopenGroup = async () => {
@@ -519,6 +658,18 @@ const exitGroup = async () => {
   });
 
   if (!result.isConfirmed) return;
+  Swal.fire({
+          title: "Saliendo del grupo...",
+          allowOutsideClick: false,
+          allowEscapeKey: false,
+          background: "#dee0e0",
+          color:"#283655",
+          iconColor:"#269181",
+          confirmButtonColor:"#35b67e",
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
 
   localStorage.removeItem("groupId");
   setGroupId(null);
@@ -530,14 +681,14 @@ const exitGroup = async () => {
     icon: "success",
     timer: 1200,
     iconColor:"#269181",
-    showConfirmButton: false,    
+    showConfirmButton: false,
     background: "#dee0e0",
     color: "#283655",
   });
 };
 
-  // const exitGroup = () => {    
-  //   localStorage.removeItem("groupId");    
+  // const exitGroup = () => {
+  //   localStorage.removeItem("groupId");
   //   setGroupId(null);
   //   setPeople([]);
   //   setExpenses([]);
@@ -576,11 +727,11 @@ const exitGroup = async () => {
   );
 }
 
-{loading && (
-  <div className="global-loader">
-    <div className="spinner"></div>
-  </div>
-)}
+// {loading && (
+//   <div className="global-loader">
+//     <div className="spinner"></div>
+//   </div>
+// )}
 
   return (
     <div className="app">
@@ -648,7 +799,7 @@ const exitGroup = async () => {
 
 {groupId && (
   <div className="bottom-bar">
-    
+
 
     <div className="bottom-icon" onClick={() => scrollToSection("section-people")}>
   <i className="fa-solid fa-person-circle-plus"></i>
@@ -664,15 +815,15 @@ const exitGroup = async () => {
   <i className="fa-solid fa-calculator"></i>
   <small>Balance</small>
 </div>
-   
+
 {group?.adminUid && group.adminUid !== user?.uid && (
     <div className="bottom-icon" onClick={handleAdminPinLogin}>
       <i className="fa-solid fa-crown"></i>
       <small>Admin</small>
     </div>
-  )} 
+  )}
 
-  <div className="bottom-icon" onClick={exitGroup}>    
+  <div className="bottom-icon" onClick={exitGroup}>
       <i className="fa-solid fa-house"></i>
       <small>Inicio</small>
     </div>
@@ -684,11 +835,11 @@ const exitGroup = async () => {
       </div>
      )}
   </div>
-  
+
 )}
-  </div> 
+  </div>
   );
-  
+
 }
 
 export default App;

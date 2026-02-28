@@ -72,23 +72,19 @@ export default function AddPerson({
     confirmButtonText: "Eliminar",
     cancelButtonText: "Cancelar",
   });
-
   if (!result.isConfirmed) return;
-
-  // 🔒 Loading bloqueante
-  Swal.fire({
-    title: "Eliminando participante...",
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    background: "#dee0e0",
-    color:"#283655",
-    iconColor:"#269181",
-    confirmButtonColor:"#35b67e",
-    didOpen: () => {
-      Swal.showLoading();
-    },
-  });
-
+Swal.fire({
+        title: "Eliminando participante...",
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        background: "#dee0e0",
+        color:"#283655",
+        iconColor:"#269181",
+        confirmButtonColor:"#35b67e",
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
   try {
     await deletePerson(person);
 
@@ -324,6 +320,15 @@ const handleEditPerson = async (person) => {
         ))}
       </ul>
       <p>Total de personas:{totalPersonas}</p>
+
+     {/* <div>
+        {canEdit && (<button
+  onClick={handleDeletePerson}
+  style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
+>
+  <i className="fa-solid fa-trash"></i> Borrar participantes</button>)}
+
+        </div>      */}
     </div>
   );
 }

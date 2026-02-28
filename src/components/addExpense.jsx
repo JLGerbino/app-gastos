@@ -127,7 +127,7 @@ const deleteAll = async () => {
 
   // 🔒 Loading bloqueante
   Swal.fire({
-    title: "Eliminando gastos...",
+    title: "Eliminando los gastos...",
     background: "#dee0e0",
     color:"#283655",
     iconColor:"#269181",      
