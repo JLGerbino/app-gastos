@@ -269,6 +269,21 @@ li,p{
 .checkbox{
   accent-color: #35b67e;  
 }
+.btn-danger{
+  color: gray;
+}
+
+.btn-danger{
+  background: #b61028;
+  margin-top: 12px;
+  color: white;
+  width: 190px;
+}
+.btn-danger:disabled{
+  background-color: grey;
+  color: #ADC1c0;
+}
+
 
 /*Barra fija*/
 .bottom-bar {

@@ -309,8 +309,10 @@ console.log("AddExpense group:", group);
       </ul> 
       <div>
         {canEdit && (<button
+    className="btn-danger"    
   onClick={deleteAll}
-  style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
+  disabled={!expenses?.length}
+  // style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
 >
   <i className="fa-solid fa-trash"></i> Borrar todos los gastos</button>)}
 

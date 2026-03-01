@@ -338,9 +338,11 @@ export default function BalanceList({
   </ul>
 )}
 <div>
-        {canEdit && (<button
+       {canEdit && (<button
+       className="btn-danger"
   onClick={handleClearPayments}
-  style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
+  disabled={!payments?.length}
+  // style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
 >
   <i className="fa-solid fa-trash"></i> Borrar todos los pagos</button>)}
 
