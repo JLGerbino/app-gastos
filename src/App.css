@@ -124,6 +124,15 @@ li,p{
   font-weight: bold;
 }
 
+.someExpense{
+  display: flex;
+  justify-content: center;
+}
+
+.expense-some{
+  background:#e6ecff;
+}
+
 .deudores{
   padding: 5px; 
   cursor: pointer; 

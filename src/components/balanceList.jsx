@@ -2,25 +2,54 @@ import { collection, addDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import Swal from "sweetalert2";
 
+
 // La que calcula todo
 const calculateDebts = (people, expenses, payments) => {
-  const totals = {};
-  people.forEach((p) => (totals[p.name] = 0));
+  const balancesMap = {};
 
-  expenses.forEach((e) => {
-    totals[e.payer] += e.amount;
+  // Inicializar balances en 0
+  people.forEach((p) => {
+    balancesMap[p.name] = 0;
   });
 
-  const totalPersonas = people.reduce((acc, p) => acc + p.count, 0);
-  const totalGasto = expenses.reduce((acc, e) => acc + e.amount, 0);
-  const costoPorPersona = totalGasto / totalPersonas;
+  // Procesar cada gasto individualmente
+  expenses.forEach((expense) => {
+  const { payer, amount, participants } = expense;
 
-  const balances = people.map((p) => {
-    const gastoEsperado = p.count * costoPorPersona;
-    const balance = totals[p.name] - gastoEsperado;
-    return { name: p.name, balance };
+  let currentParticipants = participants;
+
+  // 🔥 Si no tiene participants (gastos viejos)
+  if (!currentParticipants || currentParticipants.length === 0) {
+    currentParticipants = people.map(p => ({
+      name: p.name,
+      units: p.count
+    }));
+  }
+
+  const totalUnits = currentParticipants.reduce(
+    (acc, p) => acc + Number(p.units),
+    0
+  );
+
+  if (totalUnits === 0) return;
+
+  const valuePerUnit = amount / totalUnits;
+
+  balancesMap[payer] += amount;
+
+  currentParticipants.forEach((p) => {
+    const share = valuePerUnit * Number(p.units);
+    balancesMap[p.name] -= share;
   });
+}); 
 
+  // Convertir a array
+  const balances = Object.entries(balancesMap).map(([name, balance]) => ({
+    name,
+    balance,
+  }));
+
+  // Aplicar pagos manuales (igual que antes)
   payments.forEach((p) => {
     const payer = balances.find((b) => b.name === p.from);
     const receiver = balances.find((b) => b.name === p.to);
@@ -29,6 +58,7 @@ const calculateDebts = (people, expenses, payments) => {
     if (receiver) receiver.balance -= p.amount;
   });
 
+  // 👇 DESDE ACÁ PARA ABAJO NO TOCAR (tu lógica original)
   const balancesForDebts = balances.map((b) => ({ ...b }));
 
   const deudores = balancesForDebts.filter((b) => b.balance < -0.01);
@@ -60,8 +90,79 @@ const calculateDebts = (people, expenses, payments) => {
     if (acreedores[j].balance < 0.01) j++;
   }
 
-  return { balances, deudas, totalGasto, costoPorPersona };
+  const totalGasto = expenses.reduce((acc, e) => acc + e.amount, 0);
+
+  return {
+    balances,
+    deudas,
+    totalGasto,
+    costoPorPersona: null, // ya no aplica globalmente
+  };
 };
+
+
+
+
+//esta funciona bien sin gastos entre algunos
+// const calculateDebts = (people, expenses, payments) => {
+//   const totals = {};
+//   people.forEach((p) => (totals[p.name] = 0));
+
+//   expenses.forEach((e) => {
+//     totals[e.payer] += e.amount;
+//   });
+
+//   const totalPersonas = people.reduce((acc, p) => acc + p.count, 0);
+//   const totalGasto = expenses.reduce((acc, e) => acc + e.amount, 0);
+//   const costoPorPersona = totalGasto / totalPersonas;
+
+//   const balances = people.map((p) => {
+//     const gastoEsperado = p.count * costoPorPersona;
+//     const balance = totals[p.name] - gastoEsperado;
+//     return { name: p.name, balance };
+//   });
+
+//   payments.forEach((p) => {
+//     const payer = balances.find((b) => b.name === p.from);
+//     const receiver = balances.find((b) => b.name === p.to);
+
+//     if (payer) payer.balance += p.amount;
+//     if (receiver) receiver.balance -= p.amount;
+//   });
+
+//   const balancesForDebts = balances.map((b) => ({ ...b }));
+
+//   const deudores = balancesForDebts.filter((b) => b.balance < -0.01);
+//   const acreedores = balancesForDebts.filter((b) => b.balance > 0.01);
+
+//   deudores.sort((a, b) => a.balance - b.balance);
+//   acreedores.sort((a, b) => b.balance - a.balance);
+
+//   const deudas = [];
+//   let i = 0;
+//   let j = 0;
+
+//   while (i < deudores.length && j < acreedores.length) {
+//     const monto = Math.min(
+//       Math.abs(deudores[i].balance),
+//       acreedores[j].balance
+//     );
+
+//     deudas.push({
+//       from: deudores[i].name,
+//       to: acreedores[j].name,
+//       amount: monto,
+//     });
+
+//     deudores[i].balance += monto;
+//     acreedores[j].balance -= monto;
+
+//     if (Math.abs(deudores[i].balance) < 0.01) i++;
+//     if (acreedores[j].balance < 0.01) j++;
+//   }
+
+//   return { balances, deudas, totalGasto, costoPorPersona };
+// };
 
 export default function BalanceList({
   people,
@@ -267,7 +368,7 @@ export default function BalanceList({
       <h2  className="titulo">Balance</h2>
       <strong>Total gastado: ${totalGasto.toFixed(2)}</strong>
       <br />
-      <strong>A pagar cada uno: ${costoPorPersona.toFixed(2)}</strong>
+      {/* <strong>A pagar cada uno: ${costoPorPersona.toFixed(2)}</strong> */}
 
       <h3 className="balance">Balance individual</h3>
       <ul>

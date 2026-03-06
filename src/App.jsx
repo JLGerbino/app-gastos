@@ -3,7 +3,7 @@ import AddPerson from "./components/addPerson";
 import AddExpense from "./components/addExpense";
 import BalanceList from "./components/balanceList";
 import CreateGroup from "./components/createGroup";
-import { calculateDebts } from "./utils/calculateDebts";
+// import { calculateDebts } from "./utils/calculateDebts";
 import Swal from "sweetalert2";
 import { db } from "./firebase";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
-export default function AddExpense({  
+import { useEffect } from "react";
+export default function AddExpense({
   group,
   people,
   expenses,
@@ -8,42 +9,91 @@ export default function AddExpense({
   deleteExpenseFromDB,
   deleteAllExpenses,
   canEdit,
- 
+
 }) {
   const [payer, setPayer] = useState("");
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
+  const [mode, setMode] = useState("all"); // "all" | "some"
+  const [participants, setParticipants] = useState([]);
+  const [splitType, setSplitType] = useState("all");
+  
+  //Agregar gasto handleAddExpense
+const addExpense = async () => {
+  if (!payer || !amount) return;
 
-  //Agregar gasto
-  const addExpense = () => {
-    if (!payer || !amount) return Swal.fire({
-      icon: "warning",
-      background: "#dee0e0",
-      color: "#283655",
-      iconColor: "#269181",
-      confirmButtonColor: "#35b67e",
-      title:"Completa todos los campos",
-      confirmButtonText: "Cerrar",
-  });
+  const finalParticipants =
+    mode === "all"
+      ? people.map(p => ({
+          name: p.name,
+          units: p.count
+        }))
+      : participants
+          .filter(p => p.selected)
+          .map(p => ({
+            name: p.name,
+            units: Number(p.units)
+          }));
 
-    const newExpense = {
-      payer,
-      desc,
-      amount: parseFloat(amount)
-    };
+const expense = mode === "all"? {
+        payer,
+        amount: Number(amount),
+        desc,
+        createdAt: new Date()
+      }
+    : {
+        payer,
+        amount: Number(amount),
+        desc,
+        participants: finalParticipants,
+        createdAt: new Date()
+      };
+  // {
+  //   payer,
+  //   amount: Number(amount),
+  //   desc,
+  //   participants: finalParticipants,
+  //   createdAt: new Date()
+  // };
 
-    addExpenseToDB(newExpense);
+  await addExpenseToDB(expense);
 
-    setDesc("");
-    setAmount("");
-    setPayer("");
-  };
+  // limpiar form si querés
+  setPayer("");
+  setAmount("");
+  setDesc("");
+  setMode("all")
+};
+
+  // const addExpense = () => {
+  //   if (!payer || !amount) return Swal.fire({
+  //     icon: "warning",
+  //     background: "#dee0e0",
+  //     color: "#283655",
+  //     iconColor: "#269181",
+  //     confirmButtonColor: "#35b67e",
+  //     title:"Completa todos los campos",
+  //     confirmButtonText: "Cerrar",
+  // });
+
+  //   const newExpense = {
+  //     payer,
+  //     desc,
+  //     amount: parseFloat(amount)
+  //   };
+
+  //   addExpenseToDB(newExpense);
+
+  //   setDesc("");
+  //   setAmount("");
+  //   setPayer("");
+  // };
 
   //Borrar gasto
-  const deleteExpense = async (expenseId) => { 
+  const deleteExpense = async (expenseId) => {
     const expense = expenses.find(e => e.id === expenseId);
     const result = await Swal.fire({
-  title: "¿Eliminar gasto?",  
+  title: "¿Eliminar gasto?",
   html: `
     <div style="text-align:center; font-size:26px; margin-top:10px;">
       <p style=font-size:26px; margin-top:10px;"><strong>Pagó:</strong> ${expense.payer}</p>
@@ -69,7 +119,7 @@ export default function AddExpense({
 });
 
   if (!result.isConfirmed) return;
-  
+
   Swal.fire({
     title: "Eliminando gasto...",
     allowOutsideClick: false,
@@ -85,7 +135,7 @@ export default function AddExpense({
 
   try {
     await deleteExpenseFromDB(expenseId);
-    
+
     await Swal.fire({
       icon: "success",
       title: "Eliminado",
@@ -129,7 +179,7 @@ const deleteAll = async () => {
     title: "Eliminando los gastos...",
     background: "#dee0e0",
     color:"#283655",
-    iconColor:"#269181",      
+    iconColor:"#269181",
     allowOutsideClick: false,
     allowEscapeKey: false,
     didOpen: () => {
@@ -161,6 +211,9 @@ const deleteAll = async () => {
   }
 };
 
+// const isAll = !e.participants;
+// const isAll = e.participants?.length === people.length;
+
 //Mostrar gastos y alias
 const showPersonExpenses = (personName) => {
   const personExpenses = expenses.filter(
@@ -185,7 +238,32 @@ const showPersonExpenses = (personName) => {
   );
 
   const listHtml = personExpenses
-    .map(e => `<li>${e.desc || "Sin descripción"} - $${e.amount}</li>`)
+    // .map(e => `<li>${e.desc || "Sin descripción"} - $${e.amount}</li>`)
+    .map(e => {
+    let participantsText = "";
+
+    if (!e.participants || e.participants.length === 0) {
+      participantsText = "Participan: Todos";
+    } else if (e.participants.length === people.length) {
+      participantsText = "Participan: Todos";
+    } else {
+      participantsText =
+        "Participan: " +
+        e.participants
+          .map(p => `${p.name} (${p.units})`)
+          .join(", ");
+    }
+
+    return `
+      <li style="margin-bottom:8px">
+        <strong>${e.desc || "Sin descripción"}</strong> - $${e.amount}
+        <br/>
+        <span style="font-size:12px;color:gray">
+          ${participantsText}
+        </span>
+      </li>
+    `;
+  })
     .join("");
 
   Swal.fire({
@@ -203,7 +281,7 @@ const showPersonExpenses = (personName) => {
           ? `
             <hr />
             <p><strong>Alias para recibir transferencias</strong></p>
-            <p 
+            <p
               id="copyAliasExpense"
               style="
                 font-size:22px;
@@ -241,7 +319,7 @@ const showPersonExpenses = (personName) => {
           title: "Alias copiado",
           background: "#dee0e0",
           color:"#283655",
-          iconColor:"#269181",          
+          iconColor:"#269181",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -250,14 +328,55 @@ const showPersonExpenses = (personName) => {
   });
 };
 
+//Maneja inicializar cuando cambia all/some
+const handleSplitTypeChange = (value) => {
+
+  setMode(value);
+
+  if (value === "some") {
+    const initialParticipants = people.map(p => ({
+      name: p.name,
+      units: p.count,
+      selected: false
+    }));
+
+    setParticipants(initialParticipants);
+  }
+
+  if (value === "all") {
+    const allParticipants = people.map(p => ({
+      name: p.name,
+      units: p.count,
+      selected: true
+    }));
+
+    setParticipants(allParticipants);
+  }
+};
+
+
+//inicializar participantes
+useEffect(() => {
+  if (people.length > 0) {
+    setParticipants(
+      people.map(p => ({
+        name: p.name,
+        units: p.count,
+        selected: false,
+      }))
+    );
+  }
+}, [people]);
+
 console.log("AddExpense group:", group);
 
   return (
     <div className="card" id="section-expense">
+
       <h2  className="titulo">Agregar gasto</h2>
 <div>
       <select value={payer} onChange={(e) => setPayer(e.target.value)} disabled={!canEdit}>
-        
+
         <option value="">--     Quién realizó el gasto    --</option>
         {people.map((p) => (
           <option key={p.id} value={p.name}>
@@ -286,38 +405,120 @@ console.log("AddExpense group:", group);
         disabled={!canEdit}
       />
 </div>
+
+<div>
+  <h3>¿Quiénes participan?</h3>
+
+  <label>
+  <input
+    className="checkbox"
+    type="radio"
+    name="splitType"
+    value="all"
+    checked={mode === "all"}
+    onChange={(e) => handleSplitTypeChange(e.target.value)}
+  />
+  Todos
+</label>
+
+  <label>
+  <input
+    className="checkbox"
+    type="radio"
+    name="splitType"
+    value="some"
+    checked={mode === "some"}
+    onChange={(e) => handleSplitTypeChange(e.target.value)}
+  />
+  Algunos
+</label>
+  
+</div>
+{mode === "some" && (
+  <div className="someExpense">
+  <div>
+  {participants.map((p, index) => (
+    <div
+      key={p.name}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "10px",
+        marginBottom: "6px"
+      }}
+    >
+
+<input
+  className="checkbox"
+  type="checkbox"
+  checked={p.selected}
+  onChange={(e) => {
+    const updated = [...participants];
+    updated[index].selected = e.target.checked;
+    setParticipants(updated);
+  }}
+/>
+
+      <span style={{ width: "120px" }}>
+        {p.name}
+      </span>
+
+<input
+  type="number"
+  min={1}
+  value={p.units}
+  disabled={!p.selected}
+  style={{ width: "60px", marginLeft: "10px" }}
+  onChange={(e) => {
+    const updated = [...participants];
+    updated[index].units = Number(e.target.value);
+    setParticipants(updated);
+  }}
+/>
+
+    </div>
+  ))}
+</div>
+</div>
+)}
+
+
+
+
 <div>
       {canEdit && (<button className="boton" onClick={addExpense}>Agregar</button>)}
 </div>
+
+{/* "people-name expense-payer" */}
 <h3>Gastos</h3>
-      <ul>        
-        {expenses.map((e) => (
+      <ul>
+        ;
+        {expenses.map((e) => (          
           <li key={e.id} className="people-item expense-item">
   <span
-    className="people-name expense-payer"
+    className= "people-name expense-payer "
     onClick={() => showPersonExpenses(e.payer)}
   >
     {e.payer}
-  
+
   {" "}pagó ${e.amount} ({e.desc})</span>
 
   {canEdit && (<button onClick={() => deleteExpense(e.id)}>
     <i className="fa-solid fa-trash"></i>
   </button>)}
-</li>          
-        ))}        
-      </ul> 
+</li>
+        ))}
+      </ul>
       <div>
         {canEdit && (<button
-    className="btn-danger"    
+    className="btn-danger"
   onClick={deleteAll}
-  disabled={!expenses?.length}
-  // style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
+  disabled={!expenses?.length}  
 >
   <i className="fa-solid fa-trash"></i> Borrar todos los gastos</button>)}
 
-        </div>     
-    </div>    
+        </div>
+    </div>
   );
 }
 
