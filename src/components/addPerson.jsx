@@ -18,7 +18,7 @@ export default function AddPerson({
   const totalPersonas = people.reduce((acc, p) => acc + p.count, 0);
 
   //Agregar persona
-  const addPerson = () => {
+  const addPerson = async () => {
     if (!name.trim())  return Swal.fire({
           icon: "warning",
           title: "Falta el nombre del participante",
@@ -50,11 +50,19 @@ export default function AddPerson({
           });
     }
 
-    addPersonToDB({
+    await addPersonToDB({
       name: name.trim(),
       count: Number(count),
       alias: alias.trim(),
     });
+    Swal.fire({
+        icon: "success",
+        title: "Participante agregado",
+        html: `<b>${name}</b>`,
+        timer: 1500,
+        showConfirmButton: false,
+        iconColor:"#269181",
+      });
 
     setName("");
     setCount(1);

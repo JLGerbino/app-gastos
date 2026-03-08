@@ -14,13 +14,22 @@ export default function AddExpense({
   const [payer, setPayer] = useState("");
   const [desc, setDesc] = useState("");
   const [amount, setAmount] = useState("");
-  const [mode, setMode] = useState("all"); // "all" | "some"
+  const [mode, setMode] = useState("all"); 
   const [participants, setParticipants] = useState([]);
-  const [splitType, setSplitType] = useState("all");
+  // const [splitType, setSplitType] = useState("all");
   
-  //Agregar gasto handleAddExpense
+//Agregar gasto 
 const addExpense = async () => {
-  if (!payer || !amount) return;
+  if (!payer || !amount || !desc ) return Swal.fire({
+      icon: "warning",
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      title:"Completa todos los campos",
+      confirmButtonText: "Cerrar",
+  });
+
 
   const finalParticipants =
     mode === "all"
@@ -48,17 +57,16 @@ const expense = mode === "all"? {
         participants: finalParticipants,
         createdAt: new Date()
       };
-  // {
-  //   payer,
-  //   amount: Number(amount),
-  //   desc,
-  //   participants: finalParticipants,
-  //   createdAt: new Date()
-  // };
-
   await addExpenseToDB(expense);
-
-  // limpiar form si querés
+Swal.fire({
+    icon: "success",
+    title: "Gasto agregado",
+    html: `<b>${payer}</b> pagó $${amount}<br>${desc || ""}`,
+    timer: 1500,
+    showConfirmButton: false,
+    iconColor:"#269181",
+  });
+  
   setPayer("");
   setAmount("");
   setDesc("");
@@ -154,6 +162,9 @@ const expense = mode === "all"? {
       icon: "error",
       title: "Error",
       text: "No se pudo eliminar el gasto",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
     });
   }
 };
@@ -201,11 +212,12 @@ const deleteAll = async () => {
     });
   } catch (error) {
     console.error("Error borrando gastos:", error);
-    Swal.fire(
-      "Error",
-      "No se pudieron borrar los gastos",
-      "error"
-    );
+    Swal.fire({
+      text:"Error, no se pudieron borrar los gastos",      
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
+    });
   }
 };
 
@@ -423,9 +435,6 @@ console.log("AddExpense group:", group);
       </select>
 </div>
 
-
-
-
 <div>
   <h3>Descripción del gasto</h3>
       <input
@@ -433,16 +442,6 @@ console.log("AddExpense group:", group);
         placeholder="Ingresar descripción"
         value={desc}
         onChange={(e) => setDesc(e.target.value)}
-        disabled={!canEdit}
-      />
-</div>
-<div>
-  <h3>Importe del gasto</h3>
-      <input
-        type="number"
-        placeholder="Ingresar importe"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
         disabled={!canEdit}
       />
 </div>
@@ -474,11 +473,13 @@ console.log("AddExpense group:", group);
     disabled={!canEdit}
   />
   Algunos
-</label>
-  
+</label>  
 </div>
+
 {mode === "some" && (
-  <div className="some">
+  <div>
+    <h4>Elegí quienes participan del gasto</h4>
+  <div className="some">    
   <div>
   {participants.map((p, index) => (
     <div
@@ -523,7 +524,24 @@ console.log("AddExpense group:", group);
   ))}
 </div>
 </div>
-)}
+</div>)}
+
+
+
+
+<div>
+  <h3>Importe del gasto</h3>
+      <input
+        type="number"
+        placeholder="Ingresar importe"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        disabled={!canEdit}
+      />
+</div>
+
+
+
 
 
 
