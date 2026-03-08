@@ -17,17 +17,16 @@ html, body {
 }
 
 .card {
-  margin-top: 40px;/*nuevo*/
+  margin-top: 40px;
   background: #dee0e0;
   color: #283655;
-  padding: 15px;
-  /*margin: 20px 0;*/
+  padding: 15px; 
   border-radius: 12px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
 input, select {
-  font-size: 18px;/*nuevo*/
+  font-size: 18px;
   margin-bottom: 10px;
   padding: 6px;
   border: none;
@@ -124,13 +123,26 @@ li,p{
   font-weight: bold;
 }
 
-.someExpense{
+.some{
   display: flex;
   justify-content: center;
 }
 
-.expense-some{
-  background:#e6ecff;
+/*agregado*/
+/* .expense-some{
+border-left: 6px solid #1976d2;
+}
+
+.expense-all{
+border-left: 6px solid #269181;
+} */
+/**/
+.expense-icon{
+  cursor:pointer;
+  margin-right:6px;
+}
+.expense-icon:hover{
+  color:#269181;
 }
 
 .deudores{
@@ -184,7 +196,6 @@ li,p{
   backdrop-filter: blur(2px);
 }
 
-/* Caja del modal */
 .modal {
   background-color: #dee0e0;
   padding: 24px;
@@ -197,7 +208,6 @@ li,p{
   overflow-y: auto;
 }
 
-/* Botón cerrar */
 .modal-close {
   color:  white;
   position: absolute;

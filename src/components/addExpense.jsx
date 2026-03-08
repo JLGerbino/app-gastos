@@ -196,10 +196,8 @@ const deleteAll = async () => {
       text: "Todos los gastos fueron eliminados",
       background: "#dee0e0",
       color:"#283655",
-      iconColor:"#269181",
-      confirmButtonColor:"#35b67e",
-      confirmButtonText:"listo",
-      allowOutsideClick: false,
+      iconColor:"#269181",   
+    
     });
   } catch (error) {
     console.error("Error borrando gastos:", error);
@@ -211,6 +209,45 @@ const deleteAll = async () => {
   }
 };
 
+
+const showParticipants = (expense) => {
+
+  const isAll = !expense.participants;
+
+  if (isAll) {
+    Swal.fire({
+      title: "Participantes",
+      text: "Este gasto es para todos",
+      icon: "info",
+      background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",
+    
+    
+    confirmButtonText: "Cerrar",
+    confirmButtonColor:"#35b67e",
+    
+    });
+    return;
+  }
+
+  const list = expense.participants
+    .map(p => `${p.name} (${p.units})`)
+    .join("<br>");
+
+  Swal.fire({
+    title: "Participantes",
+    html: list,
+    icon: "info",
+    background: "#dee0e0",
+    color:"#283655",
+    iconColor:"#269181",  
+   
+    confirmButtonText: "Cerrar",
+    confirmButtonColor:"#35b67e",
+
+  });
+};
 // const isAll = !e.participants;
 // const isAll = e.participants?.length === people.length;
 
@@ -435,7 +472,7 @@ console.log("AddExpense group:", group);
   
 </div>
 {mode === "some" && (
-  <div className="someExpense">
+  <div className="some">
   <div>
   {participants.map((p, index) => (
     <div
@@ -491,8 +528,39 @@ console.log("AddExpense group:", group);
 
 {/* "people-name expense-payer" */}
 <h3>Gastos</h3>
-      <ul>
-        ;
+
+<ul>
+  {expenses.map((e) => {
+      
+    const isAll = !e.participants || e.participants.length === 0;
+    return (
+      <li
+        key={e.id}
+        className={`people-item expense-item`}
+      >
+        <span className="expense-icon"
+        onClick={() => showParticipants(e)}>
+    {isAll ? <i class="fa-solid fa-users"></i> : <i class="fa-solid fa-user-group"></i>}</span>
+        <span
+          className="people-name expense-payer"
+          onClick={() => showPersonExpenses(e.payer)}
+        >
+              
+          {e.payer} pagó ${e.amount} ({e.desc})
+        </span>
+
+        {canEdit && (
+          <button onClick={() => deleteExpense(e.id)}>
+            <i className="fa-solid fa-trash"></i>
+          </button>
+        )}
+      </li>
+    );
+  })}
+</ul>
+
+      {/* <ul>
+     
         {expenses.map((e) => (          
           <li key={e.id} className="people-item expense-item">
   <span
@@ -508,7 +576,7 @@ console.log("AddExpense group:", group);
   </button>)}
 </li>
         ))}
-      </ul>
+      </ul> */}
       <div>
         {canEdit && (<button
     className="btn-danger"
