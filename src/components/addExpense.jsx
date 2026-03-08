@@ -422,6 +422,10 @@ console.log("AddExpense group:", group);
         ))}
       </select>
 </div>
+
+
+
+
 <div>
   <h3>Descripción del gasto</h3>
       <input
@@ -454,6 +458,7 @@ console.log("AddExpense group:", group);
     value="all"
     checked={mode === "all"}
     onChange={(e) => handleSplitTypeChange(e.target.value)}
+    disabled={!canEdit}
   />
   Todos
 </label>
@@ -466,6 +471,7 @@ console.log("AddExpense group:", group);
     value="some"
     checked={mode === "some"}
     onChange={(e) => handleSplitTypeChange(e.target.value)}
+    disabled={!canEdit}
   />
   Algunos
 </label>
