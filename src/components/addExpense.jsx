@@ -228,8 +228,8 @@ const showParticipants = (expense) => {
 
   if (isAll) {
     Swal.fire({
-      title: "Participantes",
-      text: "Este gasto es para todos",
+      title: "Participantes:",
+      text: "Todos participan de este gasto",
       icon: "info",
       background: "#dee0e0",
     color:"#283655",
@@ -244,11 +244,11 @@ const showParticipants = (expense) => {
   }
 
   const list = expense.participants
-    .map(p => `${p.name} (${p.units})`)
+    .map(p => `${p.name} (x${p.units})`)
     .join("<br>");
 
   Swal.fire({
-    title: "Participantes",
+    title: "Participan del gasto:",
     html: list,
     icon: "info",
     background: "#dee0e0",
@@ -299,7 +299,7 @@ const showPersonExpenses = (personName) => {
       participantsText =
         "Participan: " +
         e.participants
-          .map(p => `${p.name} (${p.units})`)
+          .map(p => `${p.name} (x${p.units})`)
           .join(", ");
     }
 
@@ -564,7 +564,7 @@ console.log("AddExpense group:", group);
       >
         <span className="expense-icon"
         onClick={() => showParticipants(e)}>
-    {isAll ? <i class="fa-solid fa-users"></i> : <i class="fa-solid fa-user-group"></i>}</span>
+    {isAll ? <i className="fa-solid fa-users"></i> : <i className="fa-solid fa-user-group"></i>}</span>
         <span
           className="people-name expense-payer"
           onClick={() => showPersonExpenses(e.payer)}

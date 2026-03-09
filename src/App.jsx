@@ -515,8 +515,8 @@ const exitGroup = async () => {
   if (!groupId) {
   return (
     <div className="app">
-      <img src="logo.png" alt="Cuentas Claras" className="Create" />
       <p>La manera más fácil de compartir gastos</p>
+      <img src="logo.png" alt="Cuentas Claras" className="Create" />      
 
       <CreateGroup
       user={user}
@@ -531,8 +531,9 @@ const exitGroup = async () => {
 
   return (
     <div className="app">
-      <img src="logo.png" alt="Cuentas Claras" className="Create" />
       <p>La manera más fácil de compartir gastos</p>
+      <img src="logo.png" alt="Cuentas Claras" className="Create" />
+      
 <h1 className="group-title">{groupName}</h1>
 <p className="group-code">
   <strong>{groupCode}</strong>

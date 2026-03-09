@@ -322,7 +322,7 @@ const handleEditPerson = async (person) => {
   className="expense-payer people-name"
   onClick={() => showPersonAlias(p)}
 >
-  {p.name} ({p.count})
+  {p.name} (x{p.count})
 </span>
 
             
