@@ -290,6 +290,7 @@ const handleEditPerson = async (person) => {
   <h3>Cantidad de personas a cargo</h3>
       <input
         type="number"
+        inputMode="numeric"
         min={1}
         value={count}
         onChange={e => setCount(e.target.value)}

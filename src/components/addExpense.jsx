@@ -509,6 +509,7 @@ console.log("AddExpense group:", group);
 
 <input
   type="number"
+  inputMode="numeric"
   min={1}
   value={p.units}
   disabled={!p.selected}
@@ -526,13 +527,11 @@ console.log("AddExpense group:", group);
 </div>
 </div>)}
 
-
-
-
 <div>
   <h3>Importe del gasto</h3>
       <input
         type="number"
+        inputMode="numeric"
         placeholder="Ingresar importe"
         value={amount}
         onChange={(e) => setAmount(e.target.value)}

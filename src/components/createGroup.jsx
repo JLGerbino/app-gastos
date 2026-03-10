@@ -302,10 +302,10 @@ onGroupCreated({
   onChange={(e) => setAdminPin(e.target.value)}
   className="input"
 />
-<p>Guardá este PIN. Lo vas a necesitar para recuperar el rol.</p>
-
-  <p>Solo vos vas a poder agregar, editar</p>
-  <p>y eliminar personas y gastos</p>
+<p>Solo vos vas a poder agregar, editar y eliminar personas y gastos</p>
+<p>Recordá este PIN. Lo vas si cambias de dispositivo o para pasar el mando de administrador.</p>
+  
+  
   </div>
   
 )}
