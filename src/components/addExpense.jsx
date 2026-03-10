@@ -29,7 +29,41 @@ const addExpense = async () => {
       title:"Completa todos los campos",
       confirmButtonText: "Cerrar",
   });
+if (mode === "some") {
 
+  const selected = participants.filter(p => p.selected);
+
+  if (selected.length === 0) {
+    return Swal.fire({
+      icon: "warning",
+      title: "Selecciona participantes",
+      text: "Debes elegir al menos un participante",
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      confirmButtonText: "Cerrar"
+    });
+  }
+
+  const invalidUnits = selected.some(
+    p => !p.units || Number(p.units) <= 0
+  );
+
+  if (invalidUnits) {
+    return Swal.fire({
+      icon: "warning",
+      title: "Cantidad inválida",
+      text: "Las personas a cargo no pueden ser 0 ni quedar vacías",
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      confirmButtonText: "Cerrar"
+    });
+  }
+
+}
 
   const finalParticipants =
     mode === "all"
@@ -515,11 +549,28 @@ console.log("AddExpense group:", group);
   disabled={!p.selected}
   style={{ width: "60px", marginLeft: "10px" }}
   onChange={(e) => {
+    const value = e.target.value;
+
+    const updated = [...participants];
+
+    updated[index].units = value === "" ? "" : Number(value);
+
+    setParticipants(updated);
+  }}
+/>
+{/* <input
+  type="number"
+  inputMode="numeric"
+  min={1}
+  value={p.units}
+  disabled={!p.selected}
+  style={{ width: "60px", marginLeft: "10px" }}
+  onChange={(e) => {
     const updated = [...participants];
     updated[index].units = Number(e.target.value);
     setParticipants(updated);
   }}
-/>
+/> */}
 
     </div>
   ))}
