@@ -249,6 +249,7 @@ const handleEditPerson = async (person) => {
     title: "Guardando cambios...",
     allowOutsideClick: false,
     background: "#dee0e0",
+    color:"#283655",
     didOpen: () => Swal.showLoading(),
   });
 
@@ -258,6 +259,8 @@ const handleEditPerson = async (person) => {
     Swal.fire({
       icon: "success",
       title: "Participante actualizado",
+      color:"#283655",
+      iconColor:"#269181",
       timer: 1500,
       showConfirmButton: false,
       background: "#dee0e0",

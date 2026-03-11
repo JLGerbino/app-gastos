@@ -289,9 +289,11 @@ const handleAdminPinLogin = async () => {
   Swal.fire({
     title: "Ahora sos el administrador del grupo",
     icon: "success",
+    iconColor:"#269181",
     confirmButtonColor: "#35b67e",
     background: "#dee0e0",
     color: "#283655",
+    confirmButtonText:"Cerrar",
   });
 };
 
@@ -444,7 +446,15 @@ Swal.fire({
 
     await batch.commit();
 
-    Swal.fire("Pagos eliminados", "", "success");
+    Swal.fire({
+    title: "Pagos eliminados",    
+    icon: "success", 
+    background: "#dee0e0",
+    color:"#283655",   
+    confirmButtonColor:"#35b67e", 
+    confirmButtonText: "Cerrar",        
+    iconColor:"#269181",
+  });
   } catch (error) {
     console.error(error);
   } finally {

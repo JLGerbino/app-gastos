@@ -95,7 +95,7 @@ const expense = mode === "all"? {
 Swal.fire({
     icon: "success",
     title: "Gasto agregado",
-    html: `<b>${payer}</b> pagó $${amount}<br>${desc || ""}`,
+    html: `<b>${payer}</b> pagó $${amount} ${desc || ""}`,
     timer: 1500,
     showConfirmButton: false,
     iconColor:"#269181",
@@ -106,30 +106,7 @@ Swal.fire({
   setDesc("");
   setMode("all")
 };
-
-  // const addExpense = () => {
-  //   if (!payer || !amount) return Swal.fire({
-  //     icon: "warning",
-  //     background: "#dee0e0",
-  //     color: "#283655",
-  //     iconColor: "#269181",
-  //     confirmButtonColor: "#35b67e",
-  //     title:"Completa todos los campos",
-  //     confirmButtonText: "Cerrar",
-  // });
-
-  //   const newExpense = {
-  //     payer,
-  //     desc,
-  //     amount: parseFloat(amount)
-  //   };
-
-  //   addExpenseToDB(newExpense);
-
-  //   setDesc("");
-  //   setAmount("");
-  //   setPayer("");
-  // };
+  
 
   //Borrar gasto
   const deleteExpense = async (expenseId) => {
@@ -241,7 +218,9 @@ const deleteAll = async () => {
       text: "Todos los gastos fueron eliminados",
       background: "#dee0e0",
       color:"#283655",
-      iconColor:"#269181",   
+      iconColor:"#269181", 
+      confirmButtonColor:"#35b67e",
+      confirmButtonText:"Cerrar",
     
     });
   } catch (error) {
@@ -251,6 +230,8 @@ const deleteAll = async () => {
       background: "#dee0e0",
       color:"#283655",
       iconColor:"#269181",
+      confirmButtonColor:"#35b67e",
+      confirmButtonText:"Cerrar",
     });
   }
 };

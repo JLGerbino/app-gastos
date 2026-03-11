@@ -49,7 +49,7 @@ const calculateDebts = (people, expenses, payments) => {
     balance,
   }));
 
-  // Aplicar pagos manuales (igual que antes)
+  // Aplicar pagos manuales 
   payments.forEach((p) => {
     const payer = balances.find((b) => b.name === p.from);
     const receiver = balances.find((b) => b.name === p.to);
@@ -58,7 +58,7 @@ const calculateDebts = (people, expenses, payments) => {
     if (receiver) receiver.balance -= p.amount;
   });
 
-  // 👇 DESDE ACÁ PARA ABAJO NO TOCAR (tu lógica original)
+  //Balances
   const balancesForDebts = balances.map((b) => ({ ...b }));
 
   const deudores = balancesForDebts.filter((b) => b.balance < -0.01);
@@ -229,6 +229,9 @@ export default function BalanceList({
     Swal.fire({
       icon: "success",
       title: "Pago registrado",
+      background: "#dee0e0",
+      color:"#283655",
+      iconColor:"#269181",
       timer: 1500,
       showConfirmButton: false,
     });
@@ -283,16 +286,6 @@ export default function BalanceList({
     showConfirmButton: false,
   });
 };
-
-
-
-  
-//deshacer pago  
-// const undoPayment = async (paymentId) => {
-//   await deleteDoc(
-//     doc(db, "groups", groupId, "payments", paymentId)
-//   );
-// };
 
 
   // 👉 Modal informativo
@@ -368,12 +361,11 @@ export default function BalanceList({
       <h2  className="titulo">Balance</h2>
       <strong>Total gastado: ${totalGasto.toFixed(2)}</strong>
       <br />
-      {/* <strong>A pagar cada uno: ${costoPorPersona.toFixed(2)}</strong> */}
-
+      
       <h3 className="balance">Balance individual</h3>
       <ul>
         {balances.map((b, i) => (
-          <li key={i}>
+          <li style={{ marginBottom: "8px" }} key={i}>
             {b.name}:{" "}
             {b.balance > 0.01
               ? `le deben $${b.balance.toFixed(2)}`
