@@ -6,49 +6,44 @@ import Swal from "sweetalert2";
 // La que calcula todo
 const calculateDebts = (people, expenses, payments) => {
   const balancesMap = {};
-
   // Inicializar balances en 0
   people.forEach((p) => {
     balancesMap[p.name] = 0;
   });
-
   // Procesar cada gasto individualmente
   expenses.forEach((expense) => {
-  const { payer, amount, participants } = expense;
+    const { payer, amount, participants } = expense;
 
-  let currentParticipants = participants;
+    let currentParticipants = participants;
+    //Si no hay participants (gastos viejos)
+    if (!currentParticipants || currentParticipants.length === 0) {
+      currentParticipants = people.map(p => ({
+        name: p.name,
+        units: p.count
+      }));
+    }
 
-  // 🔥 Si no tiene participants (gastos viejos)
-  if (!currentParticipants || currentParticipants.length === 0) {
-    currentParticipants = people.map(p => ({
-      name: p.name,
-      units: p.count
-    }));
-  }
+    const totalUnits = currentParticipants.reduce(
+      (acc, p) => acc + Number(p.units),
+      0
+    );
 
-  const totalUnits = currentParticipants.reduce(
-    (acc, p) => acc + Number(p.units),
-    0
-  );
+    if (totalUnits === 0) return;
 
-  if (totalUnits === 0) return;
+    const valuePerUnit = amount / totalUnits;
 
-  const valuePerUnit = amount / totalUnits;
+    balancesMap[payer] += amount;
 
-  balancesMap[payer] += amount;
-
-  currentParticipants.forEach((p) => {
-    const share = valuePerUnit * Number(p.units);
-    balancesMap[p.name] -= share;
+    currentParticipants.forEach((p) => {
+      const share = valuePerUnit * Number(p.units);
+      balancesMap[p.name] -= share;
+    });
   });
-}); 
-
   // Convertir a array
   const balances = Object.entries(balancesMap).map(([name, balance]) => ({
     name,
     balance,
   }));
-
   // Aplicar pagos manuales 
   payments.forEach((p) => {
     const payer = balances.find((b) => b.name === p.from);
@@ -57,7 +52,6 @@ const calculateDebts = (people, expenses, payments) => {
     if (payer) payer.balance += p.amount;
     if (receiver) receiver.balance -= p.amount;
   });
-
   //Balances
   const balancesForDebts = balances.map((b) => ({ ...b }));
 
@@ -96,73 +90,10 @@ const calculateDebts = (people, expenses, payments) => {
     balances,
     deudas,
     totalGasto,
-    costoPorPersona: null, // ya no aplica globalmente
+    costoPorPersona: null,
   };
 };
 
-
-
-
-//esta funciona bien sin gastos entre algunos
-// const calculateDebts = (people, expenses, payments) => {
-//   const totals = {};
-//   people.forEach((p) => (totals[p.name] = 0));
-
-//   expenses.forEach((e) => {
-//     totals[e.payer] += e.amount;
-//   });
-
-//   const totalPersonas = people.reduce((acc, p) => acc + p.count, 0);
-//   const totalGasto = expenses.reduce((acc, e) => acc + e.amount, 0);
-//   const costoPorPersona = totalGasto / totalPersonas;
-
-//   const balances = people.map((p) => {
-//     const gastoEsperado = p.count * costoPorPersona;
-//     const balance = totals[p.name] - gastoEsperado;
-//     return { name: p.name, balance };
-//   });
-
-//   payments.forEach((p) => {
-//     const payer = balances.find((b) => b.name === p.from);
-//     const receiver = balances.find((b) => b.name === p.to);
-
-//     if (payer) payer.balance += p.amount;
-//     if (receiver) receiver.balance -= p.amount;
-//   });
-
-//   const balancesForDebts = balances.map((b) => ({ ...b }));
-
-//   const deudores = balancesForDebts.filter((b) => b.balance < -0.01);
-//   const acreedores = balancesForDebts.filter((b) => b.balance > 0.01);
-
-//   deudores.sort((a, b) => a.balance - b.balance);
-//   acreedores.sort((a, b) => b.balance - a.balance);
-
-//   const deudas = [];
-//   let i = 0;
-//   let j = 0;
-
-//   while (i < deudores.length && j < acreedores.length) {
-//     const monto = Math.min(
-//       Math.abs(deudores[i].balance),
-//       acreedores[j].balance
-//     );
-
-//     deudas.push({
-//       from: deudores[i].name,
-//       to: acreedores[j].name,
-//       amount: monto,
-//     });
-
-//     deudores[i].balance += monto;
-//     acreedores[j].balance -= monto;
-
-//     if (Math.abs(deudores[i].balance) < 0.01) i++;
-//     if (acreedores[j].balance < 0.01) j++;
-//   }
-
-//   return { balances, deudas, totalGasto, costoPorPersona };
-// };
 
 export default function BalanceList({
   people,
@@ -178,7 +109,6 @@ export default function BalanceList({
     balances,
     deudas,
     totalGasto,
-    costoPorPersona,
   } = calculateDebts(people, expenses, payments);
 
   //Registrar pago
@@ -197,24 +127,24 @@ export default function BalanceList({
       confirmButtonText: "Confirmar",
       cancelButtonText: "Cancelar",
       background: "#dee0e0",
-      color:"#283655",
-      iconColor:"#269181",
+      color: "#283655",
+      iconColor: "#269181",
       confirmButtonColor: "#35b67e",
     });
 
     if (!result.isConfirmed) return;
     Swal.fire({
-        title: "Registrando pago...",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        background: "#dee0e0",
-        color:"#283655",
-        iconColor:"#269181",
-        confirmButtonColor:"#35b67e",
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
+      title: "Registrando pago...",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
     await addDoc(
       collection(db, "groups", groupId, "payments"),
@@ -230,62 +160,62 @@ export default function BalanceList({
       icon: "success",
       title: "Pago registrado",
       background: "#dee0e0",
-      color:"#283655",
-      iconColor:"#269181",
+      color: "#283655",
+      iconColor: "#269181",
       timer: 1500,
       showConfirmButton: false,
     });
   };
 
- //Eliminar pago
+  //Eliminar pago
   const undoPayment = async (payment) => {
-  const result = await Swal.fire({
-    title: "¿Eliminar pago?",
-    html: `
+    const result = await Swal.fire({
+      title: "¿Eliminar pago?",
+      html: `
       <p style="font-size:18px">
         ¿Querés eliminar el pago de 
         <strong>${payment.from}</strong> a 
         <strong>${payment.to}</strong>?
       </p>
     `,
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonText: "Eliminar",
-    cancelButtonText: "Cancelar",    
-    background: "#dee0e0",
-    color:"#283655",
-    iconColor:"#269181",
-    confirmButtonColor:"#35b67e",    
-  });
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+    });
 
-  if (!result.isConfirmed) return;
-   
-  Swal.fire({
+    if (!result.isConfirmed) return;
+
+    Swal.fire({
       title: "Eliminando pago...",
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
-      color:"#283655",
-      iconColor:"#269181",
-      confirmButtonColor:"#35b67e",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
       didOpen: () => {
         Swal.showLoading();
       },
     });
 
-  await deleteDoc(
-    doc(db, "groups", groupId, "payments", payment.id)
-  );
+    await deleteDoc(
+      doc(db, "groups", groupId, "payments", payment.id)
+    );
 
-  Swal.fire({
-    icon: "success",
-    title: "Pago eliminado",
-    timer: 1200,
-    color:"#283655",
-    iconColor:"#269181",
-    showConfirmButton: false,
-  });
-};
+    Swal.fire({
+      icon: "success",
+      title: "Pago eliminado",
+      timer: 1200,
+      color: "#283655",
+      iconColor: "#269181",
+      showConfirmButton: false,
+    });
+  };
 
 
   // 👉 Modal informativo
@@ -308,9 +238,8 @@ export default function BalanceList({
           a <strong style="color:#269181">${deuda.to}</strong>
         </div>
 
-        ${
-          alias
-            ? `
+        ${alias
+          ? `
               <hr />
               <p><strong>Alias para pagar</strong></p>
               <p
@@ -328,7 +257,7 @@ export default function BalanceList({
                 Tocá el alias para copiarlo
               </p>
             `
-            : ""
+          : ""
         }
       `,
       background: "#dee0e0",
@@ -356,12 +285,42 @@ export default function BalanceList({
     });
   };
 
+  //modal para pagos(hay que modificarlo)
+ const showPayModal = (pago) => {
+    // const person = people.find(p => p.name === pago.to);   
+    Swal.fire({
+      title: "Detalle del pago",
+      html: `
+        <div style="font-size:26px; line-height:1.5;">
+          <strong style="color:#269181">${pago.from}</strong> pagó
+        </div>
+
+        <div style="font-size:34px; margin:10px 0;">
+          <strong>$${pago.amount.toFixed(2)}</strong>
+        </div>
+
+        <div style="font-size:26px;">
+          a <strong style="color:#269181">${pago.to}</strong>
+        </div>        
+      `,
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      confirmButtonText: "Cerrar",     
+    });
+  };
+
+
+
+
+
   return (
     <div className="card" id="section-balance">
-      <h2  className="titulo">Balance</h2>
+      <h2 className="titulo">Balance</h2>
       <strong>Total gastado: ${totalGasto.toFixed(2)}</strong>
       <br />
-      
+
       <h3 className="balance">Balance individual</h3>
       <ul>
         {balances.map((b, i) => (
@@ -370,21 +329,21 @@ export default function BalanceList({
             {b.balance > 0.01
               ? `le deben $${b.balance.toFixed(2)}`
               : b.balance < -0.01
-              ? `debe $${Math.abs(b.balance).toFixed(2)}`
-              : "está justo"}
+                ? `debe $${Math.abs(b.balance).toFixed(2)}`
+                : "está justo"}
           </li>
         ))}
       </ul>
-<div className="titulo">
-      <h3 className="balance">Deudas entre personas</h3>
-</div>
+      <div className="titulo">
+        <h3 className="balance">Deudas entre personas</h3>
+      </div>
       {deudas.length === 0 ? (
         <p>Están todos a mano</p>
       ) : (
         <ul>
           {deudas.map((d, i) => (
             <li className="people-item expense-item"
-              key={`${d.from}-${d.to}-${i}`}              
+              key={`${d.from}-${d.to}-${i}`}
               style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
             >
               <span
@@ -398,48 +357,50 @@ export default function BalanceList({
 
               {canEdit && (<button
                 onClick={() => markAsPaid(d)}
-              ><i className="fa-solid fa-dollar-sign"></i>               
+              ><i className="fa-solid fa-dollar-sign"></i>
               </button>)}
             </li>
           ))}
         </ul>
       )}
 
-<h3 className="balance">Pagos realizados</h3>
+      <h3 className="balance">Pagos realizados</h3>
 
-{payments.length === 0 ? (
-  <p>No hay pagos registrados</p>
-) : (
-  <ul>
-    {payments.map((p) => (
-      <li className="people-item expense-item"
-        key={p.id}        
-      >
-        <span className="people-name">
-          <strong>{p.from}</strong> pagó $
-          <strong>{p.amount.toFixed(2)}</strong> a{" "}
-          <strong>{p.to}</strong>
-        </span>
+      {payments.length === 0 ? (
+        <p>No hay pagos registrados</p>
+      ) : (
+        <ul>
+          {payments.map((p) => (
+            <li className="people-item expense-item"
+              key={p.id}
+            >
+              <span className="clickable people-name expense-payer"
+              onClick={() => showPayModal(p)}>
 
-        {canEdit && (<button          
-          onClick={() => undoPayment(p)}
+                <strong>{p.from}</strong> pagó $
+                <strong>{p.amount.toFixed(2)}</strong> a{" "}
+                <strong>{p.to}</strong>
+              </span>
+
+              {canEdit && (<button
+                onClick={() => undoPayment(p)}
+              >
+                <i className="fa-solid fa-trash"></i>
+              </button>)}
+            </li>
+          ))}
+        </ul>
+      )}
+      <div>
+        {canEdit && (<button
+          className="btn-danger"
+          onClick={handleClearPayments}
+          disabled={!payments?.length}
+        // style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
         >
-          <i className="fa-solid fa-trash"></i>
-        </button>)}
-      </li>
-    ))}
-  </ul>
-)}
-<div>
-       {canEdit && (<button
-       className="btn-danger"
-  onClick={handleClearPayments}
-  disabled={!payments?.length}
-  // style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
->
-  <i className="fa-solid fa-trash"></i> Borrar todos los pagos</button>)}
+          <i className="fa-solid fa-trash"></i> Borrar todos los pagos</button>)}
 
-        </div>   
+      </div>
     </div>
   );
 }

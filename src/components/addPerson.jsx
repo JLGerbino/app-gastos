@@ -19,35 +19,35 @@ export default function AddPerson({
 
   //Agregar persona
   const addPerson = async () => {
-    if (!name.trim())  return Swal.fire({
-          icon: "warning",
-          title: "Falta el nombre del participante",
-          background: "#dee0e0",
-          color:"#283655",
-          iconColor:"#269181",
-          confirmButtonColor:"#35b67e",
-          confirmButtonText:"Cerrar",
-        });
+    if (!name.trim()) return Swal.fire({
+      icon: "warning",
+      title: "Falta el nombre del participante",
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      confirmButtonText: "Cerrar",
+    });
     if (count < 1) return Swal.fire({
-          icon: "warning",
-          title: "Cantidad inválida",
-          background: "#dee0e0",
-          color:"#283655",
-          iconColor:"#269181",
-          confirmButtonColor:"#35b67e",
-          confirmButtonText:"Cerrar",
-        });
+      icon: "warning",
+      title: "Cantidad inválida",
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      confirmButtonText: "Cerrar",
+    });
 
     if (people.some(p => p.name === name.trim())) {
       return Swal.fire({
-            icon: "warning",
-            title: "Ya existe ese participante",
-            background: "#dee0e0",
-            color:"#283655",
-            iconColor:"#269181",
-            confirmButtonColor:"#35b67e",
-            confirmButtonText:"Cerrar",
-          });
+        icon: "warning",
+        title: "Ya existe ese participante",
+        background: "#dee0e0",
+        color: "#283655",
+        iconColor: "#269181",
+        confirmButtonColor: "#35b67e",
+        confirmButtonText: "Cerrar",
+      });
     }
 
     await addPersonToDB({
@@ -56,13 +56,13 @@ export default function AddPerson({
       alias: alias.trim(),
     });
     Swal.fire({
-        icon: "success",
-        title: "Participante agregado",
-        html: `<b>${name}</b>`,
-        timer: 1500,
-        showConfirmButton: false,
-        iconColor:"#269181",
-      });
+      icon: "success",
+      title: "Participante agregado",
+      html: `<b>${name}</b>`,
+      timer: 1500,
+      showConfirmButton: false,
+      iconColor: "#269181",
+    });
 
     setName("");
     setCount(1);
@@ -71,70 +71,69 @@ export default function AddPerson({
 
   //Borrar persona
   const handleDeletePerson = async (person) => {
-  const result = await Swal.fire({
-    title:  `¿Seguro de eliminar a ${person.name}?`,
-    text: "Se eliminará la persona y todos sus gastos",
-    icon: "question",
-    showCancelButton: true,
-    background: "#dee0e0",
-    color:"#283655",
-    iconColor:"#269181",
-    confirmButtonColor:"#35b67e",
-    confirmButtonText: "Eliminar",
-    cancelButtonText: "Cancelar",
-  });
-  if (!result.isConfirmed) return;
-
-Swal.fire({
-        title: "Eliminando participante...",
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        background: "#dee0e0",
-        color:"#283655",
-        iconColor:"#269181",
-        confirmButtonColor:"#35b67e",
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-  try {
-    await deletePerson(person);
-    
-    await Swal.fire({
-      icon: "success",
-      title: "Eliminado",
-      text: "La persona y sus gastos fueron eliminados",
+    const result = await Swal.fire({
+      title: `¿Seguro de eliminar a ${person.name}?`,
+      text: "Se eliminará la persona y todos sus gastos",
+      icon: "question",
+      showCancelButton: true,
       background: "#dee0e0",
-      color:"#283655",
-      iconColor:"#269181",
-      confirmButtonColor:"#35b67e",
-      confirmButtonText:"Cerrar",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+    });
+    if (!result.isConfirmed) return;
+
+    Swal.fire({
+      title: "Eliminando participante...",
       allowOutsideClick: false,
-    });
-  } catch (error) {
-    console.error("Error eliminando persona:", error);
-
-    await Swal.fire({
-      icon: "error",
-      title: "Error",
-      text: "No se pudo eliminar la persona",
+      allowEscapeKey: false,
       background: "#dee0e0",
-      color:"#283655",
-      iconColor:"#269181",
-      confirmButtonColor:"#35b67e",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      didOpen: () => {
+        Swal.showLoading();
+      },
     });
-  }
-};
+    try {
+      await deletePerson(person);
 
-//Mostrar alias
-const showPersonAlias = (person) => {
-  Swal.fire({
-    title: person.name,
-    html: `
+      await Swal.fire({
+        icon: "success",
+        title: "Eliminado",
+        text: "La persona y sus gastos fueron eliminados",
+        background: "#dee0e0",
+        color: "#283655",
+        iconColor: "#269181",
+        confirmButtonColor: "#35b67e",
+        confirmButtonText: "Cerrar",
+        allowOutsideClick: false,
+      });
+    } catch (error) {
+      console.error("Error eliminando persona:", error);
+
+      await Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "No se pudo eliminar la persona",
+        background: "#dee0e0",
+        color: "#283655",
+        iconColor: "#269181",
+        confirmButtonColor: "#35b67e",
+      });
+    }
+  };
+
+  //Mostrar alias
+  const showPersonAlias = (person) => {
+    Swal.fire({
+      title: person.name,
+      html: `
       <p><strong>Cantidad:</strong> ${person.count}</p>
 
-      ${
-        person.alias
+      ${person.alias
           ? `
             <hr />
             <p><strong>Alias para recibir transferencias</strong></p>
@@ -154,44 +153,44 @@ const showPersonAlias = (person) => {
             </p>
           `
           : `<p style="color:gray">Sin alias cargado</p>`
-      }
+        }
     `,
-    confirmButtonText: "Cerrar",
-    background: "#dee0e0",
-    color:"#283655",
-    iconColor:"#269181",
-    confirmButtonColor:"#35b67e",
+      confirmButtonText: "Cerrar",
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
 
-    didOpen: () => {
-      if (!person.alias) return;
+      didOpen: () => {
+        if (!person.alias) return;
 
-      const aliasEl = document.getElementById("copyAliasPerson");
+        const aliasEl = document.getElementById("copyAliasPerson");
 
-      aliasEl?.addEventListener("click", async () => {
-        await navigator.clipboard.writeText(person.alias);
+        aliasEl?.addEventListener("click", async () => {
+          await navigator.clipboard.writeText(person.alias);
 
-        Swal.fire({
-          toast: true,
-          position: "top",
-          icon: "success",
-          title: "Alias copiado",
-          background: "#dee0e0",
-          color:"#283655",
-          iconColor:"#269181",
-          confirmButtonColor:"#35b67e",
-          showConfirmButton: false,
-          timer: 1500,
+          Swal.fire({
+            toast: true,
+            position: "top",
+            icon: "success",
+            title: "Alias copiado",
+            background: "#dee0e0",
+            color: "#283655",
+            iconColor: "#269181",
+            confirmButtonColor: "#35b67e",
+            showConfirmButton: false,
+            timer: 1500,
+          });
         });
-      });
-    },
-  });
-};
+      },
+    });
+  };
 
-//Editar persona
-const handleEditPerson = async (person) => {
-  const result = await Swal.fire({
-    title: "Editar participante",
-    html: `
+  //Editar persona
+  const handleEditPerson = async (person) => {
+    const result = await Swal.fire({
+      title: "Editar participante",
+      html: `
       <div
       style= "text-align: center;
              font-size: 26px;
@@ -217,126 +216,126 @@ const handleEditPerson = async (person) => {
         />
       </div><label>Alias opcional</label>
     `,
-    showCancelButton: true,
-    confirmButtonText: "Guardar",
-    cancelButtonText: "Cancelar",
-    background: "#dee0e0",
-    color:"#283655",
-    confirmButtonColor:"#35b67e",
-    preConfirm: () => {
-      const count = Number(
-        document.getElementById("editCount").value
-      );
-      const alias = document
-        .getElementById("editAlias")
-        .value
-        .trim();
-
-      if (!count || count < 1) {
-        Swal.showValidationMessage(
-          "La cantidad debe ser mayor a 0"          
+      showCancelButton: true,
+      confirmButtonText: "Guardar",
+      cancelButtonText: "Cancelar",
+      background: "#dee0e0",
+      color: "#283655",
+      confirmButtonColor: "#35b67e",
+      preConfirm: () => {
+        const count = Number(
+          document.getElementById("editCount").value
         );
-        return;
-      }
+        const alias = document
+          .getElementById("editAlias")
+          .value
+          .trim();
 
-      return { count, alias };
-    },
-  });
+        if (!count || count < 1) {
+          Swal.showValidationMessage(
+            "La cantidad debe ser mayor a 0"
+          );
+          return;
+        }
 
-  if (!result.isConfirmed) return;
+        return { count, alias };
+      },
+    });
 
-  Swal.fire({
-    title: "Guardando cambios...",
-    allowOutsideClick: false,
-    background: "#dee0e0",
-    color:"#283655",
-    didOpen: () => Swal.showLoading(),
-  });
-
-  try {
-    await editPersonInDB(person.id, result.value);
+    if (!result.isConfirmed) return;
 
     Swal.fire({
-      icon: "success",
-      title: "Participante actualizado",
-      color:"#283655",
-      iconColor:"#269181",
-      timer: 1500,
-      showConfirmButton: false,
+      title: "Guardando cambios...",
+      allowOutsideClick: false,
       background: "#dee0e0",
+      color: "#283655",
+      didOpen: () => Swal.showLoading(),
     });
-  } catch (error) {
-    console.error(error);
-    Swal.fire(
-      "Error",
-      "No se pudo actualizar el participante",
-      "error"
-    );
-  }
-};
+
+    try {
+      await editPersonInDB(person.id, result.value);
+
+      Swal.fire({
+        icon: "success",
+        title: "Participante actualizado",
+        color: "#283655",
+        iconColor: "#269181",
+        timer: 1500,
+        showConfirmButton: false,
+        background: "#dee0e0",
+      });
+    } catch (error) {
+      console.error(error);
+      Swal.fire(
+        "Error",
+        "No se pudo actualizar el participante",
+        "error"
+      );
+    }
+  };
 
 
   return (
     <div className="card" id="section-people">
-      <h2  className="titulo">Agregar participantes</h2>
-<div>
-  <h3>Nombre</h3>
-      <input
-        type="text"
-        placeholder="Nombre"
-        value={name}
-        onChange={e => setName(e.target.value)}
-        disabled={!canEdit}
-      />
-</div>
-<div>
-  <h3>Cantidad de personas a cargo</h3>
-      <input
-        type="number"
-        inputMode="numeric"
-        min={1}
-        value={count}
-        onChange={e => setCount(e.target.value)}
-        placeholder="Cantidad de personas"
-        disabled={!canEdit}
-      />
-</div>
-<div>
-  <h3>Alias para transferencias</h3>
-      <input
-        type="text"
-        placeholder="Opcional"
-        value={alias}
-        onChange={e => setAlias(e.target.value)}
-        disabled={!canEdit}
-      />
-</div>
-<div>
-{canEdit && (
-      <button className="boton" onClick={addPerson}>Agregar</button>)}
-</div>
-<h3>Participantes</h3>
+      <h2 className="titulo">Agregar participantes</h2>
+      <div>
+        <h3>Nombre</h3>
+        <input
+          type="text"
+          placeholder="Nombre"
+          value={name}
+          onChange={e => setName(e.target.value)}
+          disabled={!canEdit}
+        />
+      </div>
+      <div>
+        <h3>Cantidad de personas a cargo</h3>
+        <input
+          type="number"
+          inputMode="numeric"
+          min={1}
+          value={count}
+          onChange={e => setCount(e.target.value)}
+          placeholder="Cantidad de personas"
+          disabled={!canEdit}
+        />
+      </div>
+      <div>
+        <h3>Alias para transferencias</h3>
+        <input
+          type="text"
+          placeholder="Opcional"
+          value={alias}
+          onChange={e => setAlias(e.target.value)}
+          disabled={!canEdit}
+        />
+      </div>
+      <div>
+        {canEdit && (
+          <button className="boton" onClick={addPerson}>Agregar</button>)}
+      </div>
+      <h3>Participantes</h3>
 
       <ul>
         {people.map(p => (
-          
-          <li key={p.id} className="people-item"><span> {canEdit && (<button onClick={() => handleEditPerson(p)}> <i className="fa-solid fa-pencil edit-icon"
-      
-    ></i></button>)}</span><span
-  className="expense-payer people-name"
-  onClick={() => showPersonAlias(p)}
->
-  {p.name} (x{p.count})
-</span>
 
-            
+          <li key={p.id} className="people-item"><span> {canEdit && (<button onClick={() => handleEditPerson(p)}> <i className="fa-solid fa-pencil edit-icon"
+
+          ></i></button>)}</span><span
+            className="expense-payer people-name"
+            onClick={() => showPersonAlias(p)}
+          >
+              {p.name} (x{p.count})
+            </span>
+
+
             {canEdit && (<button className="delete-btn" onClick={() => handleDeletePerson(p)}>
               <i className="fa-solid fa-trash"></i>
             </button>)}
           </li>
         ))}
       </ul>
-      <p>Total de personas:{totalPersonas}</p>    
+      <p>Total de personas:{totalPersonas}</p>
     </div>
   );
 }

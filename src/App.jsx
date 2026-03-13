@@ -3,7 +3,6 @@ import AddPerson from "./components/addPerson";
 import AddExpense from "./components/addExpense";
 import BalanceList from "./components/balanceList";
 import CreateGroup from "./components/createGroup";
-// import { calculateDebts } from "./utils/calculateDebts";
 import Swal from "sweetalert2";
 import { db } from "./firebase";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
@@ -15,9 +14,9 @@ import {
   doc,
   query,
   where,
-  getDocs,  
+  getDocs,
   updateDoc,
-  writeBatch,  
+  writeBatch,
 } from "firebase/firestore";
 import "./App.css";
 
@@ -42,7 +41,6 @@ function App() {
   const [debts, setDebts] = useState([]);
   const hasAdmin = !!group?.adminUid;
   const isAdmin = !!group?.adminUid && group.adminUid === user?.uid;
-  //const [pinAdminMode, setPinAdminMode] = useState(false);
 
 
   // Guardar groupId en localStorage
@@ -53,249 +51,249 @@ function App() {
   }, [groupId]);
 
   //login anonimo
-useEffect(() => {
-  const auth = getAuth();
+  useEffect(() => {
+    const auth = getAuth();
 
-  signInAnonymously(auth).catch(console.error);
+    signInAnonymously(auth).catch(console.error);
 
-  const unsub = onAuthStateChanged(auth, user => {
-    setUser(user);
-  });
+    const unsub = onAuthStateChanged(auth, user => {
+      setUser(user);
+    });
 
-  return unsub;
-}, []);
+    return unsub;
+  }, []);
 
-//si no hay admin todos editan si hay, solo edita admin
-const canEdit = !hasAdmin || isAdmin;
+  //si no hay admin todos editan si hay, solo edita admin
+  const canEdit = !hasAdmin || isAdmin;
 
 
 
-// traer grupo en tiempo real
-useEffect(() => {
-  if (!groupId) return;
+  // traer grupo en tiempo real
+  useEffect(() => {
+    if (!groupId) return;
 
-  const unsub = onSnapshot(
-    doc(db, "groups", groupId),
-    (snap) => {
-      if (snap.exists()) {
-        const data = snap.data();
+    const unsub = onSnapshot(
+      doc(db, "groups", groupId),
+      (snap) => {
+        if (snap.exists()) {
+          const data = snap.data();
 
-        setGroup({
-          id: snap.id,
-          ...data,
-          status: data.status || "open",
-        });
+          setGroup({
+            id: snap.id,
+            ...data,
+            status: data.status || "open",
+          });
 
-        setGroupName(data.name || "");
-        setGroupCode(data.code || "");
+          setGroupName(data.name || "");
+          setGroupCode(data.code || "");
+        }
       }
-    }
-  );
-
-  return () => unsub();
-}, [groupId]);
-
-
-
-//Borra grupo
-const handleDeleteGroup = async () => {  
-  const confirm1 = await Swal.fire({
-    title: "Eliminar grupo",
-    text: "Esta acción eliminará el grupo con TODOS los participantes, gastos y pagos!",
-    icon: "warning",
-    iconColor:"#269181",
-    showCancelButton: true,
-    confirmButtonText: "Eliminar",
-    cancelButtonText: "Cancelar",
-    confirmButtonColor: "#d33",
-    background: "#dee0e0",
-    color: "#283655",
-  });
-
-  if (!confirm1.isConfirmed) return;
-  
-  const confirm2 = await Swal.fire({
-    title: "¿Estás completamente seguro?",
-    text: "Esta acción es irreversible.",
-    icon: "error",
-    showCancelButton: true,
-    confirmButtonText: "Sí, eliminar definitivamente",
-    cancelButtonText: "Cancelar",
-    confirmButtonColor: "#d33",
-    background: "#dee0e0",
-    color: "#283655",
-  });
-
-  if (!confirm2.isConfirmed) return;
-  Swal.fire({
-          title: "Eliminando grupo...",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          background: "#dee0e0",
-          color:"#283655",
-          iconColor:"#269181",
-          confirmButtonColor:"#35b67e",
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
-
-  try {    
-    const expensesSnap = await getDocs(
-      collection(db, "groups", groupId, "expenses")
     );
-    for (const docu of expensesSnap.docs) {
-      await deleteDoc(docu.ref);
-    }
-    
-    const paymentsSnap = await getDocs(
-      collection(db, "groups", groupId, "payments")
-    );
-    for (const docu of paymentsSnap.docs) {
-      await deleteDoc(docu.ref);
-    }
-    
-    const peopleSnap = await getDocs(
-      collection(db, "groups", groupId, "people")
-    );
-    for (const docu of peopleSnap.docs) {
-      await deleteDoc(docu.ref);
-    }
-    
-    await deleteDoc(doc(db, "groups", groupId));
 
-    await Swal.fire({
-      title: "Grupo eliminado",
-      icon: "success",
-      iconColor:"#269181",
-      timer: 1500,
-      showConfirmButton: false,
-      background: "#dee0e0",
-      color: "#283655",
-    });
-    
-    setGroupId(null);
-
-  } catch (error) {
-    console.error(error);
-    Swal.fire({
-      title: "Error al eliminar",
-      text: "Intentá nuevamente",
-      icon: "error",
-      iconColor:"#269181",
-      background: "#dee0e0",
-      color: "#283655",
-    });
-  }
-};
-
-//Scroll secciones
-const scrollToSection = (id) => {
-  const element = document.getElementById(id);
-  if (element) {
-    element.scrollIntoView({ behavior: "smooth", block: "start" });
-    setTimeout(() =>{
-      document.activeElement?.blur();
-    }, 300);
-  }
-};
+    return () => unsub();
+  }, [groupId]);
 
 
-//Traspasar administrador
-const handleAdminPinLogin = async () => {
-  const result = await Swal.fire({
-    title: "¿Querés ser administrador?",
-    text: "Ingresá el PIN",
-    input: "password",
-    background: "#dee0e0",
-    color: "#283655",
-    iconColor: "#269181",
-    showCancelButton: true,
-    confirmButtonColor: "#35b67e",
-    confirmButtonText: "Confirmar",
-    cancelButtonText: "Cerrar",
-    inputAttributes: {
-      maxlength: 4,
-      inputmode: "numeric",
-    },
-    inputPlaceholder: "PIN de 4 dígitos",
-  });
-  
-  if (!result.isConfirmed) return;
 
-  const pin = result.value;
-
-  
-  if (!pin || !pin.trim()) {
-    await Swal.fire({
-      title: "Tenés que ingresar el PIN",
+  //Borra grupo
+  const handleDeleteGroup = async () => {
+    const confirm1 = await Swal.fire({
+      title: "Eliminar grupo",
+      text: "Esta acción eliminará el grupo con TODOS los participantes, gastos y pagos!",
       icon: "warning",
-      iconColor:"#269181",
-      confirmButtonColor: "#35b67e",
+      iconColor: "#269181",
+      showCancelButton: true,
+      confirmButtonText: "Eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
       background: "#dee0e0",
       color: "#283655",
     });
-    return;
-  }  
-  if (pin !== group.adminPin) {
-    await Swal.fire({
-      title: "PIN incorrecto",
-      icon: "error",
-      iconColor:"#269181",
-      confirmButtonColor: "#35b67e",
-      background: "#dee0e0",
-      color: "#283655",
-    });
-    return;
-  }  
-  const { value: newName } = await Swal.fire({
-    title: "Ingresá el nombre del administrador",
-    input: "text",
-    inputPlaceholder: "Tu nombre",
-    background: "#dee0e0",
-    color: "#283655",
-    confirmButtonColor: "#35b67e",
-    confirmButtonText: "Confirmar",
-    cancelButtonText: "Cancelar",
-    showCancelButton: true,
-    inputValidator: (value) => {
-      if (!value || !value.trim()) {
-        return "Tenés que ingresar el nombre del nuevo administrador";
-      }
-    },
-  });
 
-  if (!newName) return;
+    if (!confirm1.isConfirmed) return;
+
+    const confirm2 = await Swal.fire({
+      title: "¿Estás completamente seguro?",
+      text: "Esta acción es irreversible.",
+      icon: "error",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar definitivamente",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
+      background: "#dee0e0",
+      color: "#283655",
+    });
+
+    if (!confirm2.isConfirmed) return;
+    Swal.fire({
+      title: "Eliminando grupo...",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    try {
+      const expensesSnap = await getDocs(
+        collection(db, "groups", groupId, "expenses")
+      );
+      for (const docu of expensesSnap.docs) {
+        await deleteDoc(docu.ref);
+      }
+
+      const paymentsSnap = await getDocs(
+        collection(db, "groups", groupId, "payments")
+      );
+      for (const docu of paymentsSnap.docs) {
+        await deleteDoc(docu.ref);
+      }
+
+      const peopleSnap = await getDocs(
+        collection(db, "groups", groupId, "people")
+      );
+      for (const docu of peopleSnap.docs) {
+        await deleteDoc(docu.ref);
+      }
+
+      await deleteDoc(doc(db, "groups", groupId));
+
+      await Swal.fire({
+        title: "Grupo eliminado",
+        icon: "success",
+        iconColor: "#269181",
+        timer: 1500,
+        showConfirmButton: false,
+        background: "#dee0e0",
+        color: "#283655",
+      });
+
+      setGroupId(null);
+
+    } catch (error) {
+      console.error(error);
+      Swal.fire({
+        title: "Error al eliminar",
+        text: "Intentá nuevamente",
+        icon: "error",
+        iconColor: "#269181",
+        background: "#dee0e0",
+        color: "#283655",
+      });
+    }
+  };
+
+  //Scroll secciones
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => {
+        document.activeElement?.blur();
+      }, 300);
+    }
+  };
+
+
+  //Traspasar administrador
+  const handleAdminPinLogin = async () => {
+    const result = await Swal.fire({
+      title: "¿Querés ser administrador?",
+      text: "Ingresá el PIN",
+      input: "password",
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      showCancelButton: true,
+      confirmButtonColor: "#35b67e",
+      confirmButtonText: "Confirmar",
+      cancelButtonText: "Cerrar",
+      inputAttributes: {
+        maxlength: 4,
+        inputmode: "numeric",
+      },
+      inputPlaceholder: "PIN de 4 dígitos",
+    });
+
+    if (!result.isConfirmed) return;
+
+    const pin = result.value;
+
+
+    if (!pin || !pin.trim()) {
+      await Swal.fire({
+        title: "Tenés que ingresar el PIN",
+        icon: "warning",
+        iconColor: "#269181",
+        confirmButtonColor: "#35b67e",
+        background: "#dee0e0",
+        color: "#283655",
+      });
+      return;
+    }
+    if (pin !== group.adminPin) {
+      await Swal.fire({
+        title: "PIN incorrecto",
+        icon: "error",
+        iconColor: "#269181",
+        confirmButtonColor: "#35b67e",
+        background: "#dee0e0",
+        color: "#283655",
+      });
+      return;
+    }
+    const { value: newName } = await Swal.fire({
+      title: "Ingresá el nombre del administrador",
+      input: "text",
+      inputPlaceholder: "Tu nombre",
+      background: "#dee0e0",
+      color: "#283655",
+      confirmButtonColor: "#35b67e",
+      confirmButtonText: "Confirmar",
+      cancelButtonText: "Cancelar",
+      showCancelButton: true,
+      inputValidator: (value) => {
+        if (!value || !value.trim()) {
+          return "Tenés que ingresar el nombre del nuevo administrador";
+        }
+      },
+    });
+
+    if (!newName) return;
 
     Swal.fire({
-          title: "Cambiando de administrador...",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          background: "#dee0e0",
-          color:"#283655",
-          iconColor:"#269181",
-          confirmButtonColor:"#35b67e",
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
+      title: "Cambiando de administrador...",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
 
-  await updateDoc(doc(db, "groups", groupId), {
-    adminUid: user.uid,
-    adminName: newName,
-  });
+    await updateDoc(doc(db, "groups", groupId), {
+      adminUid: user.uid,
+      adminName: newName,
+    });
 
-  Swal.fire({
-    title: "Ahora sos el administrador del grupo",
-    icon: "success",
-    iconColor:"#269181",
-    confirmButtonColor: "#35b67e",
-    background: "#dee0e0",
-    color: "#283655",
-    confirmButtonText:"Cerrar",
-  });
-};
+    Swal.fire({
+      title: "Ahora sos el administrador del grupo",
+      icon: "success",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      background: "#dee0e0",
+      color: "#283655",
+      confirmButtonText: "Cerrar",
+    });
+  };
 
   // Ver personas en tiempo real
   useEffect(() => {
@@ -323,19 +321,19 @@ const handleAdminPinLogin = async () => {
     return unsub;
   }, [groupId]);
 
-  //ver pago en tiemo real // agregado para pagos
+  //ver pago en tiemo real 
   useEffect(() => {
-  if (!groupId) return;
+    if (!groupId) return;
 
-  const unsub = onSnapshot(
-    collection(db, "groups", groupId, "payments"),
-    (snap) => {
-      setPayments(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    }
-  );
+    const unsub = onSnapshot(
+      collection(db, "groups", groupId, "payments"),
+      (snap) => {
+        setPayments(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      }
+    );
 
-  return unsub;
-}, [groupId]);
+    return unsub;
+  }, [groupId]);
 
   // Agregar Persona
   const addPersonToDB = (person) =>
@@ -381,179 +379,180 @@ const handleAdminPinLogin = async () => {
     );
   };
 
-// Editar participante (cantidad + alias)
-const editPersonInDB = async (personId, data) => {
-  const ref = doc(db, "groups", groupId, "people", personId);
-try {
-  await updateDoc(ref, {
-    count: Number(data.count),
-    alias: data.alias.trim(),
-  });
-} catch (error) {console.error(error);
+  // Editar participante (cantidad + alias)
+  const editPersonInDB = async (personId, data) => {
+    const ref = doc(db, "groups", groupId, "people", personId);
+    try {
+      await updateDoc(ref, {
+        count: Number(data.count),
+        alias: data.alias.trim(),
+      });
+    } catch (error) {
+      console.error(error);
 
-}finally {
-    setLoading(false);
-  }
+    } finally {
+      setLoading(false);
+    }
 
-};
+  };
 
-//guardar pago
-const addPayment = async (payment) => {
-  await addDoc(
-    collection(db, "groups", groupId, "payments"),
-    payment
-  );
-};
+  //guardar pago
+  const addPayment = async (payment) => {
+    await addDoc(
+      collection(db, "groups", groupId, "payments"),
+      payment
+    );
+  };
 
-//Borrar todos los pagos
-const handleClearPayments = async () => {
-  const result = await Swal.fire({
-    title: "Eliminar todos los pagos",
-    text: "Esta acción no se puede deshacer",
-    icon: "question",
-    showCancelButton: true,
-    confirmButtonText: "Sí, eliminar",
-    cancelButtonText: "Cancelar",
-    confirmButtonColor: "#d33",
-    iconColor:"#269181"
-  });
-
-  if (!result.isConfirmed) return;
-
-Swal.fire({
-    title: "Eliminando los pagos...",
-    allowOutsideClick: false,
-    allowEscapeKey: false,
-    background: "#dee0e0",
-    color:"#283655",
-    iconColor:"#269181",
-    confirmButtonColor:"#35b67e",
-    didOpen: () => {
-      Swal.showLoading();
-    },
-  });  
-
-  try {
-    const paymentsRef = collection(db, "groups", groupId, "payments");
-
-    const snapshot = await getDocs(paymentsRef);
-
-    const batch = writeBatch(db);
-
-    snapshot.forEach((docu) => {
-      batch.delete(docu.ref);
+  //Borrar todos los pagos
+  const handleClearPayments = async () => {
+    const result = await Swal.fire({
+      title: "Eliminar todos los pagos",
+      text: "Esta acción no se puede deshacer",
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      confirmButtonColor: "#d33",
+      iconColor: "#269181"
     });
 
-    await batch.commit();
+    if (!result.isConfirmed) return;
 
     Swal.fire({
-    title: "Pagos eliminados",    
-    icon: "success", 
-    background: "#dee0e0",
-    color:"#283655",   
-    confirmButtonColor:"#35b67e", 
-    confirmButtonText: "Cerrar",        
-    iconColor:"#269181",
-  });
-  } catch (error) {
-    console.error(error);
-  } finally {
-    setLoading(false);
-  }
-};
+      title: "Eliminando los pagos...",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
 
-// Salir del grupo
-const exitGroup = async () => {
-  const result = await Swal.fire({
-    title: "Salir del grupo",
-    text: "¿Estás seguro que querés salir del grupo actual?",
-    icon: "question",
-    iconColor:"#269181",
-    showCancelButton: true,
-    confirmButtonText: "Salir del grupo",
-    cancelButtonText: "Cerrar",
-    confirmButtonColor: "#35b67e",
-    background: "#dee0e0",
-    color: "#283655",
-  });
+    try {
+      const paymentsRef = collection(db, "groups", groupId, "payments");
 
-  if (!result.isConfirmed) return;
-  Swal.fire({
-          title: "Saliendo del grupo...",
-          allowOutsideClick: false,
-          allowEscapeKey: false,
-          background: "#dee0e0",
-          color:"#283655",
-          iconColor:"#269181",
-          confirmButtonColor:"#35b67e",
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
+      const snapshot = await getDocs(paymentsRef);
 
-  localStorage.removeItem("groupId");
-  setGroupId(null);
-  setPeople([]);
-  setExpenses([]);
+      const batch = writeBatch(db);
 
-  Swal.fire({
-    title: "Saliste del grupo",
-    icon: "success",
-    timer: 1200,
-    iconColor:"#269181",
-    showConfirmButton: false,
-    background: "#dee0e0",
-    color: "#283655",
-  });
-};  
+      snapshot.forEach((docu) => {
+        batch.delete(docu.ref);
+      });
 
-//Bienvenida
+      await batch.commit();
+
+      Swal.fire({
+        title: "Pagos eliminados",
+        icon: "success",
+        background: "#dee0e0",
+        color: "#283655",
+        confirmButtonColor: "#35b67e",
+        confirmButtonText: "Cerrar",
+        iconColor: "#269181",
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Salir del grupo
+  const exitGroup = async () => {
+    const result = await Swal.fire({
+      title: "Salir del grupo",
+      text: "¿Estás seguro que querés salir del grupo actual?",
+      icon: "question",
+      iconColor: "#269181",
+      showCancelButton: true,
+      confirmButtonText: "Salir del grupo",
+      cancelButtonText: "Cerrar",
+      confirmButtonColor: "#35b67e",
+      background: "#dee0e0",
+      color: "#283655",
+    });
+
+    if (!result.isConfirmed) return;
+    Swal.fire({
+      title: "Saliendo del grupo...",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    localStorage.removeItem("groupId");
+    setGroupId(null);
+    setPeople([]);
+    setExpenses([]);
+
+    Swal.fire({
+      title: "Saliste del grupo",
+      icon: "success",
+      timer: 1200,
+      iconColor: "#269181",
+      showConfirmButton: false,
+      background: "#dee0e0",
+      color: "#283655",
+    });
+  };
+
+  //Bienvenida
   if (!started && !groupId) {
-  return (
-    <div className="app welcome">
-      <img src="logo.png" alt="Cuentas Claras" className="logo" />
-      <h2>La manera más fácil de compartir gastos</h2>
-      <h3>Ideal para resolver las cuentas en vacaciones, juntadas, salidas o cuando lo nesecites!!!</h3>
-      <button className="boton" onClick={() => setStarted(true)}>
-        Ingresar
-      </button>
-    </div>
-  );
-}
+    return (
+      <div className="app welcome">
+        <img src="logo.png" alt="Cuentas Claras" className="logo" />
+        <h2>La manera más fácil de compartir gastos</h2>
+        <h3>Ideal para resolver las cuentas en vacaciones, juntadas, salidas o cuando lo nesecites!!!</h3>
+        <button className="boton" onClick={() => setStarted(true)}>
+          Ingresar
+        </button>
+      </div>
+    );
+  }
 
   // Pantalla crear/Entrar a grupo
   if (!groupId) {
-  return (
-    <div className="app">
-      <p>La manera más fácil de compartir gastos</p>
-      <img src="logo.png" alt="Cuentas Claras" className="Create" />      
+    return (
+      <div className="app">
+        <p>La manera más fácil de compartir gastos</p>
+        <img src="logo.png" alt="Cuentas Claras" className="Create" />
 
-      <CreateGroup
-      user={user}
-  onGroupCreated={({ groupId, groupName, hasAdmin }) => {
-    setGroupId(groupId);
-    setGroupName(groupName);
-  }}
-/>
-    </div>
-  );
-}
+        <CreateGroup
+          user={user}
+          onGroupCreated={({ groupId, groupName, hasAdmin }) => {
+            setGroupId(groupId);
+            setGroupName(groupName);
+          }}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="app">
       <p>La manera más fácil de compartir gastos</p>
       <img src="logo.png" alt="Cuentas Claras" className="Create" />
-      
-<h1 className="group-title">{groupName}</h1>
-<p className="group-code">
-  <strong>{groupCode}</strong>
-</p>
-{group?.adminUid && (
-  <p className="admin-label">
-    Administrador: <strong>{group.adminName}</strong>
-    {isAdmin && " (vos)"}
-  </p>
-)}
+
+      <h1 className="group-title">{groupName}</h1>
+      <p className="group-code">
+        <strong>{groupCode}</strong>
+      </p>
+      {group?.adminUid && (
+        <p className="admin-label">
+          Administrador: <strong>{group.adminName}</strong>
+          {isAdmin && " (vos)"}
+        </p>
+      )}
 
       <AddPerson
         people={people}
@@ -577,60 +576,60 @@ const exitGroup = async () => {
       />
 
       <BalanceList
-      people={people}
-      expenses={expenses}
-      payments={payments}
-      debts={debts}
-      group={group}
-      onPayDebt={addPayment}
-      groupId={groupId}
-      isAdminMode={isAdminMode}
-      canEdit={canEdit}
-      handleClearPayments={handleClearPayments}
+        people={people}
+        expenses={expenses}
+        payments={payments}
+        debts={debts}
+        group={group}
+        onPayDebt={addPayment}
+        groupId={groupId}
+        isAdminMode={isAdminMode}
+        canEdit={canEdit}
+        handleClearPayments={handleClearPayments}
       />
 
 
-{groupId && (
-  <div className="bottom-bar">
+      {groupId && (
+        <div className="bottom-bar">
 
 
-    <div className="bottom-icon" onClick={() => scrollToSection("section-people")}>
-  <i className="fa-solid fa-person-circle-plus"></i>
-  <small>Persona</small>
-</div>
+          <div className="bottom-icon" onClick={() => scrollToSection("section-people")}>
+            <i className="fa-solid fa-person-circle-plus"></i>
+            <small>Persona</small>
+          </div>
 
-<div className="bottom-icon" onClick={() => scrollToSection("section-expense")}>
-  <i className="fa-solid fa-circle-plus"></i>
-  <small>Gasto</small>
-</div>
+          <div className="bottom-icon" onClick={() => scrollToSection("section-expense")}>
+            <i className="fa-solid fa-circle-plus"></i>
+            <small>Gasto</small>
+          </div>
 
-<div className="bottom-icon" onClick={() => scrollToSection("section-balance")}>
-  <i className="fa-solid fa-calculator"></i>
-  <small>Balance</small>
-</div>
+          <div className="bottom-icon" onClick={() => scrollToSection("section-balance")}>
+            <i className="fa-solid fa-calculator"></i>
+            <small>Balance</small>
+          </div>
 
-{group?.adminUid && group.adminUid !== user?.uid && (
-    <div className="bottom-icon" onClick={handleAdminPinLogin}>
-      <i className="fa-solid fa-crown"></i>
-      <small>Admin</small>
+          {group?.adminUid && group.adminUid !== user?.uid && (
+            <div className="bottom-icon" onClick={handleAdminPinLogin}>
+              <i className="fa-solid fa-crown"></i>
+              <small>Admin</small>
+            </div>
+          )}
+
+          <div className="bottom-icon" onClick={exitGroup}>
+            <i className="fa-solid fa-house"></i>
+            <small>Inicio</small>
+          </div>
+
+          {canEdit && (
+            <div className="bottom-icon" onClick={handleDeleteGroup}>
+              <i className="fa-solid fa-trash-arrow-up"></i>
+              <small>Grupo</small>
+            </div>
+          )}
+        </div>
+
+      )}
     </div>
-  )}
-
-  <div className="bottom-icon" onClick={exitGroup}>
-      <i className="fa-solid fa-house"></i>
-      <small>Inicio</small>
-    </div>
-
-    {canEdit && (
-      <div className="bottom-icon" onClick={handleDeleteGroup}>
-        <i className="fa-solid fa-trash-arrow-up"></i>
-        <small>Grupo</small>
-      </div>
-     )}
-  </div>
-
-)}
-  </div>
   );
 
 }
