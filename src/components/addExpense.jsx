@@ -241,8 +241,8 @@ export default function AddExpense({
     const isAll = !expense.participants;
     if (isAll) {
       Swal.fire({
-        title: "Participantes:",
-        text: "Todos participan de este gasto",
+        title: "Participan del gasto:",
+        text: "Todos",
         icon: "info",
         background: "#dee0e0",
         color: "#283655",

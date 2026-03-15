@@ -285,9 +285,8 @@ export default function BalanceList({
     });
   };
 
-  //modal para pagos(hay que modificarlo)
- const showPayModal = (pago) => {
-    // const person = people.find(p => p.name === pago.to);   
+  //modal para pagos
+ const showPayModal = (pago) => {       
     Swal.fire({
       title: "Detalle del pago",
       html: `
@@ -312,15 +311,11 @@ export default function BalanceList({
   };
 
 
-
-
-
   return (
     <div className="card" id="section-balance">
       <h2 className="titulo">Balance</h2>
-      <strong>Total gastado: ${totalGasto.toFixed(2)}</strong>
-      <br />
-
+      <strong>Total gastado: ${totalGasto.toFixed(2)}</strong> 
+          
       <h3 className="balance">Balance individual</h3>
       <ul>
         {balances.map((b, i) => (
@@ -343,8 +338,7 @@ export default function BalanceList({
         <ul>
           {deudas.map((d, i) => (
             <li className="people-item expense-item"
-              key={`${d.from}-${d.to}-${i}`}
-              style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+              key={`${d.from}-${d.to}-${i}`}              
             >
               <span
                 className="clickable people-name expense-payer"
@@ -395,8 +389,7 @@ export default function BalanceList({
         {canEdit && (<button
           className="btn-danger"
           onClick={handleClearPayments}
-          disabled={!payments?.length}
-        // style={{ background: "#b61028", marginTop: "12px", color: "white", width: "190px"  }}
+          disabled={!payments?.length}       
         >
           <i className="fa-solid fa-trash"></i> Borrar todos los pagos</button>)}
 
