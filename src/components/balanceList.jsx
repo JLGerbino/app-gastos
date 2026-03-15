@@ -44,7 +44,7 @@ const calculateDebts = (people, expenses, payments) => {
     name,
     balance,
   }));
-  // Aplicar pagos manuales 
+  // Aplicar pagos manuales
   payments.forEach((p) => {
     const payer = balances.find((b) => b.name === p.from);
     const receiver = balances.find((b) => b.name === p.to);
@@ -117,8 +117,8 @@ export default function BalanceList({
       title: "Confirmar pago",
       html: `
         <p style="font-size:20px">
-          ${deuda.from} pagó 
-          <strong>$${deuda.amount.toFixed(2)}</strong> 
+          ${deuda.from} pagó
+          <strong>$${deuda.amount.toFixed(2)}</strong>
           a ${deuda.to}?
         </p>
       `,
@@ -173,8 +173,8 @@ export default function BalanceList({
       title: "¿Eliminar pago?",
       html: `
       <p style="font-size:18px">
-        ¿Querés eliminar el pago de 
-        <strong>${payment.from}</strong> a 
+        ¿Querés eliminar el pago de
+        <strong>${payment.from}</strong> a
         <strong>${payment.to}</strong>?
       </p>
     `,
@@ -217,8 +217,25 @@ export default function BalanceList({
     });
   };
 
+  //Modal total gastos
+  const showTotalExpenses = () => {
+    Swal.fire({
+      title: "Total gastado:",
+      html: `
+        <div style="font-size:26px; line-height:1.5;">
+          <strong style="color:#269181">${totalGasto.toFixed(2)}</strong> 
+        </div>        
+      `,
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      confirmButtonText: "Cerrar",
+    });
+  };
 
-  // 👉 Modal informativo
+
+  //Modal deuda entre personas
   const showDebtModal = (deuda) => {
     const person = people.find(p => p.name === deuda.to);
     const alias = person?.alias;
@@ -286,7 +303,7 @@ export default function BalanceList({
   };
 
   //modal para pagos
- const showPayModal = (pago) => {       
+ const showPayModal = (pago) => {
     Swal.fire({
       title: "Detalle del pago",
       html: `
@@ -300,13 +317,13 @@ export default function BalanceList({
 
         <div style="font-size:26px;">
           a <strong style="color:#269181">${pago.to}</strong>
-        </div>        
+        </div>
       `,
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Cerrar",     
+      confirmButtonText: "Cerrar",
     });
   };
 
@@ -314,8 +331,8 @@ export default function BalanceList({
   return (
     <div className="card" id="section-balance">
       <h2 className="titulo">Balance</h2>
-      <strong>Total gastado: ${totalGasto.toFixed(2)}</strong> 
-          
+      <strong className="people-name expense-payer" onClick={() => showTotalExpenses()}>Total gastado: ${totalGasto.toFixed(2)}</strong>
+
       <h3 className="balance">Balance individual</h3>
       <ul>
         {balances.map((b, i) => (
@@ -338,7 +355,7 @@ export default function BalanceList({
         <ul>
           {deudas.map((d, i) => (
             <li className="people-item expense-item"
-              key={`${d.from}-${d.to}-${i}`}              
+              key={`${d.from}-${d.to}-${i}`}
             >
               <span
                 className="clickable people-name expense-payer"
@@ -389,7 +406,7 @@ export default function BalanceList({
         {canEdit && (<button
           className="btn-danger"
           onClick={handleClearPayments}
-          disabled={!payments?.length}       
+          disabled={!payments?.length}
         >
           <i className="fa-solid fa-trash"></i> Borrar todos los pagos</button>)}
 
