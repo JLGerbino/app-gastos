@@ -216,6 +216,7 @@ export default function BalanceList({
       showConfirmButton: false,
     });
   };
+  
 
   //Modal total gastos
   const showTotalExpenses = () => {
