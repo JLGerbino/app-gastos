@@ -427,10 +427,11 @@ export default function AddExpense({
     <div className="card" id="section-expense">
 
       <h2 className="titulo">Agregar gasto</h2>
+
+      <h3>Quién pagó?</h3>
       <div>
         <select value={payer} onChange={(e) => setPayer(e.target.value)} disabled={!canEdit}>
-
-          <option value="">--     Quién realizó el gasto    --</option>
+          <option value="">Seleccionar participante</option>
           {people.map((p) => (
             <option key={p.id} value={p.name}>
               {p.name}
@@ -451,7 +452,7 @@ export default function AddExpense({
       </div>
 
       <div>
-        <h3>¿Quiénes participan?</h3>
+        <h3>Quiénes participan?</h3>
 
         <label>
           <input
@@ -536,7 +537,7 @@ export default function AddExpense({
         </div>)}
 
       <div>
-        <h3>Importe del gasto</h3>
+        <h3>Importe gastado</h3>
         <input
           type="number"
           inputMode="numeric"
