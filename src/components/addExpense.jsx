@@ -431,7 +431,7 @@ export default function AddExpense({
       <h3>Quién pagó?</h3>
       <div>
         <select value={payer} onChange={(e) => setPayer(e.target.value)} disabled={!canEdit}>
-          <option value="">-  Seleccionar participante  -</option>
+          <option value="">-    Seleccionar participante    -</option>
           {people.map((p) => (
             <option key={p.id} value={p.name}>
               {p.name}
