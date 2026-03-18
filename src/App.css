@@ -170,7 +170,9 @@ border-left: 6px solid #269181;
   border-radius: 6px;
 }
  
-
+.swal2-loader {
+  border-color: #35b67e transparent #35b67e transparent !important;
+}
 .modal-overlay {
   position: fixed;
   inset: 0;

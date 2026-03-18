@@ -49,7 +49,18 @@ export default function AddPerson({
         confirmButtonText: "Cerrar",
       });
     }
-
+     Swal.fire({
+      title: "Agregando participante...",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
     await addPersonToDB({
       name: name.trim(),
       count: Number(count),
@@ -248,6 +259,7 @@ export default function AddPerson({
       title: "Guardando cambios...",
       allowOutsideClick: false,
       background: "#dee0e0",
+      iconColor: "#269181",
       color: "#283655",
       didOpen: () => Swal.showLoading(),
     });

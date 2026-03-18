@@ -91,6 +91,20 @@ export default function AddExpense({
         participants: finalParticipants,
         createdAt: new Date()
       };
+      
+       Swal.fire({
+      title: "Agregando gasto...",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      background: "#dee0e0",
+      color: "#283655",
+      iconColor: "#269181",
+      confirmButtonColor: "#35b67e",
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     await addExpenseToDB(expense);
     Swal.fire({
       icon: "success",
