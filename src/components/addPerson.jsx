@@ -28,7 +28,7 @@ export default function AddPerson({
       confirmButtonColor: "#35b67e",
       confirmButtonText: "Cerrar",
     });
-    if (count < 1) return Swal.fire({
+    if (count < 1 || 0 ) return Swal.fire({
       icon: "warning",
       title: "Cantidad inválida",
       background: "#dee0e0",

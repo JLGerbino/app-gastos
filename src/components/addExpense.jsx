@@ -20,7 +20,7 @@ export default function AddExpense({
   
   //Agregar gasto 
   const addExpense = async () => {
-    if (!payer || !amount || !desc) return Swal.fire({
+    if (!payer || !amount || !desc ) return Swal.fire({
       icon: "warning",
       background: "#dee0e0",
       color: "#283655",
@@ -29,6 +29,20 @@ export default function AddExpense({
       title: "Completa todos los campos",
       confirmButtonText: "Cerrar",
     });
+
+    if (Number(amount) <= 0) {
+  return Swal.fire({
+    icon: "warning",
+    title: "Monto inválido",
+    text: "El importe debe ser mayor a 0",
+    background: "#dee0e0",
+    color: "#283655",
+    iconColor: "#269181",
+    confirmButtonColor: "#35b67e",
+    confirmButtonText: "Cerrar"
+  });
+}
+
     if (mode === "some") {
 
       const selected = participants.filter(p => p.selected);
@@ -36,7 +50,7 @@ export default function AddExpense({
       if (selected.length === 0) {
         return Swal.fire({
           icon: "warning",
-          title: "Selecciona participantes",
+          title: "Seleccioná participantes",
           text: "Debes elegir al menos un participante",
           background: "#dee0e0",
           color: "#283655",
@@ -91,6 +105,8 @@ export default function AddExpense({
         participants: finalParticipants,
         createdAt: new Date()
       };
+     
+
       
        Swal.fire({
       title: "Agregando gasto...",
