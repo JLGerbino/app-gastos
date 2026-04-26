@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 export default function AddExpense({
   group,
   people,
@@ -16,8 +18,14 @@ export default function AddExpense({
   const [amount, setAmount] = useState("");
   const [mode, setMode] = useState("all");
   const [participants, setParticipants] = useState([]);
-
+  const { t } = useTranslation();
   
+function Test() {
+  const { t } = useTranslation();
+
+  return <button>{t("addExpense")}</button>;
+}
+
   //Agregar gasto 
   const addExpense = async () => {
     if (!payer || !amount || !desc ) return Swal.fire({
@@ -454,14 +462,16 @@ export default function AddExpense({
   console.log("AddExpense group:", group);
 
   return (
+    
     <div className="card" id="section-expense">
 
-      <h2 className="titulo">Agregar gasto</h2>
+      <h2 className="titulo">{t("agregarGasto")}</h2>
 
-      <h3>Quién pagó?</h3>
+      <h3>{t("quienPago")}</h3>
       <div>
+        
         <select value={payer} onChange={(e) => setPayer(e.target.value)} disabled={!canEdit}>
-          <option value="">--    Seleccionar participante    --</option>
+          <option value="">--    {t("seleccionarParticipante")}    --</option>
           {people.map((p) => (
             <option key={p.id} value={p.name}>
               {p.name}
@@ -471,10 +481,10 @@ export default function AddExpense({
       </div>
 
       <div>
-        <h3>Descripción del gasto</h3>
+        <h3>{t("descripcionGasto")}</h3>
         <input
           type="text"
-          placeholder="Ingresar descripción"
+          placeholder={t("ingresarDescripcion")}
           value={desc}
           onChange={(e) => setDesc(e.target.value)}
           disabled={!canEdit}
@@ -482,7 +492,7 @@ export default function AddExpense({
       </div>
 
       <div>
-        <h3>Quiénes participan?</h3>
+        <h3>{t("quienesParticipan")}</h3>
 
         <label>
           <input
@@ -494,7 +504,7 @@ export default function AddExpense({
             onChange={(e) => handleSplitTypeChange(e.target.value)}
             disabled={!canEdit}
           />
-          Todos
+          {t("todos")}
         </label>
 
         <label>
@@ -507,13 +517,13 @@ export default function AddExpense({
             onChange={(e) => handleSplitTypeChange(e.target.value)}
             disabled={!canEdit}
           />
-          Algunos
+          {t("algunos")}
         </label>
       </div>
 
       {mode === "some" && (
         <div>
-          <h4>Elegí quienes participan del gasto</h4>
+          <h4>{t("quienesParticipanGasto")}</h4>
           <div className="some">
             <div>
               {participants.map((p, index) => (
@@ -567,11 +577,11 @@ export default function AddExpense({
         </div>)}
 
       <div>
-        <h3>Importe gastado</h3>
+        <h3>{t("importeGastado")}</h3>
         <input
           type="number"
           inputMode="numeric"
-          placeholder="Ingresar importe"
+          placeholder={t("ingresarImporte")}
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           disabled={!canEdit}
@@ -581,11 +591,11 @@ export default function AddExpense({
 
 
       <div>
-        {canEdit && (<button className="boton" onClick={addExpense}>Agregar</button>)}
+        {canEdit && (<button className="boton" onClick={addExpense}>{t("agregar")}</button>)}
       </div>
 
 
-      <h3>Gastos</h3>
+      <h3>{t("gastos")}</h3>
 
       <ul>
         {expenses.map((e) => {
@@ -604,7 +614,7 @@ export default function AddExpense({
                 onClick={() => showPersonExpenses(e.payer)}
               >
 
-                {e.payer} pagó ${e.amount} ({e.desc})
+                {e.payer} {t("pagó")} ${e.amount} ({e.desc})
               </span>
 
               {canEdit && (
@@ -623,7 +633,7 @@ export default function AddExpense({
           onClick={deleteAll}
           disabled={!expenses?.length}
         >
-          <i className="fa-solid fa-trash"></i> Borrar todos los gastos</button>)}
+          <i className="fa-solid fa-trash"></i> {t("borrarTodosGastos")}</button>)}
 
       </div>
     </div>

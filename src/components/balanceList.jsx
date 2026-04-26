@@ -1,6 +1,14 @@
 import { collection, addDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
+
+//cambio de lenguaje y local storage
+const changeLang = (lang) => {
+  i18n.changeLanguage(lang);
+  localStorage.setItem("lang", lang);
+};
 
 
 // La que calcula todo
@@ -110,6 +118,8 @@ export default function BalanceList({
     deudas,
     totalGasto,
   } = calculateDebts(people, expenses, payments);
+
+  const { t } = useTranslation(); //traductor
 
   //Registrar pago
   const markAsPaid = async (deuda) => {
@@ -331,27 +341,34 @@ export default function BalanceList({
 
   return (
     <div className="card" id="section-balance">
-      <h2 className="titulo">Balance</h2>
-      <strong className="people-name expense-payer" onClick={() => showTotalExpenses()}>Total gastado: ${totalGasto.toFixed(2)}</strong>
+      <h2 className="titulo">{t("balance")}</h2>      
 
-      <h3 className="balance">Balance individual</h3>
+<div style={{ marginBottom: "10px" }}>
+  <button onClick={() => changeLang("es")}>ES</button>
+  <button onClick={() => changeLang("en")}>EN</button>
+  <button onClick={() => changeLang("pt")}>PT</button>
+  <button onClick={() => changeLang("fr")}>FR</button></div>
+
+
+      <strong className="people-name expense-payer" onClick={() => showTotalExpenses()}>{t("totalGastado")}: {t("$")}{totalGasto.toFixed(2)}</strong>
+      <h3 className="balance">{t("balanceIndividual")}</h3>
       <ul>
         {balances.map((b, i) => (
           <li style={{ marginBottom: "8px" }} key={i}>
             {b.name}:{" "}
             {b.balance > 0.01
-              ? `le deben $${b.balance.toFixed(2)}`
+              ? `${t("leDeben")} ${t("$")}${b.balance.toFixed(2)}`
               : b.balance < -0.01
-                ? `debe $${Math.abs(b.balance).toFixed(2)}`
-                : "está justo"}
+                ? `${t("debe")} ${t("$")}${Math.abs(b.balance).toFixed(2)}`
+                : `${t("estaJusto")}`}
           </li>
         ))}
       </ul>
       <div className="titulo">
-        <h3 className="balance">Deudas entre personas</h3>
+        <h3 className="balance">{t("deudas")}</h3>
       </div>
       {deudas.length === 0 ? (
-        <p>Están todos a mano</p>
+        <p>{t("TodosMano")}</p>
       ) : (
         <ul>
           {deudas.map((d, i) => (
@@ -362,8 +379,8 @@ export default function BalanceList({
                 className="clickable people-name expense-payer"
                 onClick={() => showDebtModal(d)}
               >
-                <strong className="deudor">{d.from}</strong> debe $
-                <strong className="monto">{d.amount.toFixed(2)}</strong> a{" "}
+                <strong className="deudor">{d.from}</strong> {t("debe")} {t("$")}
+                <strong className="monto">{d.amount.toFixed(2)}</strong> {t("a")} {" "}
                 <strong className="acreedor">{d.to}</strong>
               </span>
 
@@ -376,10 +393,10 @@ export default function BalanceList({
         </ul>
       )}
 
-      <h3 className="balance">Pagos realizados</h3>
+      <h3 className="balance">{t("pagos realizados")}</h3>
 
       {payments.length === 0 ? (
-        <p>No hay pagos registrados</p>
+        <p>{t("noPayments")}</p>
       ) : (
         <ul>
           {payments.map((p) => (
@@ -389,8 +406,8 @@ export default function BalanceList({
               <span className="clickable people-name expense-payer"
               onClick={() => showPayModal(p)}>
 
-                <strong>{p.from}</strong> pagó $
-                <strong>{p.amount.toFixed(2)}</strong> a{" "}
+                <strong>{p.from}</strong> {t("pagó")} {t("$")}
+                <strong>{p.amount.toFixed(2)}</strong> {t("a")}{" "}
                 <strong>{p.to}</strong>
               </span>
 
@@ -409,7 +426,7 @@ export default function BalanceList({
           onClick={handleClearPayments}
           disabled={!payments?.length}
         >
-          <i className="fa-solid fa-trash"></i> Borrar todos los pagos</button>)}
+          <i className="fa-solid fa-trash"></i> {t("borrarTodosPagos")}</button>)}
 
       </div>
     </div>

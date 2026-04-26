@@ -128,6 +128,22 @@ li,p{
   justify-content: center;
 }
 
+.bandera{
+  background-color: #ADC1c0;
+  width: 24px;
+  height: 24px;
+  object-fit: cover;
+  
+}
+.botonBandera{
+  background-color: #ADC1c0;
+}
+
+.botonBandera:hover{
+  background-color: #ADC1c0;
+  transform: scale(1.1);
+}
+
 /*agregado*/
 /* .expense-some{
 border-left: 6px solid #1976d2;

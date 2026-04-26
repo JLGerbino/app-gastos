@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { db } from "../firebase";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 import {
   doc,
   getDoc,
@@ -17,7 +19,7 @@ export default function CreateGroup({ onGroupCreated, user }) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminName, setAdminName] = useState("");
   const [adminPin, setAdminPin] = useState("");
-
+  const { t } = useTranslation();
 
 
   useEffect(() => {
@@ -210,25 +212,25 @@ export default function CreateGroup({ onGroupCreated, user }) {
   return (
     <div>
       <div className="card">
-        <h2>¿Ya tenés un grupo?</h2>
-        <h4>Ingresá acá</h4>
+        <h2>{t("yaTenesGrupo")}</h2>
+        <h4>{t("ingresaAca")}</h4>
         <div>
           <input
-            placeholder="Nombre del grupo"
+            placeholder={t("nombreGrupo")}
             value={joinName}
             onChange={(e) => setJoinName(e.target.value)}
           />
         </div>
         <div>
           <input
-            placeholder="Código (6 dígitos)"
+            placeholder={t("codigo6")}
             value={joinCode}
             maxLength={6}
             onChange={(e) => setJoinCode(e.target.value)}
           />
         </div>
         <button className="boton" onClick={joinGroup}>
-          Entrar al grupo
+          {t("entrarGrupo")}
         </button>
 
         {showCreate && (
@@ -242,16 +244,16 @@ export default function CreateGroup({ onGroupCreated, user }) {
                 <i className="fa-solid fa-x"></i>
               </button>
 
-              <h2>Crear nuevo grupo</h2>
+              <h2>{t("crearNuevoGrupo")}</h2>
 
               <input
-                placeholder="Nombre del grupo"
+                placeholder={t("nombreGrupo")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
 
               <input
-                placeholder="Código (6 dígitos)"
+                placeholder={t("codigo6")}
                 value={code}
                 maxLength={6}
                 onChange={(e) => setCode(e.target.value)}
@@ -271,13 +273,13 @@ export default function CreateGroup({ onGroupCreated, user }) {
                       }
                     }}
                   />
-                  Quiero ser administrador del grupo
+                  {t("administradorGrupo")}
                 </label></div>
               {isAdmin && (
                 <div>
                   <input
                     type="text"
-                    placeholder="Nombre del administrador"
+                    placeholder={t("nombreAdmin")}
                     value={adminName}
                     onChange={(e) => setAdminName(e.target.value)}
                     className="input"
@@ -307,7 +309,7 @@ export default function CreateGroup({ onGroupCreated, user }) {
       </div>
 
       <div className="nuevo-grupo-container">
-        <h2 className="grupo">Nuevo grupo</h2>
+        <h2 className="grupo">{t("nuevoGrupo")}</h2>
         <div
           onClick={() => setShowCreate(true)}
           className="nuevo nuevo-grupo"

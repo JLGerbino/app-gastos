@@ -5,6 +5,9 @@ import BalanceList from "./components/balanceList";
 import CreateGroup from "./components/createGroup";
 import Swal from "sweetalert2";
 import { db } from "./firebase";
+import { useTranslation } from "react-i18next";
+import i18n from "./i18n";
+import LanguageSelector from "./components/languageSelector";
 import { getAuth, signInAnonymously, onAuthStateChanged } from "firebase/auth";
 import {
   collection,
@@ -41,7 +44,7 @@ function App() {
   const [debts, setDebts] = useState([]);
   const hasAdmin = !!group?.adminUid;
   const isAdmin = !!group?.adminUid && group.adminUid === user?.uid;
-
+  const { t } = useTranslation();
 
   // Guardar groupId en localStorage
   useEffect(() => {
@@ -461,6 +464,8 @@ function App() {
     }
   };
 
+ 
+
   // Salir del grupo
   const exitGroup = async () => {
     const result = await Swal.fire({
@@ -510,11 +515,12 @@ function App() {
   if (!started && !groupId) {
     return (
       <div className="app welcome">
+        <LanguageSelector />
         <img src="logo.png" alt="Cuentas Claras" className="logo" />
-        <h2>La manera más fácil de compartir gastos</h2>
-        <h3>Ideal para resolver las cuentas en vacaciones, juntadas, salidas o cuando lo nesecites!!!</h3>
+        <h2>{t("slogan")}</h2>
+        <h3>{t("slogan2")}</h3>
         <button className="boton" onClick={() => setStarted(true)}>
-          Ingresar
+          {t("ingresar")}
         </button>
       </div>
     );
@@ -524,7 +530,7 @@ function App() {
   if (!groupId) {
     return (
       <div className="app">
-        <p>La manera más fácil de compartir gastos</p>
+        <p>{t("slogan")}</p>
         <img src="logo.png" alt="Cuentas Claras" className="Create" />
 
         <CreateGroup
@@ -540,8 +546,18 @@ function App() {
 
   return (
     <div className="app">
-      <p>La manera más fácil de compartir gastos</p>
+      <div style={{ position: "absolute", top: 10, right: 10 }}>
+        {/* <div style={{ marginBottom: "10px" }}>
+  <button onClick={() => changeLang("es")}>ES</button>
+  <button onClick={() => changeLang("en")}>EN</button>
+  <button onClick={() => changeLang("pt")}>PT</button>
+  <button onClick={() => changeLang("fr")}>FR</button></div> */}
+  <LanguageSelector />
+</div>
+      <p>{t("slogan")}</p>
       <img src="logo.png" alt="Cuentas Claras" className="Create" />
+
+   
 
       <h1 className="group-title">{groupName}</h1>
       <p className="group-code">
@@ -549,7 +565,7 @@ function App() {
       </p>
       {group?.adminUid && (
         <p className="admin-label">
-          Administrador: <strong>{group.adminName}</strong>
+          {t("administrador")}: <strong>{group.adminName}</strong>
           {isAdmin && " (vos)"}
         </p>
       )}

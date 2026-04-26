@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import { useTranslation } from "react-i18next";
+import i18n from "i18next";
 
 export default function AddPerson({
   people,
@@ -12,10 +14,16 @@ export default function AddPerson({
   const [name, setName] = useState("");
   const [count, setCount] = useState(1);
   const [alias, setAlias] = useState("");
-
+  const { t } = useTranslation();
 
 
   const totalPersonas = people.reduce((acc, p) => acc + p.count, 0);
+
+//cambio de lenguaje y local storage
+const changeLang = (lang) => {
+  i18n.changeLanguage(lang);
+  localStorage.setItem("lang", lang);
+};
 
   //Agregar persona
   const addPerson = async () => {
@@ -289,34 +297,34 @@ export default function AddPerson({
 
   return (
     <div className="card" id="section-people">
-      <h2 className="titulo">Agregar participantes</h2>
+      <h2 className="titulo">{t("agregarParticipante")}</h2>
       <div>
-        <h3>Nombre</h3>
+        <h3>{t("nombre")}</h3>
         <input
           type="text"
-          placeholder="Nombre"
+          placeholder={t("nombre")}
           value={name}
           onChange={e => setName(e.target.value)}
           disabled={!canEdit}
         />
       </div>
       <div>
-        <h3>Cantidad de personas a cargo</h3>
+        <h3></h3>
         <input
           type="number"
           inputMode="numeric"
           min={1}
           value={count}
           onChange={e => setCount(e.target.value)}
-          placeholder="Cantidad de personas"
+          placeholder={t("cantidadPersonas")}
           disabled={!canEdit}
         />
       </div>
       <div>
-        <h3>Alias para transferencias</h3>
+        <h3>{t("alias")}</h3>
         <input
           type="text"
-          placeholder="Opcional"
+          placeholder={t("opcional")}
           value={alias}
           onChange={e => setAlias(e.target.value)}
           disabled={!canEdit}
@@ -324,9 +332,9 @@ export default function AddPerson({
       </div>
       <div>
         {canEdit && (
-          <button className="boton" onClick={addPerson}>Agregar</button>)}
+          <button className="boton" onClick={addPerson}>{t("agregar")}</button>)}
       </div>
-      <h3>Participantes</h3>
+      <h3>{t("participantes")}</h3>
 
       <ul>
         {people.map(p => (
@@ -347,7 +355,7 @@ export default function AddPerson({
           </li>
         ))}
       </ul>
-      <p>Total de personas:{totalPersonas}</p>
+      <p>{t("totalPersonas")}:{totalPersonas}</p>
     </div>
   );
 }
