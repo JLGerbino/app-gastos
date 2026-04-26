@@ -286,14 +286,14 @@ export default function CreateGroup({ onGroupCreated, user }) {
                   />
                   <input
                     type="password"
-                    placeholder="PIN de 4 dígitos"
+                    placeholder={t("pin4")}
                     maxLength={4}
                     value={adminPin}
                     onChange={(e) => setAdminPin(e.target.value)}
                     className="input"
                   />
-                  <p>Solo vos vas a poder agregar, editar y eliminar personas y gastos</p>
-                  <p>Recordá este PIN. Lo vas a necesitar si cambias de dispositivo o para pasar el mando de administrador.</p>
+                  <p>{t("textoAdmin1")}</p>
+                  <p>{t("textoAdmin2")}</p>
 
 
                 </div>
@@ -301,7 +301,7 @@ export default function CreateGroup({ onGroupCreated, user }) {
               )}
 
               <button className="boton" onClick={createGroup}>
-                Crear grupo
+                {t("crearGrupo")}
               </button>
             </div>
           </div>
