@@ -150,12 +150,12 @@ const changeLang = (lang) => {
     Swal.fire({
       title: person.name,
       html: `
-      <p><strong>Cantidad:</strong> ${person.count}</p>
+      <p><strong>${t("cantidad")}:</strong> ${person.count}</p>
 
       ${person.alias
           ? `
             <hr />
-            <p><strong>Alias para recibir transferencias</strong></p>
+            <p><strong>${t("aliasParaRecibir")}</strong></p>
             <p 
               id="copyAliasPerson"
               style="
@@ -168,13 +168,13 @@ const changeLang = (lang) => {
               ${person.alias}
             </p>
             <p style="font-size:12px;color:gray">
-              Tocá el alias para copiarlo
+              ${t("tocaAlias")}
             </p>
           `
-          : `<p style="color:gray">Sin alias cargado</p>`
+          : `<p style="color:gray">${t("sinAlias")}</p>`
         }
     `,
-      confirmButtonText: "Cerrar",
+      confirmButtonText: t("cerrar"),
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
@@ -192,7 +192,7 @@ const changeLang = (lang) => {
             toast: true,
             position: "top",
             icon: "success",
-            title: "Alias copiado",
+            title: t("aliasCopiado"),
             background: "#dee0e0",
             color: "#283655",
             iconColor: "#269181",
@@ -208,7 +208,7 @@ const changeLang = (lang) => {
   //Editar persona
   const handleEditPerson = async (person) => {
     const result = await Swal.fire({
-      title: "Editar participante",
+      title: t("editarParticipante"),
       html: `
       <div
       style= "text-align: center;
@@ -226,18 +226,18 @@ const changeLang = (lang) => {
           min="1"
           class="swal2-input"
           value="${person.count}"                        
-        /></div><label>Cantidad de personas</label>        
+        /></div><label>${t("cantidadPersonas")}</label>        
         <div>        
         <input
           id="editAlias"
           class="swal2-input"
           value="${person.alias || ""}"          
         />
-      </div><label>Alias opcional</label>
+      </div><label>${t("aliasOpcional")}</label>
     `,
       showCancelButton: true,
-      confirmButtonText: "Guardar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: t("guardar"),
+      cancelButtonText: t("cancelar"),
       background: "#dee0e0",
       color: "#283655",
       confirmButtonColor: "#35b67e",
@@ -252,7 +252,7 @@ const changeLang = (lang) => {
 
         if (!count || count < 1) {
           Swal.showValidationMessage(
-            "La cantidad debe ser mayor a 0"
+            t("cantidadMayor0")
           );
           return;
         }
@@ -264,7 +264,7 @@ const changeLang = (lang) => {
     if (!result.isConfirmed) return;
 
     Swal.fire({
-      title: "Guardando cambios...",
+      title: t("guardandoCambios"),
       allowOutsideClick: false,
       background: "#dee0e0",
       iconColor: "#269181",
@@ -277,7 +277,7 @@ const changeLang = (lang) => {
 
       Swal.fire({
         icon: "success",
-        title: "Participante actualizado",
+        title: t("participanteActualizado"),
         color: "#283655",
         iconColor: "#269181",
         timer: 1500,
@@ -287,9 +287,9 @@ const changeLang = (lang) => {
     } catch (error) {
       console.error(error);
       Swal.fire(
-        "Error",
-        "No se pudo actualizar el participante",
-        "error"
+        t("error"),        
+        t("noPudoActualizarParticipante"),
+        t("error")
       );
     }
   };
@@ -309,7 +309,7 @@ const changeLang = (lang) => {
         />
       </div>
       <div>
-        <h3></h3>
+        <h3>{t("personasCargo")}</h3>
         <input
           type="number"
           inputMode="numeric"

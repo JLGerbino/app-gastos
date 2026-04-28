@@ -349,7 +349,7 @@ border-left: 6px solid #269181;
   -webkit-touch-callout: none;
 }
 
-.bottom-icon:hover { 
+.bottom-icon:hover {   
   color: #dee0e0;
 }
 
@@ -380,6 +380,51 @@ border-left: 6px solid #269181;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
+
+.settings-menu {
+  position: fixed;
+  bottom: 70px;
+  right: 10px;
+  background: #dee0e0;
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.settings-menu div {
+  padding: 8px 12px;
+  cursor: pointer;
+  /* border-radius: 8px; */
+}
+
+.settings-menu div:hover {
+  background: rgba(0,0,0,0.1);
+  color: #283655;
+}
+
+.bottom-icon-inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.lang-container {
+  display: flex;
+  gap: 8px;
+}
+
+.lang-container.horizontal {
+  flex-direction: row;
+  justify-content: center; 
+}
+
+.lang-container.vertical {
+  flex-direction: column;
+  align-items: flex-start; 
+}
+
 
 @keyframes spin {
   to { transform: rotate(360deg); }

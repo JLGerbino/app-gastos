@@ -45,6 +45,14 @@ function App() {
   const hasAdmin = !!group?.adminUid;
   const isAdmin = !!group?.adminUid && group.adminUid === user?.uid;
   const { t } = useTranslation();
+  const [showMenu, setShowMenu] = useState(false);
+  const [showLang, setShowLang] = useState(false);
+
+  //para cerrar Settings
+useEffect(() => {
+  setShowMenu(false);
+  setShowLang(false);
+}, [groupId]);
 
   // Guardar groupId en localStorage
   useEffect(() => {
@@ -552,7 +560,7 @@ function App() {
   <button onClick={() => changeLang("en")}>EN</button>
   <button onClick={() => changeLang("pt")}>PT</button>
   <button onClick={() => changeLang("fr")}>FR</button></div> */}
-  <LanguageSelector />
+  {/* <LanguageSelector /> */}
 </div>
       <p>{t("slogan")}</p>
       <img src="logo.png" alt="Cuentas Claras" className="Create" />
@@ -611,40 +619,59 @@ function App() {
 
           <div className="bottom-icon" onClick={() => scrollToSection("section-people")}>
             <i className="fa-solid fa-person-circle-plus"></i>
-            <small>Persona</small>
+            <small>{t("persona")}</small>
           </div>
 
           <div className="bottom-icon" onClick={() => scrollToSection("section-expense")}>
             <i className="fa-solid fa-circle-plus"></i>
-            <small>Gasto</small>
+            <small>{t("gasto")}</small>
           </div>
 
           <div className="bottom-icon" onClick={() => scrollToSection("section-balance")}>
             <i className="fa-solid fa-calculator"></i>
-            <small>Balance</small>
+            <small>{t("balance")}</small>
           </div>
 
-          {group?.adminUid && group.adminUid !== user?.uid && (
-            <div className="bottom-icon" onClick={handleAdminPinLogin}>
+          
+
+          <div className="bottom-icon" onClick={() => setShowMenu(!showMenu)}>
+  <i className="fa-solid fa-gear"></i>
+  <small>{t("mas")}</small>
+</div>
+{showMenu && (
+  <div className="settings-menu">
+    
+{group?.adminUid && group.adminUid !== user?.uid && (
+            <div className="bottom-icon bottom-icon-inline" onClick={handleAdminPinLogin}>
               <i className="fa-solid fa-crown"></i>
-              <small>Admin</small>
+              <small> {t("cambiarAdmin")}</small>
             </div>
           )}
-
-          <div className="bottom-icon" onClick={exitGroup}>
+       <div className="bottom-icon bottom-icon-inline" onClick={exitGroup}>
             <i className="fa-solid fa-house"></i>
-            <small>Inicio</small>
-          </div>
+            <small> {t("salirGrupo")}</small>
+          </div>   
+    
 
-          {canEdit && (
-            <div className="bottom-icon" onClick={handleDeleteGroup}>
-              <i className="fa-solid fa-trash-arrow-up"></i>
-              <small>Grupo</small>
-            </div>
-          )}
-        </div>
+    <div className="bottom-icon bottom-icon-inline" onClick={handleDeleteGroup}>
+  <i className="fa-solid fa-trash-arrow-up"></i>
+  <small> {t("eliminarGrupo")}</small>
+</div>   
 
-      )}
+<div className="bottom-icon bottom-icon-inline" onClick={() => setShowLang(!showLang)}>
+  <i class="fa-solid fa-comments"></i>
+  <small> {t("idioma")}</small>
+</div>
+
+{showLang && (
+  <LanguageSelector direction="vertical" />
+)}
+    
+
+  </div>
+)}         
+        </div> 
+      )}      
     </div>
   );
 
