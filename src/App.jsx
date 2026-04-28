@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import AddPerson from "./components/addPerson";
 import AddExpense from "./components/addExpense";
 import BalanceList from "./components/balanceList";
@@ -47,12 +47,35 @@ function App() {
   const { t } = useTranslation();
   const [showMenu, setShowMenu] = useState(false);
   const [showLang, setShowLang] = useState(false);
-
+  const closeMenu = () => {setShowMenu(false); setShowLang(false);};
+  const toggleMenu = () => {
+  setShowMenu(prev => {
+    if (!prev) setShowLang(false); // 👈 resetea al abrir
+    return !prev;
+  });
+};
   //para cerrar Settings
 useEffect(() => {
   setShowMenu(false);
   setShowLang(false);
 }, [groupId]);
+
+const menuRef = useRef(null);
+
+useEffect(() => {
+  const handleClickOutside = (event) => {
+    if (menuRef.current && !menuRef.current.contains(event.target)) {
+      setShowMenu(false);
+      setShowLang(false);
+    }
+  };
+  document.addEventListener("click", handleClickOutside);  
+
+  return () => {
+     document.addEventListener("click", handleClickOutside);    
+  };
+}, []);
+
 
   // Guardar groupId en localStorage
   useEffect(() => {
@@ -633,13 +656,14 @@ useEffect(() => {
           </div>
 
           
-
-          <div className="bottom-icon" onClick={() => setShowMenu(!showMenu)}>
+<div 
+  className="bottom-icon" onClick={(e) => {e.stopPropagation(); toggleMenu();}}>
+        
   <i className="fa-solid fa-gear"></i>
   <small>{t("mas")}</small>
 </div>
 {showMenu && (
-  <div className="settings-menu">
+  <div className="settings-menu" ref={menuRef}>
     
 {group?.adminUid && group.adminUid !== user?.uid && (
             <div className="bottom-icon bottom-icon-inline" onClick={handleAdminPinLogin}>
@@ -659,7 +683,7 @@ useEffect(() => {
 </div>   
 
 <div className="bottom-icon bottom-icon-inline" onClick={() => setShowLang(!showLang)}>
-  <i class="fa-solid fa-comments"></i>
+  <i className="fa-solid fa-comments"></i>
   <small> {t("idioma")}</small>
 </div>
 

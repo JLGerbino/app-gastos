@@ -74,5 +74,13 @@
   "idioma": "Langue",
   "eliminarGrupo": "Supprimer le groupe",
   "salirGrupo": "Quitter le groupe",
-  "cambiarAdmin": "Changer d’administrateur"
+  "cambiarAdmin": "Changer d’administrateur",
+  "faltaNombreParticipante": "Le nom du participant est requis",
+  "cantidadInvalida": "Quantité invalide",
+  "yaExisteParticipante": "Ce participant existe déjà",
+  "agregandoParticipante": "Ajout du participant...",
+  "participanteAgregado": "Participant ajouté",
+  "seguroEliminar": "Êtes-vous sûr de vouloir supprimer",
+  "seEliminaraPersona": "La personne et toutes ses dépenses seront supprimées",
+  "eliminar": "Supprimer"
 }

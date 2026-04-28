@@ -74,5 +74,13 @@
   "idioma": "Idioma",
   "eliminarGrupo": "Eliminar grupo",
   "salirGrupo": "Salir del grupo",
-  "cambiarAdmin": "Cambiar administrador"
+  "cambiarAdmin": "Cambiar administrador",
+  "faltaNombreParticipante": "Falta el nombre del participante",
+  "cantidadInvalida": "Cantidad inválida",
+  "yaExisteParticipante": "Ya existe ese participante",
+  "agregandoParticipante": "Agregando participante...",
+  "participanteAgregado": "Participante agregado",
+  "seguroEliminar": "¿Seguro de eliminar a",
+  "seEliminaraPersona": "Se eliminará la persona y todos sus gastos",
+  "eliminar": "Eliminar"
 }

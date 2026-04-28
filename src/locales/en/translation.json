@@ -74,5 +74,13 @@
   "idioma": "Language",
   "eliminarGrupo": "Delete group",
   "salirGrupo": "Leave group",
-  "cambiarAdmin": "Change admin"
+  "cambiarAdmin": "Change admin",
+  "faltaNombreParticipante": "Participant name is required",
+  "cantidadInvalida": "Invalid quantity",
+  "yaExisteParticipante": "That participant already exists",
+  "agregandoParticipante": "Adicionando participante...",
+  "participanteAgregado": "Participant added",
+  "seguroEliminar": "Are you sure you want to delete",
+  "seEliminaraPersona": "The person and all their expenses will be deleted",
+  "eliminar": "Delete"
 }

@@ -29,36 +29,36 @@ const changeLang = (lang) => {
   const addPerson = async () => {
     if (!name.trim()) return Swal.fire({
       icon: "warning",
-      title: "Falta el nombre del participante",
+      title: t("faltaNombreParticipante"),
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Cerrar",
+      confirmButtonText: t("cerrar"),
     });
     if (count < 1 || 0 ) return Swal.fire({
       icon: "warning",
-      title: "Cantidad inválida",
+      title: t("cantidadInvalida"),
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Cerrar",
+      confirmButtonText: t("cerrar"),
     });
 
     if (people.some(p => p.name === name.trim())) {
       return Swal.fire({
         icon: "warning",
-        title: "Ya existe ese participante",
+        title: t("yaExisteParticipante"),
         background: "#dee0e0",
         color: "#283655",
         iconColor: "#269181",
         confirmButtonColor: "#35b67e",
-        confirmButtonText: "Cerrar",
+        confirmButtonText: t("cerrar"),
       });
     }
      Swal.fire({
-      title: "Agregando participante...",
+      title: t("agregandoParticipante"),
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
@@ -76,7 +76,7 @@ const changeLang = (lang) => {
     });
     Swal.fire({
       icon: "success",
-      title: "Participante agregado",
+      title: t("participanteAgregado"),
       html: `<b>${name}</b>`,
       timer: 1500,
       showConfirmButton: false,
@@ -91,16 +91,16 @@ const changeLang = (lang) => {
   //Borrar persona
   const handleDeletePerson = async (person) => {
     const result = await Swal.fire({
-      title: `¿Seguro de eliminar a ${person.name}?`,
-      text: "Se eliminará la persona y todos sus gastos",
+      title: ` ${t("seguroEliminar")} ${person.name}?`,
+      text: t("seEliminaraPersona"),
       icon: "question",
       showCancelButton: true,
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Eliminar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: t("eliminar"),
+      cancelButtonText: t("cancelar"),
     });
     if (!result.isConfirmed) return;
 
