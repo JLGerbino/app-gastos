@@ -34,20 +34,20 @@ function Test() {
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
-      title: "Completa todos los campos",
-      confirmButtonText: "Cerrar",
+      title: t("completaCampos"),
+      confirmButtonText: t("cerrar"),
     });
 
     if (Number(amount) <= 0) {
   return Swal.fire({
     icon: "warning",
-    title: "Monto inválido",
-    text: "El importe debe ser mayor a 0",
+    title: t("montoInvalido"),
+    text: t("montoMayor0"),
     background: "#dee0e0",
     color: "#283655",
     iconColor: "#269181",
     confirmButtonColor: "#35b67e",
-    confirmButtonText: "Cerrar"
+    confirmButtonText: t("cerrar")
   });
 }
 
@@ -58,13 +58,13 @@ function Test() {
       if (selected.length === 0) {
         return Swal.fire({
           icon: "warning",
-          title: "Seleccioná participantes",
-          text: "Debes elegir al menos un participante",
+          title: t("seleccionaParticipante"),
+          text: t("elegirUnParticipante"),
           background: "#dee0e0",
           color: "#283655",
           iconColor: "#269181",
           confirmButtonColor: "#35b67e",
-          confirmButtonText: "Cerrar"
+          confirmButtonText: t("cerrar")
         });
       }
 
@@ -75,13 +75,13 @@ function Test() {
       if (invalidUnits) {
         return Swal.fire({
           icon: "warning",
-          title: "Cantidad inválida",
-          text: "Las personas a cargo no pueden ser 0 ni quedar vacías",
+          title: t("cantidadInvalida"),
+          text: t("personasCargoNo0"),
           background: "#dee0e0",
           color: "#283655",
           iconColor: "#269181",
           confirmButtonColor: "#35b67e",
-          confirmButtonText: "Cerrar"
+          confirmButtonText: t("cerrar")
         });
       }
 
@@ -117,7 +117,7 @@ function Test() {
 
       
        Swal.fire({
-      title: "Agregando gasto...",
+      title: t("agregandoGasto"),
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
@@ -132,8 +132,8 @@ function Test() {
     await addExpenseToDB(expense);
     Swal.fire({
       icon: "success",
-      title: "Gasto agregado",
-      html: `<b>${payer}</b> pagó $${amount} ${desc || ""}`,
+      title: t("gastoAgregado"),
+      html: `<b>${payer}</b> ${t("pagó")} $${amount} ${desc || ""}`,
       timer: 1500,
       showConfirmButton: false,
       iconColor: "#269181",
@@ -150,17 +150,17 @@ function Test() {
   const deleteExpense = async (expenseId) => {
     const expense = expenses.find(e => e.id === expenseId);
     const result = await Swal.fire({
-      title: "¿Eliminar gasto?",
+      title: t("eliminarGasto?"),
       html: `
     <div style="text-align:center; font-size:26px; margin-top:10px;">
-      <p style=font-size:26px; margin-top:10px;"><strong>Pagó:</strong> ${expense.payer}</p>
-      <p style=font-size:26px; margin-top:10px;"><strong>Detalle:</strong> ${expense.desc || "Sin descripción"}</p>
+      <p style=font-size:26px; margin-top:10px;"><strong>${t("pagó")}:</strong> ${expense.payer}</p>
+      <p style=font-size:26px; margin-top:10px;"><strong>${t("detalle")}:</strong> ${expense.desc || t("sinDescripcion")}</p>
       <p style="font-size:26px; margin-top:10px;">
-        <strong>Monto:</strong> $${Number(expense.amount).toFixed(2)}
+        <strong>${t("monto")}:</strong> $${Number(expense.amount).toFixed(2)}
       </p>
     </div>
     <p style="font-size:18px; margin-top:10px;">
-        Esta acción no se puede deshacer
+        ${t("accionNoPuedeDeshacer")}
       </p>
 
   `,
@@ -171,14 +171,14 @@ function Test() {
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Eliminar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: t("eliminar"),
+      cancelButtonText: t("cancelar"),
     });
 
     if (!result.isConfirmed) return;
 
     Swal.fire({
-      title: "Eliminando gasto...",
+      title: t("eliminandoGasto"),
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
@@ -195,13 +195,13 @@ function Test() {
 
       await Swal.fire({
         icon: "success",
-        title: "Eliminado",
-        text: "El gasto fue eliminado",
+        title: t("eliminado"),
+        text: t("gastoEliminado"),
         background: "#dee0e0",
         color: "#283655",
         iconColor: "#269181",
         confirmButtonColor: "#35b67e",
-        confirmButtonText: "Cerrar",
+        confirmButtonText: t("cerrar"),
         allowOutsideClick: false,
       });
     } catch (error) {
@@ -209,8 +209,8 @@ function Test() {
 
       await Swal.fire({
         icon: "error",
-        title: "Error",
-        text: "No se pudo eliminar el gasto",
+        title: t("error"),
+        text: t("noPudoEliminarGasto"),
         background: "#dee0e0",
         color: "#283655",
         iconColor: "#269181",
@@ -222,22 +222,22 @@ function Test() {
   //Borrar todos los gastos
   const deleteAll = async () => {
     const result = await Swal.fire({
-      title: "¿Borrar TODOS los gastos?",
-      text: "Esta acción no se puede deshacer",
+      title: t("borrarTodosGastos?"),
+      text: t("accionNoPuedeDeshacer"),
       icon: "question",
       showCancelButton: true,
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#d33",
-      confirmButtonText: "Sí, borrar todo",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: t("siBorrarTodo"),
+      cancelButtonText: t("cancelar"),
     });
 
     if (!result.isConfirmed) return;
 
     Swal.fire({
-      title: "Eliminando los gastos...",
+      title: t("eliminandoGastos"),
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
@@ -253,24 +253,24 @@ function Test() {
 
       await Swal.fire({
         icon: "success",
-        title: "Eliminados",
-        text: "Todos los gastos fueron eliminados",
+        title: t("eliminados"),
+        text: t("todosGastosEliminados"),
         background: "#dee0e0",
         color: "#283655",
         iconColor: "#269181",
         confirmButtonColor: "#35b67e",
-        confirmButtonText: "Cerrar",
+        confirmButtonText: t("cerrar"),
 
       });
     } catch (error) {
       console.error("Error borrando gastos:", error);
       Swal.fire({
-        text: "Error, no se pudieron borrar los gastos",
+        text: t("noPudieronEliminarGastos"),
         background: "#dee0e0",
         color: "#283655",
         iconColor: "#269181",
         confirmButtonColor: "#35b67e",
-        confirmButtonText: "Cerrar",
+        confirmButtonText: t("cerrar"),
       });
     }
   };

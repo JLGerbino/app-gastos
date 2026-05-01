@@ -105,7 +105,7 @@ const changeLang = (lang) => {
     if (!result.isConfirmed) return;
 
     Swal.fire({
-      title: "Eliminando participante...",
+      title: t("eliminandoParticipante"),
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
@@ -121,13 +121,13 @@ const changeLang = (lang) => {
 
       await Swal.fire({
         icon: "success",
-        title: "Eliminado",
-        text: "La persona y sus gastos fueron eliminados",
+        title: t("eliminado"),
+        text: t("personaGastosEliminados"),
         background: "#dee0e0",
         color: "#283655",
         iconColor: "#269181",
         confirmButtonColor: "#35b67e",
-        confirmButtonText: "Cerrar",
+        confirmButtonText: t("cerrar"),
         allowOutsideClick: false,
       });
     } catch (error) {
@@ -136,7 +136,7 @@ const changeLang = (lang) => {
       await Swal.fire({
         icon: "error",
         title: "Error",
-        text: "No se pudo eliminar la persona",
+        text: t("noPudoEliminarPersona"),
         background: "#dee0e0",
         color: "#283655",
         iconColor: "#269181",
