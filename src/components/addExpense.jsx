@@ -279,13 +279,13 @@ function Test() {
     const isAll = !expense.participants;
     if (isAll) {
       Swal.fire({
-        title: "Participan del gasto:",
-        text: "Todos",
+        title: t("paticipanGasto"),
+        text: t("todos"),
         icon: "info",
         background: "#dee0e0",
         color: "#283655",
         iconColor: "#269181",
-        confirmButtonText: "Cerrar",
+        confirmButtonText: t("cerrar"),
         confirmButtonColor: "#35b67e",
       });
       return;
@@ -295,13 +295,13 @@ function Test() {
       .join("<br>");
 
     Swal.fire({
-      title: "Participan del gasto:",
+      title: t("paticipanGasto"),
       html: list,
       icon: "info",
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
-      confirmButtonText: "Cerrar",
+      confirmButtonText: t("cerrar"),
       confirmButtonColor: "#35b67e",
     });
   };
@@ -318,8 +318,8 @@ function Test() {
 
     if (personExpenses.length === 0) {
       Swal.fire(
-        "Sin gastos",
-        `${personName} no tiene gastos registrados`,
+        t("sinGastos"),
+        `${personName} ${t("noGastosRegistrados")}`,
         "info"
       );
       return;
@@ -335,12 +335,12 @@ function Test() {
         let participantsText = "";
 
         if (!e.participants || e.participants.length === 0) {
-          participantsText = "Participan: Todos";
+          participantsText = t("participanTodos");
         } else if (e.participants.length === people.length) {
-          participantsText = "Participan: Todos";
+          participantsText = t("participanTodos");
         } else {
           participantsText =
-            "Participan: " +
+            t("participan") + 
             e.participants
               .map(p => `${p.name} (x${p.units})`)
               .join(", ");
@@ -348,7 +348,7 @@ function Test() {
 
         return `
       <li style="margin-bottom:8px">
-        <strong>${e.desc || "Sin descripción"}</strong> - $${e.amount}
+        <strong>${e.desc || t("sinDescripcion")}</strong> - $${e.amount}
         <br/>
         <span style="font-size:12px;color:gray">
           ${participantsText}
@@ -359,7 +359,7 @@ function Test() {
       .join("");
 
     Swal.fire({
-      title: `Gastos de ${personName}`,
+      title: `${t("sinDescripcion")} ${personName}`,
       html: `
       <ul style="text-align:left">
         ${listHtml}
@@ -371,7 +371,7 @@ function Test() {
       ${alias
           ? `
             <hr />
-            <p><strong>Alias para recibir transferencias</strong></p>
+            <p><strong>${t("aliasParaRecibir")}</strong></p>
             <p
               id="copyAliasExpense"
               style="
@@ -384,7 +384,7 @@ function Test() {
               ${alias}
             </p>
             <p style="font-size:12px;color:gray">
-              Tocá el alias para copiarlo
+              ${t("aliasParaRecibir")}
             </p>
           `
           : ""
@@ -394,7 +394,7 @@ function Test() {
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Cerrar",
+      confirmButtonText: t("cerrar"),
       didOpen: () => {
         if (!alias) return;
 
@@ -407,7 +407,7 @@ function Test() {
             toast: true,
             position: "top",
             icon: "success",
-            title: "Alias copiado",
+            title: t("aliasCopiado"),
             background: "#dee0e0",
             color: "#283655",
             iconColor: "#269181",

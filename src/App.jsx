@@ -132,13 +132,13 @@ useEffect(() => {
   //Borra grupo
   const handleDeleteGroup = async () => {
     const confirm1 = await Swal.fire({
-      title: "Eliminar grupo",
-      text: "Esta acción eliminará el grupo con TODOS los participantes, gastos y pagos!",
+      title: t("eliminarGrupo"),
+      text: t("accionEliminaragrupo"),
       icon: "warning",
       iconColor: "#269181",
       showCancelButton: true,
-      confirmButtonText: "Eliminar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: t("eliminar"),
+      cancelButtonText: t("cancelar"),
       confirmButtonColor: "#d33",
       background: "#dee0e0",
       color: "#283655",
@@ -147,12 +147,12 @@ useEffect(() => {
     if (!confirm1.isConfirmed) return;
 
     const confirm2 = await Swal.fire({
-      title: "¿Estás completamente seguro?",
-      text: "Esta acción es irreversible.",
+      title: t("completamenteSeguror"),
+      text: t("accionIrreversible"),
       icon: "error",
       showCancelButton: true,
-      confirmButtonText: "Sí, eliminar definitivamente",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: t("siEliminarDefinit"),
+      cancelButtonText: t("cancelar"),
       confirmButtonColor: "#d33",
       background: "#dee0e0",
       color: "#283655",
@@ -160,7 +160,7 @@ useEffect(() => {
 
     if (!confirm2.isConfirmed) return;
     Swal.fire({
-      title: "Eliminando grupo...",
+      title: t("eliminandoGrupo"),
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
@@ -197,7 +197,7 @@ useEffect(() => {
       await deleteDoc(doc(db, "groups", groupId));
 
       await Swal.fire({
-        title: "Grupo eliminado",
+        title: t("grupoEliminado"),
         icon: "success",
         iconColor: "#269181",
         timer: 1500,
@@ -211,8 +211,8 @@ useEffect(() => {
     } catch (error) {
       console.error(error);
       Swal.fire({
-        title: "Error al eliminar",
-        text: "Intentá nuevamente",
+        title: t("errorEliminar"),
+        text: t("intentaNuevamente"),
         icon: "error",
         iconColor: "#269181",
         background: "#dee0e0",
@@ -236,21 +236,21 @@ useEffect(() => {
   //Traspasar administrador
   const handleAdminPinLogin = async () => {
     const result = await Swal.fire({
-      title: "¿Querés ser administrador?",
-      text: "Ingresá el PIN",
+      title: t("queresSerAdministrador?"),
+      text: t("ingresaPIN"),
       input: "password",
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
       showCancelButton: true,
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Confirmar",
-      cancelButtonText: "Cerrar",
+      confirmButtonText: t("confirmar"),
+      cancelButtonText: t("cerrar"),
       inputAttributes: {
         maxlength: 4,
         inputmode: "numeric",
       },
-      inputPlaceholder: "PIN de 4 dígitos",
+      inputPlaceholder: t("pin4"),
     });
 
     if (!result.isConfirmed) return;
@@ -260,7 +260,7 @@ useEffect(() => {
 
     if (!pin || !pin.trim()) {
       await Swal.fire({
-        title: "Tenés que ingresar el PIN",
+        title: t("tenesIngresarPIN4"),
         icon: "warning",
         iconColor: "#269181",
         confirmButtonColor: "#35b67e",
@@ -271,7 +271,7 @@ useEffect(() => {
     }
     if (pin !== group.adminPin) {
       await Swal.fire({
-        title: "PIN incorrecto",
+        title: t("PINIncorrecto"),
         icon: "error",
         iconColor: "#269181",
         confirmButtonColor: "#35b67e",
@@ -281,18 +281,18 @@ useEffect(() => {
       return;
     }
     const { value: newName } = await Swal.fire({
-      title: "Ingresá el nombre del administrador",
+      title: t("ingresaNombreAdmin"),
       input: "text",
-      inputPlaceholder: "Tu nombre",
+      inputPlaceholder: t("tuNombre"),
       background: "#dee0e0",
       color: "#283655",
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Confirmar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: t("confirmar"),
+      cancelButtonText: t("cancelar"),
       showCancelButton: true,
       inputValidator: (value) => {
         if (!value || !value.trim()) {
-          return "Tenés que ingresar el nombre del nuevo administrador";
+          return t("ingresarNombreAdmin");
         }
       },
     });
@@ -300,7 +300,7 @@ useEffect(() => {
     if (!newName) return;
 
     Swal.fire({
-      title: "Cambiando de administrador...",
+      title: t("cambiandoAdmin"),
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
@@ -319,13 +319,13 @@ useEffect(() => {
     });
 
     Swal.fire({
-      title: "Ahora sos el administrador del grupo",
+      title: t("ahoraSosAdmin"),
       icon: "success",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
       background: "#dee0e0",
       color: "#283655",
-      confirmButtonText: "Cerrar",
+      confirmButtonText: t("cerrar"),
     });
   };
 
@@ -441,12 +441,12 @@ useEffect(() => {
   //Borrar todos los pagos
   const handleClearPayments = async () => {
     const result = await Swal.fire({
-      title: "Eliminar todos los pagos",
-      text: "Esta acción no se puede deshacer",
+      title: t("eliminarTodosPagos?"),
+      text: t("accionNoDeshacer"),
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: t("siEliminar"),
+      cancelButtonText: t("cancelar"),
       confirmButtonColor: "#d33",
       iconColor: "#269181"
     });
@@ -454,7 +454,7 @@ useEffect(() => {
     if (!result.isConfirmed) return;
 
     Swal.fire({
-      title: "Eliminando los pagos...",
+      title: t("eliminandoPagos"),
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
@@ -480,12 +480,12 @@ useEffect(() => {
       await batch.commit();
 
       Swal.fire({
-        title: "Pagos eliminados",
+        title: t("pagosEliminados"),
         icon: "success",
         background: "#dee0e0",
         color: "#283655",
         confirmButtonColor: "#35b67e",
-        confirmButtonText: "Cerrar",
+        confirmButtonText: t("cerrar"),
         iconColor: "#269181",
       });
     } catch (error) {
@@ -500,13 +500,13 @@ useEffect(() => {
   // Salir del grupo
   const exitGroup = async () => {
     const result = await Swal.fire({
-      title: "Salir del grupo",
-      text: "¿Estás seguro que querés salir del grupo actual?",
+      title: t("salirGrupo"),
+      text: t("seguroSalirGrupo?"),
       icon: "question",
       iconColor: "#269181",
       showCancelButton: true,
-      confirmButtonText: "Salir del grupo",
-      cancelButtonText: "Cerrar",
+      confirmButtonText: t("salirGrupo"),
+      cancelButtonText: t("cerrar"),
       confirmButtonColor: "#35b67e",
       background: "#dee0e0",
       color: "#283655",
@@ -514,7 +514,7 @@ useEffect(() => {
 
     if (!result.isConfirmed) return;
     Swal.fire({
-      title: "Saliendo del grupo...",
+      title: t("saliendoGrupo"),
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
@@ -532,7 +532,7 @@ useEffect(() => {
     setExpenses([]);
 
     Swal.fire({
-      title: "Saliste del grupo",
+      title: t("salisteGrupo"),
       icon: "success",
       timer: 1200,
       iconColor: "#269181",

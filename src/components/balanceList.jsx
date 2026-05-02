@@ -124,18 +124,18 @@ export default function BalanceList({
   //Registrar pago
   const markAsPaid = async (deuda) => {
     const result = await Swal.fire({
-      title: "Confirmar pago",
+      title: t("confirmarPago"),
       html: `
         <p style="font-size:20px">
-          ${deuda.from} pagó
+          ${deuda.from} ${t("pagó")}
           <strong>$${deuda.amount.toFixed(2)}</strong>
-          a ${deuda.to}?
+          ${t("a")} ${deuda.to}?
         </p>
       `,
       icon: "warning",
       showCancelButton: true,
-      confirmButtonText: "Confirmar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: t("confirmar"),
+      cancelButtonText: t("cancelar"),
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
@@ -144,7 +144,7 @@ export default function BalanceList({
 
     if (!result.isConfirmed) return;
     Swal.fire({
-      title: "Registrando pago...",
+      title: t("registrandoPago"),
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
@@ -168,7 +168,7 @@ export default function BalanceList({
 
     Swal.fire({
       icon: "success",
-      title: "Pago registrado",
+      title: t("pagoRegistrado"),
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
@@ -180,18 +180,18 @@ export default function BalanceList({
   //Eliminar pago
   const undoPayment = async (payment) => {
     const result = await Swal.fire({
-      title: "¿Eliminar pago?",
+      title: t("eliminarPago?"),
       html: `
       <p style="font-size:18px">
-        ¿Querés eliminar el pago de
-        <strong>${payment.from}</strong> a
+        ${t("queresEliminarPago")}
+        <strong>${payment.from}</strong> ${t("a")}
         <strong>${payment.to}</strong>?
       </p>
     `,
       icon: "question",
       showCancelButton: true,
-      confirmButtonText: "Eliminar",
-      cancelButtonText: "Cancelar",
+      confirmButtonText: t("eliminar"),
+      cancelButtonText: t("cancelar"),
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
@@ -201,7 +201,7 @@ export default function BalanceList({
     if (!result.isConfirmed) return;
 
     Swal.fire({
-      title: "Eliminando pago...",
+      title: t("eliminandoPago"),
       allowOutsideClick: false,
       allowEscapeKey: false,
       background: "#dee0e0",
@@ -219,7 +219,7 @@ export default function BalanceList({
 
     Swal.fire({
       icon: "success",
-      title: "Pago eliminado",
+      title: t("pagoEliminado"),
       timer: 1200,
       color: "#283655",
       iconColor: "#269181",
@@ -231,7 +231,7 @@ export default function BalanceList({
   //Modal total gastos
   const showTotalExpenses = () => {
     Swal.fire({
-      title: "Total gastado:",
+      title: t("totalGastado"),
       html: `
         <div style="font-size:26px; line-height:1.5;">
           <strong style="color:#269181">${totalGasto.toFixed(2)}</strong> 
@@ -241,7 +241,7 @@ export default function BalanceList({
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Cerrar",
+      confirmButtonText: t("cerrar"),
     });
   };
 
@@ -252,10 +252,10 @@ export default function BalanceList({
     const alias = person?.alias;
 
     Swal.fire({
-      title: "Deuda entre personas",
+      title: t("deudas"),
       html: `
         <div style="font-size:26px; line-height:1.5;">
-          <strong style="color:#269181">${deuda.from}</strong> debe
+          <strong style="color:#269181">${deuda.from}</strong> ${t("debe")}
         </div>
 
         <div style="font-size:34px; margin:10px 0;">
@@ -263,13 +263,13 @@ export default function BalanceList({
         </div>
 
         <div style="font-size:26px;">
-          a <strong style="color:#269181">${deuda.to}</strong>
+          ${t("a")} <strong style="color:#269181">${deuda.to}</strong>
         </div>
 
         ${alias
           ? `
               <hr />
-              <p><strong>Alias para pagar</strong></p>
+              <p><strong>${t("aliasPagar")}</strong></p>
               <p
                 id="copyAlias"
                 style="
@@ -282,7 +282,7 @@ export default function BalanceList({
                 ${alias}
               </p>
               <p style="font-size:12px;color:gray">
-                Tocá el alias para copiarlo
+                ${t("tocaAlias")}
               </p>
             `
           : ""
@@ -292,7 +292,7 @@ export default function BalanceList({
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Cerrar",
+      confirmButtonText: t("cerrar"),
       didOpen: () => {
         if (!alias) return;
 
@@ -304,7 +304,7 @@ export default function BalanceList({
             toast: true,
             position: "top",
             icon: "success",
-            title: "Alias copiado",
+            title: t("aliasCopiado"),
             timer: 1500,
             showConfirmButton: false,
           });
@@ -316,10 +316,10 @@ export default function BalanceList({
   //modal para pagos
  const showPayModal = (pago) => {
     Swal.fire({
-      title: "Detalle del pago",
+      title: t("detallePago"),
       html: `
         <div style="font-size:26px; line-height:1.5;">
-          <strong style="color:#269181">${pago.from}</strong> pagó
+          <strong style="color:#269181">${pago.from}</strong> ${t("pagó")}
         </div>
 
         <div style="font-size:34px; margin:10px 0;">
@@ -327,14 +327,14 @@ export default function BalanceList({
         </div>
 
         <div style="font-size:26px;">
-          a <strong style="color:#269181">${pago.to}</strong>
+          ${t("a")} <strong style="color:#269181">${pago.to}</strong>
         </div>
       `,
       background: "#dee0e0",
       color: "#283655",
       iconColor: "#269181",
       confirmButtonColor: "#35b67e",
-      confirmButtonText: "Cerrar",
+      confirmButtonText: t("cerrar"),
     });
   };
 
